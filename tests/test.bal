@@ -130,13 +130,13 @@ function testDeleteEvent() {
 }
 
 WatchConfiguration watchConfig = {
-  id: "abc1qwelo7815895454158ytgtyer23",
-  token: "asd123",
-  'type: "webhook",
-  address: config:getAsString("ADDRESS"),
-  params: {
-    ttl: "20000"
-  }
+    id: "abc1qwelo7815895454158ytgtyer23",
+    token: "asd123",
+    'type: "webhook",
+    address: config:getAsString("ADDRESS"),
+    params: {
+        ttl: "20000"
+    }
 };
 
 @test:Config{}
