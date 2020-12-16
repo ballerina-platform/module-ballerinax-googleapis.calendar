@@ -13,21 +13,8 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-import ballerina/log;
 
-# Convert json to Event array.
-# 
-# + payload - Json response
-# + return - Event objects array on success else an error 
-isolated function toEvents(json payload) returns Event[]|error {
-    EventResponse|error res = payload.cloneWithType(EventResponse);
-    if (res is EventResponse) {
-        return res.items;
-    } else {
-        log:printError(ERR_EVENTRESPONSE + PAYLOAD + payload.toJsonString(), err = res);
-        return error(ERR_EVENTRESPONSE, res);
-    }
-}
+import ballerina/log;
 
 # Convert json to Event.
 # 
@@ -52,8 +39,8 @@ isolated function toWatchResponse(json payload) returns WatchResponse|error {
     if (res is WatchResponse) {
         return res;
     } else {
-        log:printError(ERR_WATCHRESPONSE + PAYLOAD + payload.toJsonString(), err = res);
-        return error(ERR_WATCHRESPONSE, res);
+        log:printError(ERR_WATCH_RESPONSE + PAYLOAD + payload.toJsonString(), err = res);
+        return error(ERR_WATCH_RESPONSE, res);
     }
 }
 
@@ -66,7 +53,7 @@ isolated function toEventsUpdated(json payload) returns EventResponse|error {
     if (res is EventResponse) {
         return res;
     } else {
-        log:printError(ERR_EVENTRESPONSE + PAYLOAD + payload.toJsonString(), err = res);
-        return error(ERR_EVENTRESPONSE, res);
+        log:printError(ERR_EVENT_RESPONSE + PAYLOAD + payload.toJsonString(), err = res);
+        return error(ERR_EVENT_RESPONSE, res);
     }
 }

@@ -76,9 +76,10 @@ function testquickAdd() {
 }
 function testGetEvents() {
     log:print("calendarClient -> getEvents()");
-    Event[]|error res = calendarClient->getEvents(config:getAsString("CALENDAR_ID"), 5);
-    if (res is Event[]) {
-        test:assertTrue(res.length() > 0, msg = "Found 0 search records!");
+    stream<Event>|error res = calendarClient->getEvents(config:getAsString("CALENDAR_ID"));
+    if (res is stream<Event>) {
+        var event = res.next();
+           test:assertNotEquals(event?.value, "", msg = "Found 0 records");
     } else {
         test:assertFail(res.message());
     }
@@ -178,20 +179,17 @@ function testGetEventResponse() {
 }
 
 isolated function setEvent (string summary) returns InputEvent|error {
-    time:Time time = time:currentTime();  
-    string|error startTime = time:format(time:addDuration(time, 0, 0, 0, 4, 0, 0, 0), "yyyy-MM-dd'T'HH:mm:ssZ");
-    string|error endTime = time:format(time:addDuration(time, 0, 0, 0, 5, 0, 0, 0), "yyyy-MM-dd'T'HH:mm:ssZ");
-    if (startTime is string && endTime is string) {
-        InputEvent event = {
-            'start: {
-                dateTime: startTime
-            },
-            end: {
-                dateTime: endTime
-            },
-            summary: summary
-        };
-        return event;
-    }
-    return error("Internal error");
+    time:Time time = time:currentTime();
+    string startTime = check time:format(time:addDuration(time, 0, 0, 0, 4, 0, 0, 0), TIME_FORMAT);
+    string endTime = check time:format(time:addDuration(time, 0, 0, 0, 5, 0, 0, 0), TIME_FORMAT);
+    InputEvent event = {
+        'start: {
+            dateTime: startTime
+        },
+        end: {
+            dateTime: endTime
+        },
+        summary: summary
+    };
+    return event;  
 }

@@ -126,3 +126,53 @@ isolated function checkAndSetErrors(http:Response|http:Payload|error httpRespons
         return error(HTTP_ERROR_MSG + (<error>httpResponse).message());
     }
 }
+
+# Get events stream.
+# 
+# + calendarClient - Calendar client
+# + calendarId - Calendar id
+# + events - Event array
+# + count - Number events required (optional)
+# + syncToken - Token for getting incremental sync
+# + pageToken - Token for retrieving next page
+# + return - Event stream on success, else an error
+function getEventsStream(http:Client calendarClient, string calendarId, @tainted Event[] events, int? count = (), string? syncToken = 
+                   (), string? pageToken = ()) returns @tainted stream<Event>|error {
+    string[] value = [];
+    map<string> optionals = {};
+    if (syncToken is string) {
+        optionals[SYNC_TOKEN] = syncToken;
+    }
+    if (count is int) {
+        optionals[MAX_RESULT] = count.toString();
+    }
+    if (pageToken is string) {
+        optionals[PAGE_TOKEN] = pageToken;
+    }
+    optionals.forEach(function(string val) {
+        value.push(val);
+    });
+    string path = <@untainted> prepareQueryUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS], optionals.keys(), value);
+    var httpResponse = calendarClient->get(path);
+    json|error resp = checkAndSetErrors(httpResponse);
+    if resp is json {
+        EventResponse|error res = resp.cloneWithType(EventResponse);
+        if (res is EventResponse) {
+            int i = events.length();
+            foreach Event item in res.items {
+                events[i] = item;
+                i = i + 1;
+            }
+            stream<Event> eventStream = (<@untainted>events).toStream();
+            string? nextPageToken = res?.nextPageToken;
+            if (nextPageToken is string) {
+                var streams = check getEventsStream(calendarClient, calendarId, events, count, syncToken, nextPageToken);
+            }
+            return eventStream;
+        } else {
+            return error(ERR_EVENT_RESPONSE, res);
+        }
+    } else {
+        return resp;
+    }
+}

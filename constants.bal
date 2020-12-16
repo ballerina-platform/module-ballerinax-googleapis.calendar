@@ -48,9 +48,12 @@ const string SUPPORTS_ATTACHMENTS = "supportsAttachments";
 const string HTTP_ERROR_MSG = "Error occurred while getting the HTTP response : ";
 const string ERR_EXTRACTING_ERROR_MSG = "Error occured while extracting errors from payload.";
 const string JSON_ACCESSING_ERROR_MSG = "Error occurred while accessing the JSON payload of the response.";
-const string ERR_EVENTRESPONSE = "Error occurred while constructing EventResponse record.";
+const string ERR_EVENT_RESPONSE = "Error occurred while constructing EventResponse record.";
 const string ERR_EVENT = "Error occurred while constructing Event record.";
-const string ERR_WATCHRESPONSE = "Error occurred while constructing WatchResponse record.";
+const string ERR_WATCH_RESPONSE = "Error occurred while constructing WatchResponse record.";
 
 // Log constants
 const string PAYLOAD = " payload: ";
+
+// String constants
+const string TIME_FORMAT =  "yyyy-MM-dd'T'HH:mm:ssZ";
