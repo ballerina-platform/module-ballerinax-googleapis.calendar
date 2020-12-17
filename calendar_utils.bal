@@ -103,7 +103,7 @@ function prepareUrlWithOptional(string calendarId, CreateEventOptional? optional
 # 
 # + httpResponse - HTTP respone or HTTP payload or error
 # + return - JSON result on success else an error
-isolated function checkAndSetErrors(http:Response|http:Payload|error httpResponse) returns @tainted json|error {
+isolated function checkAndSetErrors(http:Response|http:PayloadType|error httpResponse) returns @tainted json|error {
     if (httpResponse is http:Response) {
         if (httpResponse.statusCode == http:STATUS_OK || httpResponse.statusCode == http:STATUS_CREATED) {
             json|error jsonResponse = httpResponse.getJsonPayload();
