@@ -239,3 +239,51 @@ public type WatchResponse record {|
     string token;
     string expiration;
 |};
+
+public type Calendar record {|
+    string kind;
+    string etag;
+    string id;
+    string summary;    
+    string description?;
+    string timeZone;
+    string colorId;
+    boolean selected?;
+    string backgroundColor;
+    string foregroundColor;
+    string accessRole;
+    DefaultReminder[] defaultReminders;
+    ConferenceProperties conferenceProperties;
+    boolean primary?;
+    NotificationSettings notificationSettings?;
+|};
+
+public type ConferenceProperties record {|
+    string[] allowedConferenceSolutionTypes;
+|};
+
+public type NotificationSettings record {|
+    Notification[] notifications;
+    boolean primary?;
+|};
+
+public type Notification record {|
+    string 'type;
+    string method;
+|};
+
+public type CalendarListOptional record {|
+    string? minAccessRole = ();
+    string? pageToken = ();
+    boolean? showDeleted = ();
+    boolean? showHidden = ();
+    string? syncToken = ();
+|};
+
+public type CalendarResponse record {|
+    string kind;
+    string etag;
+    string nextSyncToken?;
+    string nextPageToken?;
+    Calendar[] items;
+|};

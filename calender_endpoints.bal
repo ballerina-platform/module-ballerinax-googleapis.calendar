@@ -34,6 +34,15 @@ public client class CalendarClient {
         });
     }
 
+    # Get Calendars
+    # 
+    # + optional - Record that contains optionals
+    # + return - Stream of Calendars on success else an error
+    remote function getCalendars(CalendarListOptional? optional = ()) returns @tainted stream<Calendar>|error {
+        Calendar[] allCalendars = [];
+        return getCalendarsStream(self.calendarClient, allCalendars, optional);
+    }
+
     # Create an event.
     # 
     # + calendarId - Calendar id
@@ -45,7 +54,7 @@ public client class CalendarClient {
         json|error payload = event.cloneWithType(InputEvent);
         if (payload is json) {
             http:Request req = new;
-            string path = prepareUrlWithOptional(calendarId, optional);
+            string path = prepareUrlWithEventOptional(calendarId, optional);
             req.setJsonPayload(payload);
             var response = self.calendarClient->post(path, req);
             json|error result = checkAndSetErrors(response);
@@ -94,7 +103,7 @@ public client class CalendarClient {
         json|error payload = event.cloneWithType(InputEvent);
         if (payload is json) {
             http:Request req = new;
-            string path = prepareUrlWithOptional(calendarId, optional, eventId);
+            string path = prepareUrlWithEventOptional(calendarId, optional, eventId);
             req.setJsonPayload(payload);
             var response = self.calendarClient->put(path, req);
             json|error result = checkAndSetErrors(response);
@@ -117,8 +126,8 @@ public client class CalendarClient {
     # + return - Event stream on success, else an error
     remote function getEvents(string calendarId, int? count = (), string? syncToken = (), string? pageToken = ()) returns
     @tainted stream<Event>|error {
-        Event[] finalArray = [];
-        return getEventsStream(self.calendarClient, calendarId, finalArray, count, syncToken, pageToken);
+        Event[] allEvents = [];
+        return getEventsStream(self.calendarClient, calendarId, allEvents, count, syncToken, pageToken);
     }
 
     # Get an event.
@@ -215,7 +224,7 @@ public client class CalendarClient {
             optionals[SYNC_TOKEN] = syncToken;
         }
         if (count is int) {
-            optionals[MAX_RESULT] = count.toString();
+            optionals[MAX_RESULTS] = count.toString();
         }
         if (pageToken is string) {
             optionals[PAGE_TOKEN] = pageToken;

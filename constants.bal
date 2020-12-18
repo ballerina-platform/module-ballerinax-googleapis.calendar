@@ -18,6 +18,9 @@
 const string BASE_URL = "https://www.googleapis.com";
 const string CALENDAR_PATH = "/calendar/v3";
 const string CALENDAR = "calendars";
+const string CALENDAR_LIST = "calendarList";
+const string USERS = "users";
+const string ME = "me";
 const string CHANNELS = "channels";
 const string STOP = "stop";
 const string EVENTS = "events";
@@ -39,10 +42,13 @@ const string TEXT = "text";
 const string SEND_UPDATES = "sendUpdates";
 const string SYNC_TOKEN = "syncToken";
 const string PAGE_TOKEN ="pageToken";
-const string MAX_RESULT = "maxResults";
+const string MAX_RESULTS = "maxResults";
 const string CONFERENCE_DATA_VERSION = "conferenceDataVersion";
 const string MAX_ATTENDEES = "maxAttendees";
 const string SUPPORTS_ATTACHMENTS = "supportsAttachments";
+const string MIN_ACCESS_ROLE =  "minAccessRole";
+const string SHOW_DELETED = "showDeleted";
+const string SHOW_HIDDEN = "showHidden";
 
 // Error constants
 const string HTTP_ERROR_MSG = "Error occurred while getting the HTTP response : ";
@@ -51,7 +57,7 @@ const string JSON_ACCESSING_ERROR_MSG = "Error occurred while accessing the JSON
 const string ERR_EVENT_RESPONSE = "Error occurred while constructing EventResponse record.";
 const string ERR_EVENT = "Error occurred while constructing Event record.";
 const string ERR_WATCH_RESPONSE = "Error occurred while constructing WatchResponse record.";
-
+const string ERR_CALENDAR_RESPONSE = "Error occurred while constructing CalendarResponse record.";
 // Log constants
 const string PAYLOAD = " payload: ";
 

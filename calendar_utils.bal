@@ -71,7 +71,7 @@ isolated function prepareQueryUrl(string[] paths, string[] queryParamNames, stri
 # + optional - Record that contains optional parameters
 # + eventId - Event id
 # + return - The prepared URL with encoded query
-function prepareUrlWithOptional(string calendarId, CreateEventOptional? optional = (), string? eventId = ()) returns string {
+function prepareUrlWithEventOptional(string calendarId, CreateEventOptional? optional = (), string? eventId = ()) returns string {
     string[] value = [];
     map<string> optionalMap = {};
     string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS]);
@@ -90,6 +90,38 @@ function prepareUrlWithOptional(string calendarId, CreateEventOptional? optional
         }
         if (optional.supportsAttachments is boolean) {
             optionalMap[SUPPORTS_ATTACHMENTS] = optional.supportsAttachments.toString();
+        }
+        optionalMap.forEach(function(string val) {
+            value.push(val);
+        });
+        path = prepareQueryUrl([path], optionalMap.keys(), value);
+    }
+    return path;
+}
+
+# Prepare URL with optional parameters.
+# 
+# + optional - Record that contains optional parameters
+# + return - The prepared URL with encoded query
+function prepareUrlWithCalendarOptional(CalendarListOptional? optional = ()) returns string {
+    string[] value = [];
+    map<string> optionalMap = {};
+    string path = prepareUrl([CALENDAR_PATH, USERS, ME, CALENDAR_LIST]);  
+    if (optional is CalendarListOptional) {
+        if (optional.minAccessRole is string) {
+            optionalMap[MIN_ACCESS_ROLE] = optional.minAccessRole.toString();
+        }
+        if (optional.pageToken is string) {
+            optionalMap[PAGE_TOKEN] = optional.pageToken.toString();
+        }
+        if (optional.showDeleted is boolean) {
+            optionalMap[SHOW_DELETED] = optional.showDeleted.toString();
+        }
+        if (optional.showHidden is boolean) {
+            optionalMap[SHOW_HIDDEN] = optional.showHidden.toString();
+        }
+        if (optional.syncToken is string) {
+            optionalMap[SYNC_TOKEN] = optional.syncToken.toString();
         }
         optionalMap.forEach(function(string val) {
             value.push(val);
@@ -144,7 +176,7 @@ function getEventsStream(http:Client calendarClient, string calendarId, @tainted
         optionals[SYNC_TOKEN] = syncToken;
     }
     if (count is int) {
-        optionals[MAX_RESULT] = count.toString();
+        optionals[MAX_RESULTS] = count.toString();
     }
     if (pageToken is string) {
         optionals[PAGE_TOKEN] = pageToken;
@@ -171,6 +203,39 @@ function getEventsStream(http:Client calendarClient, string calendarId, @tainted
             return eventStream;
         } else {
             return error(ERR_EVENT_RESPONSE, res);
+        }
+    } else {
+        return resp;
+    }
+}
+
+# Get calendars stream.
+# 
+# + calendarClient - Calendar client
+# + calendars - Calendar array
+# + optional - Record that contains optional parameters
+# + return - Calendar stream on success, else an error
+function getCalendarsStream(http:Client calendarClient, @tainted Calendar[] calendars, CalendarListOptional? optional = ()) returns @tainted stream<Calendar>|error {
+    string path = <@untainted> prepareUrlWithCalendarOptional(optional);
+    var httpResponse = calendarClient->get(path);
+    json|error resp = checkAndSetErrors(httpResponse);
+    if resp is json {
+        CalendarResponse|error res = resp.cloneWithType(CalendarResponse);
+        if (res is CalendarResponse) {
+            int i = calendars.length();
+            foreach Calendar item in res.items {
+                calendars[i] = item;
+                i = i + 1;
+            }
+            stream<Calendar> calendarStream = (<@untainted>calendars).toStream();
+            string? pageToken = res?.nextPageToken;
+            if (pageToken is string && optional is CalendarListOptional) {
+                optional.pageToken = pageToken;       
+                var streams = check getCalendarsStream(calendarClient, calendars, optional);
+            }
+            return calendarStream;
+        } else {
+            return error(ERR_CALENDAR_RESPONSE, res);
         }
     } else {
         return resp;

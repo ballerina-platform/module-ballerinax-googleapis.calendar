@@ -38,6 +38,17 @@ string testChannelId = "";
 string testResourceId = "";
 string testQuickAddEventId = "";
 
+@test:Config {}function testGetCalendars() {
+    log:print("calendarClient -> getCalendars()");
+    stream<Calendar>|error res = calendarClient->getCalendars();
+    if (res is stream<Calendar>) {
+        var calendar = res.next();
+        test:assertNotEquals(calendar?.value?.id, "", msg = "Found 0 records");
+    } else {
+        test:assertFail(res.message());
+    }
+}
+
 CreateEventOptional optional = {
     conferenceDataVersion: 1,
     sendUpdates: "all",
@@ -130,8 +141,8 @@ function testDeleteEvent() {
 }
 
 WatchConfiguration watchConfig = {
-    id: "abc1qwelo7815895454158ytgtyer23",
-    token: "asd123",
+    id: "testId",
+    token: "testToken",
     'type: "webhook",
     address: config:getAsString("ADDRESS"),
     params: {
