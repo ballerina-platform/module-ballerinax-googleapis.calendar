@@ -37,6 +37,7 @@ string testEventId = "";
 string testChannelId = "";
 string testResourceId = "";
 string testQuickAddEventId = "";
+string testCalendarId = "primary";
 
 @test:Config {}function testGetCalendars() {
     log:print("calendarClient -> getCalendars()");
@@ -60,7 +61,7 @@ function testCreateEvent() {
     InputEvent|error event = setEvent("Event Created");
     if (event is InputEvent) {
         log:print("calendarClient -> createEvent()");
-        Event|error res = calendarClient->createEvent(config:getAsString("CALENDAR_ID"), event, optional);
+        Event|error res = calendarClient->createEvent(testCalendarId, event, optional);
         if (res is Event) {
             test:assertNotEquals(res.id, "", msg = "Expect event id");
             testEventId = <@untainted> res.id;
@@ -73,7 +74,7 @@ function testCreateEvent() {
 @test:Config{}
 function testquickAdd() {
     log:print("calendarClient -> quickAddEvent()");
-    Event|error res = calendarClient->quickAddEvent(config:getAsString("CALENDAR_ID"), "Hello", "none");
+    Event|error res = calendarClient->quickAddEvent(testCalendarId, "Hello", "none");
     if (res is Event) {
         test:assertNotEquals(res.id, "", msg = "Expect event id");
         testQuickAddEventId = <@untainted> res.id;
@@ -87,7 +88,7 @@ function testquickAdd() {
 }
 function testGetEvents() {
     log:print("calendarClient -> getEvents()");
-    stream<Event>|error res = calendarClient->getEvents(config:getAsString("CALENDAR_ID"));
+    stream<Event>|error res = calendarClient->getEvents(testCalendarId);
     if (res is stream<Event>) {
         var event = res.next();
            test:assertNotEquals(event?.value, "", msg = "Found 0 records");
@@ -101,7 +102,7 @@ function testGetEvents() {
 }
 function testGetEvent() {
     log:print("calendarClient -> getEvent()");
-    Event|error res = calendarClient->getEvent(config:getAsString("CALENDAR_ID"), testEventId);
+    Event|error res = calendarClient->getEvent(testCalendarId, testEventId);
     if (res is Event) {
         test:assertTrue(res.id == testEventId, msg = "Found 0 search records!");
     } else {
@@ -116,7 +117,7 @@ function testUpdatevent() {
     InputEvent|error event = setEvent("Event Updated");
     if (event is InputEvent) {
         log:print("calendarClient -> updateEvent()");
-        Event|error res = calendarClient->updateEvent(config:getAsString("CALENDAR_ID"), testEventId, event);
+        Event|error res = calendarClient->updateEvent(testCalendarId, testEventId, event);
         if (res is Event) {
             test:assertNotEquals(res.id, "", msg = "Expect event id");
             
@@ -131,8 +132,8 @@ function testUpdatevent() {
 }
 function testDeleteEvent() {
     log:print("calendarClient -> deleteEvent()");
-    boolean|error res = calendarClient->deleteEvent(config:getAsString("CALENDAR_ID"), testEventId);
-    boolean|error resp = calendarClient->deleteEvent(config:getAsString("CALENDAR_ID"), testQuickAddEventId);
+    boolean|error res = calendarClient->deleteEvent(testCalendarId, testEventId);
+    boolean|error resp = calendarClient->deleteEvent(testCalendarId, testQuickAddEventId);
     if (res is boolean) {
         test:assertTrue(res, msg = "Expects true on success");
     } else {
@@ -153,7 +154,7 @@ WatchConfiguration watchConfig = {
 @test:Config{}
 function testWatchEvents() {
     log:print("calendarClient -> watchEvents()");
-    WatchResponse|error res = calendarClient->watchEvents(config:getAsString("CALENDAR_ID"), watchConfig);
+    WatchResponse|error res = calendarClient->watchEvents(testCalendarId, watchConfig);
     if (res is WatchResponse) {
         test:assertNotEquals(res.id, "", msg = "Expects channel id");
         testChannelId = <@untainted> res.id;
@@ -181,7 +182,7 @@ function testStopChannel() {
 }
 function testGetEventResponse() {
     log:print("calendarClient -> getEventResponse()");
-    EventResponse|error res = calendarClient->getEventResponse(config:getAsString("CALENDAR_ID"), 5);
+    EventResponse|error res = calendarClient->getEventResponse(testCalendarId, 5);
     if (res is EventResponse) {
         test:assertNotEquals(res.kind, "", msg = "Expects event kind");
     } else {
