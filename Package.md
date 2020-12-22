@@ -8,7 +8,7 @@ The Google Calendar connector allows you to access Google Calendar operations th
 
 |                             |            Versions             |
 |:---------------------------:|:-------------------------------:|
-| Ballerina Language          |     Swan Lake Preview8-SNAPSHOT |
+| Ballerina Language          |     Swan Lake Preview8          |
 | Google Calendar API         |             V3                  |
 
 ## Sample
