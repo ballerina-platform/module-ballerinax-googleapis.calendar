@@ -124,8 +124,8 @@ public client class CalendarClient {
     # + syncToken - Token for getting incremental sync
     # + pageToken - Token for retrieving next page
     # + return - Event stream on success, else an error
-    remote function getEvents(string calendarId, int? count = (), string? syncToken = (), string? pageToken = ()) returns
-    @tainted stream<Event>|error {
+    remote function getEvents(string calendarId, int? count = (), string? syncToken = (), string? pageToken = ())
+    returns @tainted stream<Event>|error {
         Event[] allEvents = [];
         return getEventsStream(self.calendarClient, calendarId, allEvents, count, syncToken, pageToken);
     }
@@ -216,8 +216,8 @@ public client class CalendarClient {
     # + syncToken - Token for getting incremental sync
     # + pageToken - Token for retrieving next page
     # + return - List of EventResponse object on success, else an error
-    remote function getEventResponse(string calendarId, int? count = (), string? syncToken = (), string? pageToken = ())
-    returns @tainted EventResponse|error {
+    remote function getEventResponse(string calendarId, int? count = (), string? syncToken = (), 
+    string? pageToken = ()) returns @tainted EventResponse|error {
         string[] value = [];
         map<string> optionals = {};
         if (syncToken is string) {
