@@ -108,11 +108,16 @@ public type Event record {|
 |};
 
 public type ExtendedProperties record {|
-    Private 'private;
+    Private 'private?;
+    Shared shared?;
 |};
 
 public type Private record {|
     string everyoneDeclinedDismissed;
+|};
+
+public type Shared record {|
+    string zmMeetingNum;
 |};
 
 public type ConferenceData record {|
@@ -141,12 +146,13 @@ public type Status record {|
 public type EntryPoint record {|
     string entryPointType;
     string uri;
-    string label;
+    string label?;
     string pin?;
     string accessCode?;
     string meetingCode?;
     string passcode?;
     string password?;
+    string regionCode?;
 |};
 
 public type ConferenceSolution record {|
@@ -176,7 +182,7 @@ public type User record {|
     string id?;
     string email;
     string displayName?;
-    boolean self;
+    boolean self?;
 |};
 
 public type Time record {|
