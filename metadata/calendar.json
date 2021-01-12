@@ -11,6 +11,20 @@
                 "displayName": "Google Calendar Client",
                 "operations": [
                     {
+                        "name": "getCalendars",
+                        "displayName": "Get calendars",
+                        "parameters" : [
+                            {
+                                "name": "optional",
+                                "displayName": "Optional query parameters"
+                            }
+                        ],
+                        "returnValue": {
+                            "name": "stream<Calendar>",
+                            "displayName": "Stream of Calendars"
+                        }        
+                    },
+                    {
                         "name": "createEvent",
                         "displayName": "Create event",
                         "parameters" : [
