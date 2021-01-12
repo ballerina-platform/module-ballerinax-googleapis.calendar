@@ -252,11 +252,15 @@ public type Calendar record {|
     string id;
     string summary;    
     string description?;
+    string location?;
     string timeZone;
+    string summaryOverride?;
     string colorId;
     boolean selected?;
     string backgroundColor;
     string foregroundColor;
+    boolean hidden?;
+    boolean deleted?;
     string accessRole;
     DefaultReminder[] defaultReminders;
     ConferenceProperties conferenceProperties;
