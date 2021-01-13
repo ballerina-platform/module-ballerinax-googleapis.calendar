@@ -61,6 +61,18 @@ public type EventResponse record {|
     Event[] items;
 |};
 
+public type EventStreamResponse record {|
+    string kind?;
+    string etag?;
+    string summary?;
+    string updated?;
+    string timeZone?;
+    string accessRole?;
+    DefaultReminder[] defaultReminders?;
+    string nextSyncToken?;
+    stream<Event> items?;
+|};
+
 public type DefaultReminder record {|
     string method;
     int minutes;

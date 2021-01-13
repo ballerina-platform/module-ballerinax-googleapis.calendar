@@ -126,8 +126,16 @@ public client class CalendarClient {
     # + return - Event stream on success, else an error
     remote function getEvents(string calendarId, int? count = (), string? syncToken = (), string? pageToken = ())
     returns @tainted stream<Event>|error {
-        Event[] allEvents = [];
-        return getEventsStream(self.calendarClient, calendarId, allEvents, count, syncToken, pageToken);
+        EventStreamResponse|error response = self->getEventResponse(calendarId, count, syncToken, pageToken);
+        if (response is EventStreamResponse) {
+            stream<Event>? events = response?.items;
+            if(events is stream<Event>){
+                return events;
+            }
+            return error(ERR_EVENTS);
+        } else {
+            return response;
+        }        
     }
 
     # Get an event.
@@ -217,29 +225,10 @@ public client class CalendarClient {
     # + pageToken - Token for retrieving next page
     # + return - List of EventResponse object on success, else an error
     remote function getEventResponse(string calendarId, int? count = (), string? syncToken = (), 
-    string? pageToken = ()) returns @tainted EventResponse|error {
-        string[] value = [];
-        map<string> optionals = {};
-        if (syncToken is string) {
-            optionals[SYNC_TOKEN] = syncToken;
-        }
-        if (count is int) {
-            optionals[MAX_RESULTS] = count.toString();
-        }
-        if (pageToken is string) {
-            optionals[PAGE_TOKEN] = pageToken;
-        }
-        optionals.forEach(function(string val) {
-            value.push(val);
-        });
-        string path = prepareQueryUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS], optionals.keys(), value);
-        var httpResponse = self.calendarClient->get(path);
-        json|error resp = checkAndSetErrors(httpResponse);
-        if resp is json {
-            return toEventsUpdated(resp);
-        } else {
-            return resp;
-        }
+    string? pageToken = ()) returns @tainted EventStreamResponse|error {
+        EventStreamResponse response = {};
+        Event[] allEvents = [];
+        return getEventsStream(self.calendarClient, calendarId, response, allEvents, count, syncToken, pageToken);
     }
 }
 
