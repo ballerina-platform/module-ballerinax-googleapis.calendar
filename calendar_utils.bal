@@ -165,13 +165,15 @@ isolated function checkAndSetErrors(http:Response|http:PayloadType|error httpRes
 # 
 # + calendarClient - Calendar client
 # + calendarId - Calendar id
+# + response - EventStreamResponse record
 # + events - Event array
 # + count - Number events required (optional)
 # + syncToken - Token for getting incremental sync
 # + pageToken - Token for retrieving next page
-# + return - Event stream on success, else an error
-function getEventsStream(http:Client calendarClient, string calendarId, @tainted Event[] events, int? count = (),
- string? syncToken = (), string? pageToken = ()) returns @tainted stream<Event>|error {
+# + return - EventStreamResponse record on success, else an error
+function getEventsStream(http:Client calendarClient, string calendarId, @tainted EventStreamResponse 
+response, @tainted Event[] events, int? count = (), string? syncToken = (), string? pageToken = ()) 
+returns @tainted EventStreamResponse|error {
     string[] value = [];
     map<string> optionals = {};
     if (syncToken is string) {
@@ -200,10 +202,24 @@ function getEventsStream(http:Client calendarClient, string calendarId, @tainted
             stream<Event> eventStream = (<@untainted>events).toStream();
             string? nextPageToken = res?.nextPageToken;
             if (nextPageToken is string) {
-                var streams = check getEventsStream(calendarClient, calendarId, events, count,
-                syncToken, nextPageToken);
+                var streams = check getEventsStream(calendarClient, calendarId, response, events, count,
+                syncToken, nextPageToken);          
+            } 
+            else {
+                string? nextSyncToken = res?.nextSyncToken;
+                if (nextSyncToken is string) {    
+                    response.nextSyncToken = nextSyncToken;       
+                }        
             }
-            return eventStream;
+            response.kind = res.kind;
+            response.etag = res.etag;
+            response.summary = res.summary;
+            response.updated = res.updated;
+            response.timeZone = res.timeZone;
+            response.accessRole = res.accessRole;
+            response.defaultReminders = res.defaultReminders;  
+            response.items = eventStream;          
+            return response;      
         } else {
             return error(ERR_EVENT_RESPONSE, res);
         }
