@@ -91,7 +91,7 @@ function testGetEvents() {
     stream<Event>|error res = calendarClient->getEvents(testCalendarId);
     if (res is stream<Event>) {
         var event = res.next();
-           test:assertNotEquals(event?.value, "", msg = "Found 0 records");
+        test:assertNotEquals(event?.value, "", msg = "Found 0 records");
     } else {
         test:assertFail(res.message());
     }

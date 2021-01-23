@@ -185,7 +185,7 @@ public type Attendee record {|
     boolean self?;
     boolean 'resource?;
     boolean optional?;
-    string responseStatus;
+    string responseStatus?;
     string comment?;
     string additionalGuests?;
 |};
