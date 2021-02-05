@@ -51,7 +51,7 @@ public client class CalendarClient {
     # + return - Created Event on success else an error
     remote function createEvent(string calendarId, InputEvent event, CreateEventOptional? optional = ()) returns
     @tainted Event|error {
-        json payload = check event.cloneWithType(InputEvent);
+        json payload = check event.cloneWithType(json);
         http:Request req = new;
         string path = prepareUrlWithEventOptional(calendarId, optional);
         req.setJsonPayload(payload);
@@ -88,7 +88,7 @@ public client class CalendarClient {
     # + return - Updated event on success else an error
     remote function updateEvent(string calendarId, string eventId, InputEvent event, CreateEventOptional? optional = ())
     returns @tainted Event|error {
-        json payload = check event.cloneWithType(InputEvent);
+        json payload = check event.cloneWithType(json);
         http:Request req = new;
         string path = prepareUrlWithEventOptional(calendarId, optional, eventId);
         req.setJsonPayload(payload);
@@ -108,7 +108,7 @@ public client class CalendarClient {
     returns @tainted stream<Event>|error {
         EventStreamResponse response = check self->getEventResponse(calendarId, count, syncToken, pageToken);
         stream<Event>? events = response?.items;
-        if(events is stream<Event>){
+        if (events is stream<Event>) {
             return events;
         }
         return error(ERR_EVENTS);       
@@ -151,7 +151,6 @@ public client class CalendarClient {
         var response = self.calendarClient->post(path, req);
         json result = check checkAndSetErrors(response);
         return toWatchResponse(result);
-       
     }
 
     # Stop channel from subscription

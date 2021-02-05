@@ -58,16 +58,14 @@ CreateEventOptional optional = {
 
 @test:Config{}
 function testCreateEvent() {
-    InputEvent|error event = setEvent("Event Created");
-    if (event is InputEvent) {
-        log:print("calendarClient -> createEvent()");
-        Event|error res = calendarClient->createEvent(testCalendarId, event, optional);
-        if (res is Event) {
-            test:assertNotEquals(res.id, "", msg = "Expect event id");
-            testEventId = <@untainted> res.id;
-        } else {
-            test:assertFail(res.message());
-        }
+    InputEvent event = setEvent("Event Created");
+    log:print("calendarClient -> createEvent()");
+    Event|error res = calendarClient->createEvent(testCalendarId, event, optional);
+    if (res is Event) {
+        test:assertNotEquals(res.id, "", msg = "Expect event id");
+        testEventId = <@untainted> res.id;
+    } else {
+        test:assertFail(res.message());
     }
 }
 
@@ -114,16 +112,13 @@ function testGetEvent() {
     dependsOn: ["testCreateEvent"]
 }
 function testUpdatevent() {
-    InputEvent|error event = setEvent("Event Updated");
-    if (event is InputEvent) {
-        log:print("calendarClient -> updateEvent()");
-        Event|error res = calendarClient->updateEvent(testCalendarId, testEventId, event);
-        if (res is Event) {
-            test:assertNotEquals(res.id, "", msg = "Expect event id");
-            
-        } else {
-            test:assertFail(res.message());
-        }
+    InputEvent event = setEvent("Event Updated");
+    log:print("calendarClient -> updateEvent()");
+    Event|error res = calendarClient->updateEvent(testCalendarId, testEventId, event);
+    if (res is Event) {
+        test:assertNotEquals(res.id, "", msg = "Expect event id");
+    } else {
+        test:assertFail(res.message());
     }
 }
 
@@ -190,10 +185,10 @@ function testGetEventResponse() {
     }
 }
 
-isolated function setEvent (string summary) returns InputEvent|error {
+isolated function setEvent (string summary) returns InputEvent {
     time:Time time = time:currentTime();
-    string startTime = check time:format(time:addDuration(time, 0, 0, 0, 4, 0, 0, 0), TIME_FORMAT);
-    string endTime = check time:format(time:addDuration(time, 0, 0, 0, 5, 0, 0, 0), TIME_FORMAT);
+    string startTime = checkpanic time:format(time:addDuration(time, 0, 0, 0, 4, 0, 0, 0), TIME_FORMAT);
+    string endTime = checkpanic time:format(time:addDuration(time, 0, 0, 0, 5, 0, 0, 0), TIME_FORMAT);
     InputEvent event = {
         'start: {
             dateTime: startTime

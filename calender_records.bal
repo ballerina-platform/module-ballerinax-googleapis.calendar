@@ -14,7 +14,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-public type InputEvent record {|
+public type InputEvent record {
     string summary?;
     string description?;
     string location?;
@@ -39,16 +39,16 @@ public type InputEvent record {|
     Reminder reminders?;
     Source 'source?;
     Attachment[] attachments?;
-|};
+};
 
-public type CreateEventOptional record {|
+public type CreateEventOptional record {
     int? conferenceDataVersion = ();
     int? maxAttendees = ();
     string? sendUpdates = ();
     boolean? supportsAttachments = ();
-|};
+};
 
-public type EventResponse record {|
+public type EventResponse record {
     string kind;
     string etag;
     string summary;
@@ -59,9 +59,9 @@ public type EventResponse record {|
     string nextSyncToken?;
     string nextPageToken?;
     Event[] items;
-|};
+};
 
-public type EventStreamResponse record {|
+public type EventStreamResponse record {
     string kind?;
     string etag?;
     string summary?;
@@ -71,14 +71,14 @@ public type EventStreamResponse record {|
     DefaultReminder[] defaultReminders?;
     string nextSyncToken?;
     stream<Event> items?;
-|};
+};
 
-public type DefaultReminder record {|
+public type DefaultReminder record {
     string method;
     int minutes;
-|};
+};
 
-public type Event record {|
+public type Event record {
     string kind;
     string etag;
     string id;
@@ -117,45 +117,45 @@ public type Event record {|
     Reminder reminders?;
     Source 'source?;
     Attachment[] attachments?;
-|};
+};
 
-public type ExtendedProperties record {|
+public type ExtendedProperties record {
     Private 'private?;
     Shared shared?;
-|};
+};
 
-public type Private record {|
-    string everyoneDeclinedDismissed;
-|};
+public type Private record {
+    string everyoneDeclinedDismissed?;
+};
 
-public type Shared record {|
-    string zmMeetingNum;
-|};
+public type Shared record {
+    string zmMeetingNum?;
+};
 
-public type ConferenceData record {|
+public type ConferenceData record {
     CreateRequest createRequest?;
     EntryPoint[] entryPoints;
     ConferenceSolution conferenceSolution;
-    string conferenceId;
+    string conferenceId?;
     string signature;
     string notes?;
-|};
+};
 
-public type CreateRequest record {|
+public type CreateRequest record {
     string requestId;
     ConferenceSolutionKey conferenceSolutionKey;
     Status status;
-|};
+};
 
-public type ConferenceSolutionKey record {|
+public type ConferenceSolutionKey record {
     string 'type;
-|};
+};
 
-public type Status record {|
+public type Status record {
     string statusCode;
-|};
+};
 
-public type EntryPoint record {|
+public type EntryPoint record {
     string entryPointType;
     string uri;
     string label?;
@@ -165,19 +165,19 @@ public type EntryPoint record {|
     string passcode?;
     string password?;
     string regionCode?;
-|};
+};
 
-public type ConferenceSolution record {|
+public type ConferenceSolution record {
     Key key;
     string name;
     string iconUri;
-|};
+};
 
-public type Key record {|
+public type Key record {
     string 'type;
-|};
+};
 
-public type Attendee record {|
+public type Attendee record {
     string id?;
     string email;
     string displayName?;
@@ -188,22 +188,22 @@ public type Attendee record {|
     string responseStatus?;
     string comment?;
     string additionalGuests?;
-|};
+};
 
-public type User record {|
+public type User record {
     string id?;
     string email;
     string displayName?;
     boolean self?;
-|};
+};
 
-public type Time record {|
+public type Time record {
     string date?;
-    string dateTime;
+    string dateTime?;
     string timeZone?;
-|};
+};
 
-public type Gadget record {|
+public type Gadget record {
     string preferences;
     string 'type?;
     string title?;
@@ -212,53 +212,53 @@ public type Gadget record {|
     string width?;
     string height?;
     string display?;
-|};
+};
 
-public type Reminder record {|
+public type Reminder record {
     boolean useDefault;
     Override[] overrides?;
-|};
+};
 
-public type Override record {|
+public type Override record {
     string method;
     int minutes;
-|};
+};
 
-public type Source record {|
+public type Source record {
     string url;
     string title;
-|};
+};
 
-public type Attachment record {|
+public type Attachment record {
     string fileUrl;
     string title?;
     string mimeType?;
     string iconLink?;
     string fileId?;
-|};
+};
 
-public type WatchConfiguration record {|
+public type WatchConfiguration record {
     string id;
     string token;
     string 'type;
     string address;
-    Parameter params;
-|};
+    Parameter params?;
+};
 
-public type Parameter record {|
+public type Parameter record {
     string ttl;
-|};
+};
 
-public type WatchResponse record {|
+public type WatchResponse record {
     string kind;
     string id;
     string resourceId;
     string resourceUri;
-    string token;
-    string expiration;
-|};
+    string token?;
+    string expiration?;
+};
 
-public type Calendar record {|
+public type Calendar record {
     string kind;
     string etag;
     string id;
@@ -278,34 +278,34 @@ public type Calendar record {|
     ConferenceProperties conferenceProperties;
     boolean primary?;
     NotificationSettings notificationSettings?;
-|};
+};
 
-public type ConferenceProperties record {|
+public type ConferenceProperties record {
     string[] allowedConferenceSolutionTypes;
-|};
+};
 
-public type NotificationSettings record {|
+public type NotificationSettings record {
     Notification[] notifications;
     boolean primary?;
-|};
+};
 
-public type Notification record {|
+public type Notification record {
     string 'type;
     string method;
-|};
+};
 
-public type CalendarListOptional record {|
+public type CalendarListOptional record {
     string? minAccessRole = ();
     string? pageToken = ();
     boolean? showDeleted = ();
     boolean? showHidden = ();
     string? syncToken = ();
-|};
+};
 
-public type CalendarResponse record {|
+public type CalendarResponse record {
     string kind;
     string etag;
     string nextSyncToken?;
     string nextPageToken?;
     Calendar[] items;
-|};
+};
