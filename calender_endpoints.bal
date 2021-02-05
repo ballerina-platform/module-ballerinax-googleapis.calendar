@@ -51,23 +51,15 @@ public client class CalendarClient {
     # + return - Created Event on success else an error
     remote function createEvent(string calendarId, InputEvent event, CreateEventOptional? optional = ()) returns
     @tainted Event|error {
-        json|error payload = event.cloneWithType(InputEvent);
-        if (payload is json) {
-            http:Request req = new;
-            string path = prepareUrlWithEventOptional(calendarId, optional);
-            req.setJsonPayload(payload);
-            var response = self.calendarClient->post(path, req);
-            json|error result = checkAndSetErrors(response);
-            if (result is json) {
-                return toEvent(result);
-            } else {
-                return result;
-            }
-        } else {
-            return payload;
-        }
+        json payload = check event.cloneWithType(json);
+        http:Request req = new;
+        string path = prepareUrlWithEventOptional(calendarId, optional);
+        req.setJsonPayload(payload);
+        var response = self.calendarClient->post(path, req);
+        json result = check checkAndSetErrors(response);
+        return toEvent(result);
     }
-
+           
     # Create an event based on a simple text string.
     # 
     # + calendarId - Calendar id
@@ -83,12 +75,8 @@ public client class CalendarClient {
             path = prepareQueryUrl([path], [TEXT], [text]);
         }
         var response = self.calendarClient->post(path, ());
-        json|error result = checkAndSetErrors(response);
-        if (result is json) {
-            return toEvent(result);
-        } else {
-            return result;
-        }
+        json result = check checkAndSetErrors(response);
+        return toEvent(result);
     }
 
     # Update an existing event.
@@ -100,21 +88,13 @@ public client class CalendarClient {
     # + return - Updated event on success else an error
     remote function updateEvent(string calendarId, string eventId, InputEvent event, CreateEventOptional? optional = ())
     returns @tainted Event|error {
-        json|error payload = event.cloneWithType(InputEvent);
-        if (payload is json) {
-            http:Request req = new;
-            string path = prepareUrlWithEventOptional(calendarId, optional, eventId);
-            req.setJsonPayload(payload);
-            var response = self.calendarClient->put(path, req);
-            json|error result = checkAndSetErrors(response);
-            if (result is json) {
-                return toEvent(result);
-            } else {
-                return result;
-            }
-        } else {
-            return payload;
-        }
+        json payload = check event.cloneWithType(json);
+        http:Request req = new;
+        string path = prepareUrlWithEventOptional(calendarId, optional, eventId);
+        req.setJsonPayload(payload);
+        var response = self.calendarClient->put(path, req);
+        json result = check checkAndSetErrors(response);
+        return toEvent(result);      
     }
 
     # Get all events.
@@ -126,16 +106,12 @@ public client class CalendarClient {
     # + return - Event stream on success, else an error
     remote function getEvents(string calendarId, int? count = (), string? syncToken = (), string? pageToken = ())
     returns @tainted stream<Event>|error {
-        EventStreamResponse|error response = self->getEventResponse(calendarId, count, syncToken, pageToken);
-        if (response is EventStreamResponse) {
-            stream<Event>? events = response?.items;
-            if(events is stream<Event>){
-                return events;
-            }
-            return error(ERR_EVENTS);
-        } else {
-            return response;
-        }        
+        EventStreamResponse response = check self->getEventResponse(calendarId, count, syncToken, pageToken);
+        stream<Event>? events = response?.items;
+        if (events is stream<Event>) {
+            return events;
+        }
+        return error(ERR_EVENTS);       
     }
 
     # Get an event.
@@ -146,12 +122,8 @@ public client class CalendarClient {
     remote function getEvent(string calendarId, string eventId) returns @tainted Event|error {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, eventId]);
         var httpResponse = self.calendarClient->get(path);
-        json|error resp = checkAndSetErrors(httpResponse);
-        if resp is json {
-            return toEvent(resp);
-        } else {
-            return resp;
-        }
+        json resp = check checkAndSetErrors(httpResponse);
+        return toEvent(resp);
     }
 
     # Delete an event.
@@ -162,12 +134,8 @@ public client class CalendarClient {
     remote function deleteEvent(string calendarId, string eventId) returns @tainted boolean|error {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, eventId]);
         var httpResponse = self.calendarClient->delete(path);
-        json|error resp = checkAndSetErrors(httpResponse);
-        if resp is json {
-            return true;
-        } else {
-            return resp;
-        }
+        json resp = check checkAndSetErrors(httpResponse);
+        return true;
     }
 
     # Create subscription to get notification.
@@ -176,21 +144,13 @@ public client class CalendarClient {
     # + config - Configuration for the subscription
     # + return - WatchResponse object on success else an error
     remote function watchEvents(string calendarId, WatchConfiguration config) returns @tainted WatchResponse|error {
-        json|error payload = config.cloneWithType(json);
-        if (payload is json) {
-            http:Request req = new;
-            string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, WATCH]);
-            req.setJsonPayload(payload);
-            var response = self.calendarClient->post(path, req);
-            json|error result = checkAndSetErrors(response);
-            if (result is json) {
-                return toWatchResponse(result);
-            } else {
-                return result;
-            }
-        } else {
-            return payload;
-        }
+        json payload = check config.cloneWithType(json);
+        http:Request req = new;
+        string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, WATCH]);
+        req.setJsonPayload(payload);
+        var response = self.calendarClient->post(path, req);
+        json result = check checkAndSetErrors(response);
+        return toWatchResponse(result);
     }
 
     # Stop channel from subscription
@@ -209,12 +169,8 @@ public client class CalendarClient {
         http:Request req = new;
         req.setJsonPayload(payload);
         var response = self.calendarClient->post(path, req);
-        json|error result = checkAndSetErrors(response);
-        if (result is json) {
-            return true;
-        } else {
-            return result;
-        }
+        json result = check checkAndSetErrors(response);
+        return true;
     }
 
     # Get event response.

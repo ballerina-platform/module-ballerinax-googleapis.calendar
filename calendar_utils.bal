@@ -190,41 +190,37 @@ returns @tainted EventStreamResponse|error {
     });
     string path = <@untainted> prepareQueryUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS], optionals.keys(), value);
     var httpResponse = calendarClient->get(path);
-    json|error resp = checkAndSetErrors(httpResponse);
-    if resp is json {
-        EventResponse|error res = resp.cloneWithType(EventResponse);
-        if (res is EventResponse) {
-            int i = events.length();
-            foreach Event item in res.items {
-                events[i] = item;
-                i = i + 1;
-            }
-            stream<Event> eventStream = (<@untainted>events).toStream();
-            string? nextPageToken = res?.nextPageToken;
-            if (nextPageToken is string) {
-                var streams = check getEventsStream(calendarClient, calendarId, response, events, count,
-                syncToken, nextPageToken);          
-            } 
-            else {
-                string? nextSyncToken = res?.nextSyncToken;
-                if (nextSyncToken is string) {    
-                    response.nextSyncToken = nextSyncToken;       
-                }        
-            }
-            response.kind = res.kind;
-            response.etag = res.etag;
-            response.summary = res.summary;
-            response.updated = res.updated;
-            response.timeZone = res.timeZone;
-            response.accessRole = res.accessRole;
-            response.defaultReminders = res.defaultReminders;  
-            response.items = eventStream;          
-            return response;      
-        } else {
-            return error(ERR_EVENT_RESPONSE, res);
+    json resp = check checkAndSetErrors(httpResponse);
+    EventResponse|error res = resp.cloneWithType(EventResponse);
+    if (res is EventResponse) {
+        int i = events.length();
+        foreach Event item in res.items {
+            events[i] = item;
+            i = i + 1;
         }
+        stream<Event> eventStream = (<@untainted>events).toStream();
+        string? nextPageToken = res?.nextPageToken;
+        if (nextPageToken is string) {
+            var streams = check getEventsStream(calendarClient, calendarId, response, events, count,
+            syncToken, nextPageToken);          
+        } 
+        else {
+            string? nextSyncToken = res?.nextSyncToken;
+            if (nextSyncToken is string) {    
+                response.nextSyncToken = nextSyncToken;       
+            }        
+        }
+        response.kind = res.kind;
+        response.etag = res.etag;
+        response.summary = res.summary;
+        response.updated = res.updated;
+        response.timeZone = res.timeZone;
+        response.accessRole = res.accessRole;
+        response.defaultReminders = res.defaultReminders;  
+        response.items = eventStream;          
+        return response;      
     } else {
-        return resp;
+        return error(ERR_EVENT_RESPONSE, res);
     }
 }
 
@@ -238,26 +234,22 @@ function getCalendarsStream(http:Client calendarClient, @tainted Calendar[] cale
 optional = ()) returns @tainted stream<Calendar>|error {
     string path = <@untainted> prepareUrlWithCalendarOptional(optional);
     var httpResponse = calendarClient->get(path);
-    json|error resp = checkAndSetErrors(httpResponse);
-    if resp is json {
-        CalendarResponse|error res = resp.cloneWithType(CalendarResponse);
-        if (res is CalendarResponse) {
-            int i = calendars.length();
-            foreach Calendar item in res.items {
-                calendars[i] = item;
-                i = i + 1;
-            }
-            stream<Calendar> calendarStream = (<@untainted>calendars).toStream();
-            string? pageToken = res?.nextPageToken;
-            if (pageToken is string && optional is CalendarListOptional) {
-                optional.pageToken = pageToken;       
-                var streams = check getCalendarsStream(calendarClient, calendars, optional);
-            }
-            return calendarStream;
-        } else {
-            return error(ERR_CALENDAR_RESPONSE, res);
+    json resp = check checkAndSetErrors(httpResponse);
+    CalendarResponse|error res = resp.cloneWithType(CalendarResponse);
+    if (res is CalendarResponse) {
+        int i = calendars.length();
+        foreach Calendar item in res.items {
+            calendars[i] = item;
+            i = i + 1;
         }
+        stream<Calendar> calendarStream = (<@untainted>calendars).toStream();
+        string? pageToken = res?.nextPageToken;
+        if (pageToken is string && optional is CalendarListOptional) {
+            optional.pageToken = pageToken;       
+            var streams = check getCalendarsStream(calendarClient, calendars, optional);
+        }
+        return calendarStream;
     } else {
-        return resp;
+        return error(ERR_CALENDAR_RESPONSE, res);
     }
 }
