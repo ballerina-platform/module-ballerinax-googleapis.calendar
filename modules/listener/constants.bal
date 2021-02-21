@@ -25,7 +25,7 @@ public enum EventType {
 
 # Header constants
 const string GOOGLE_CHANNEL_ID = "X-Goog-Channel-ID";
-const string GOOGLE_RESOURCE_ID = "X-Goog-Resource-ID"
+const string GOOGLE_RESOURCE_ID = "X-Goog-Resource-ID";
 const string GOOGLE_RESOURCE_STATE = "X-Goog-Resource-State";
 const string SYNC = "sync";
 

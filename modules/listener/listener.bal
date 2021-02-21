@@ -29,7 +29,7 @@ calendar:CalendarConfiguration calendarConfig = {
         }
     }
 };
-private string? syncToken = ();
+string? syncToken = ();
 
 calendar:CalendarClient calendarClient = new (calendarConfig);
 

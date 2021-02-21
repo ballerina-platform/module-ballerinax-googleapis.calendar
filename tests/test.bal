@@ -37,9 +37,12 @@ string testEventId = "";
 string testChannelId = "";
 string testResourceId = "";
 string testQuickAddEventId = "";
-string testCalendarId = "primary";
+string testCalendarId = "";
 
-@test:Config {}function testGetCalendars() {
+@test:Config {
+    dependsOn: ["testCreateCalendar"]
+}
+function testGetCalendars() {
     log:print("calendarClient -> getCalendars()");
     stream<Calendar>|error res = calendarClient->getCalendars();
     if (res is stream<Calendar>) {
@@ -56,7 +59,32 @@ CreateEventOptional optional = {
     supportsAttachments: false
 };
 
-@test:Config{}
+@test:Config {}
+function testCreateCalendar() {
+    log:print("calendarClient -> createCalendar()");
+    CalendarResource|error res = calendarClient->createCalendar("testCalendar");
+    if (res is CalendarResource) {
+        test:assertNotEquals(res.id, "", msg = "Expect event id");
+        testCalendarId = <@untainted> res.id;
+    } else {
+        test:assertFail(res.message());
+    }
+}
+
+@test:AfterSuite {}
+function testDeleteCalendar() {
+    log:print("calendarClient -> deleteCalendar()");
+    boolean|error res = calendarClient->deleteCalendar(testCalendarId);
+    if (res is boolean) {
+        test:assertTrue(res, msg = "Expects true on success");
+    } else {
+        test:assertFail(res.message());
+    }
+}
+
+@test:Config {
+    dependsOn: ["testCreateCalendar"]
+}
 function testCreateEvent() {
     InputEvent event = setEvent("Event Created");
     log:print("calendarClient -> createEvent()");
@@ -69,7 +97,9 @@ function testCreateEvent() {
     }
 }
 
-@test:Config{}
+@test:Config {
+    dependsOn: ["testCreateCalendar"]
+}
 function testquickAdd() {
     log:print("calendarClient -> quickAddEvent()");
     Event|error res = calendarClient->quickAddEvent(testCalendarId, "Hello", "none");
@@ -146,7 +176,9 @@ WatchConfiguration watchConfig = {
     }
 };
 
-@test:Config{}
+@test:Config{
+    dependsOn: ["testCreateCalendar"]
+}
 function testWatchEvents() {
     log:print("calendarClient -> watchEvents()");
     WatchResponse|error res = calendarClient->watchEvents(testCalendarId, watchConfig);

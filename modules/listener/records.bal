@@ -14,6 +14,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import ballerinax/googleapis_calendar as calendar;
+
 # Define the event info
 # 
 # + eventType - Event type

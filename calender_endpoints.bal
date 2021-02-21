@@ -43,6 +43,33 @@ public client class CalendarClient {
         return getCalendarsStream(self.calendarClient, allCalendars, optional);
     }
 
+    # Create a calendar.
+    # 
+    # + title - Calendar name
+    # + return - Created Event on success else an error
+    remote function createCalendar(string title) returns @tainted CalendarResource|error {
+        http:Request req = new;
+        string path = prepareUrl([CALENDAR_PATH, CALENDAR]);
+        json payload = {
+            summary: title
+        };
+        req.setJsonPayload(payload);
+        var response = self.calendarClient->post(path, req);
+        json result = check checkAndSetErrors(response);
+        return toCalendar(result);
+    }
+
+    # Delete a calendar.
+    # 
+    # + calendarId - Calendar id
+    # + return - True on success, else an error
+    remote function deleteCalendar(string calendarId) returns @tainted boolean|error {
+        string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId]);
+        var httpResponse = self.calendarClient->delete(path);
+        json resp = check checkAndSetErrors(httpResponse);
+        return true;
+    }
+
     # Create an event.
     # 
     # + calendarId - Calendar id
