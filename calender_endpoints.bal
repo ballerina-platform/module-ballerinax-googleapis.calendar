@@ -23,15 +23,26 @@ import ballerina/http;
 public client class CalendarClient {
 
     public http:Client calendarClient;
+    CalendarConfiguration calendarConfiguration;
 
     public function init(CalendarConfiguration calendarConfig) {
-        oauth2:OutboundOAuth2Provider oauth2Provider = new (calendarConfig.oauth2Config);
-        http:BearerAuthHandler bearerHandler = new (oauth2Provider);
+
+        self.calendarConfiguration = calendarConfig;
         http:ClientSecureSocket? socketConfig = calendarConfig?.secureSocketConfig;
-        self.calendarClient = new (BASE_URL, {
-            auth: {authHandler: bearerHandler},
+
+        // Create an HTTP client.
+        self.calendarClient = checkpanic new (BASE_URL, {
+            auth: calendarConfig.oauth2Config,
             secureSocket: socketConfig
         });
+
+
+        // http:BearerAuthHandler bearerHandler = new (oauth2Provider);
+        // http:ClientSecureSocket? socketConfig = calendarConfig?.secureSocketConfig;
+        // self.calendarClient = new (BASE_URL, {
+        //     auth: {authHandler: bearerHandler},
+        //     secureSocket: socketConfig
+        // });
     }
 
     # Get Calendars

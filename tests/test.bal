@@ -14,20 +14,22 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/config;
 import ballerina/log;
 import ballerina/test;
 import ballerina/time;
 
+configurable string clientId = ?;
+configurable string clientSecret = ?;
+configurable string refreshToken = ?;
+configurable string refreshUrl = ?;
+configurable string addressUrl = ?;
+
 CalendarConfiguration config = {
     oauth2Config: {
-        accessToken: config:getAsString("ACCESS_TOKEN"),
-        refreshConfig: {
-            clientId: config:getAsString("CLIENT_ID"),
-            clientSecret: config:getAsString("CLIENT_SECRET"),
-            refreshUrl: config:getAsString("REFRESH_URL"),
-            refreshToken: config:getAsString("REFRESH_TOKEN")
-        }
+        clientId: clientId,
+        clientSecret: clientSecret,
+        refreshToken: refreshToken,
+        refreshUrl: refreshUrl   
     }
 };
 
@@ -40,7 +42,7 @@ string testQuickAddEventId = "";
 string testCalendarId = "";
 
 @test:Config {
-    dependsOn: ["testCreateCalendar"]
+    dependsOn: [testCreateCalendar]
 }
 function testGetCalendars() {
     log:print("calendarClient -> getCalendars()");
@@ -83,7 +85,7 @@ function testDeleteCalendar() {
 }
 
 @test:Config {
-    dependsOn: ["testCreateCalendar"]
+    dependsOn: [testCreateCalendar]
 }
 function testCreateEvent() {
     InputEvent event = setEvent("Event Created");
@@ -98,7 +100,7 @@ function testCreateEvent() {
 }
 
 @test:Config {
-    dependsOn: ["testCreateCalendar"]
+    dependsOn: [testCreateCalendar]
 }
 function testquickAdd() {
     log:print("calendarClient -> quickAddEvent()");
@@ -112,7 +114,7 @@ function testquickAdd() {
 }
 
 @test:Config {
-    dependsOn: ["testGetEvent", "testquickAdd"]
+    dependsOn: [testGetEvent, testquickAdd]
 }
 function testGetEvents() {
     log:print("calendarClient -> getEvents()");
@@ -126,7 +128,7 @@ function testGetEvents() {
 }
 
 @test:Config {
-    dependsOn: ["testCreateEvent"]
+    dependsOn: [testCreateEvent]
 }
 function testGetEvent() {
     log:print("calendarClient -> getEvent()");
@@ -139,7 +141,7 @@ function testGetEvent() {
 }
 
 @test:Config{
-    dependsOn: ["testCreateEvent"]
+    dependsOn: [testCreateEvent]
 }
 function testUpdatevent() {
     InputEvent event = setEvent("Event Updated");
@@ -153,7 +155,7 @@ function testUpdatevent() {
 }
 
 @test:Config {
-    dependsOn: ["testGetEvent", "testUpdatevent"]
+    dependsOn: [testGetEvent, testUpdatevent]
 }
 function testDeleteEvent() {
     log:print("calendarClient -> deleteEvent()");
@@ -170,14 +172,14 @@ WatchConfiguration watchConfig = {
     id: "testId",
     token: "testToken",
     'type: "webhook",
-    address: config:getAsString("ADDRESS"),
+    address: addressUrl,
     params: {
         ttl: "20000"
     }
 };
 
 @test:Config{
-    dependsOn: ["testCreateCalendar"]
+    dependsOn: [testCreateCalendar]
 }
 function testWatchEvents() {
     log:print("calendarClient -> watchEvents()");
@@ -192,7 +194,7 @@ function testWatchEvents() {
 }
 
 @test:Config{
-    dependsOn: ["testWatchEvents"]
+    dependsOn: [testWatchEvents]
 }
 function testStopChannel() {
     log:print("calendarClient -> stopChannel()");
@@ -205,7 +207,7 @@ function testStopChannel() {
 }
 
 @test:Config {
-    dependsOn: ["testGetEvent"]
+    dependsOn: [testGetEvent]
 }
 function testGetEventResponse() {
     log:print("calendarClient -> getEventResponse()");
@@ -219,8 +221,8 @@ function testGetEventResponse() {
 
 isolated function setEvent (string summary) returns InputEvent {
     time:Time time = time:currentTime();
-    string startTime = checkpanic time:format(time:addDuration(time, 0, 0, 0, 4, 0, 0, 0), TIME_FORMAT);
-    string endTime = checkpanic time:format(time:addDuration(time, 0, 0, 0, 5, 0, 0, 0), TIME_FORMAT);
+    string startTime = checkpanic time:format(checkpanic time:addDuration(time, {hours: 4}), TIME_FORMAT);
+    string endTime = checkpanic time:format(checkpanic time:addDuration(time, {hours: 5}), TIME_FORMAT);
     InputEvent event = {
         'start: {
             dateTime: startTime
