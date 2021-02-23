@@ -20,7 +20,7 @@ import ballerina/http;
 # Client for Google Calendar connector.
 # 
 # + calendarClient - HTTP client endpoint
-public client class CalendarClient {
+public client class Client {
 
     public http:Client calendarClient;
     CalendarConfiguration calendarConfiguration;
@@ -88,7 +88,7 @@ public client class CalendarClient {
     # + optional - Record that contains optional query parameters
     # + return - Created Event on success else an error
     remote function createEvent(string calendarId, InputEvent event, CreateEventOptional? optional = ()) returns
-    @tainted Event|error {
+            @tainted Event|error {
         json payload = check event.cloneWithType(json);
         http:Request req = new;
         string path = prepareUrlWithEventOptional(calendarId, optional);
@@ -105,7 +105,7 @@ public client class CalendarClient {
     # + sendUpdates - Configuration for notifing the creation.
     # + return - Created event id on success else an error
     remote function quickAddEvent(string calendarId, string text, string? sendUpdates = ()) 
-    returns @tainted Event|error {
+            returns @tainted Event|error {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, QUICK_ADD]);
         if (sendUpdates is string) {
             path = prepareQueryUrl([path], [TEXT, SEND_UPDATES], [text, sendUpdates]);
@@ -125,7 +125,7 @@ public client class CalendarClient {
     # + optional - Record that contains optional query parameters
     # + return - Updated event on success else an error
     remote function updateEvent(string calendarId, string eventId, InputEvent event, CreateEventOptional? optional = ())
-    returns @tainted Event|error {
+            returns @tainted Event|error {
         json payload = check event.cloneWithType(json);
         http:Request req = new;
         string path = prepareUrlWithEventOptional(calendarId, optional, eventId);
@@ -143,7 +143,7 @@ public client class CalendarClient {
     # + pageToken - Token for retrieving next page
     # + return - Event stream on success, else an error
     remote function getEvents(string calendarId, int? count = (), string? syncToken = (), string? pageToken = ())
-    returns @tainted stream<Event>|error {
+            returns @tainted stream<Event>|error {
         EventStreamResponse response = check self->getEventResponse(calendarId, count, syncToken, pageToken);
         stream<Event>? events = response?.items;
         if (events is stream<Event>) {

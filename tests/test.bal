@@ -33,7 +33,7 @@ CalendarConfiguration config = {
     }
 };
 
-CalendarClient calendarClient = new(config); 
+Client calendarClient = new(config); 
 
 string testEventId = "";
 string testChannelId = "";
