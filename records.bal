@@ -82,10 +82,10 @@
 # 
 # + kind - Type of the resource
 # + etag - ETag of the resource
-# + id - Identifier of the calendar. 
+# + id - Identifier of the calendar
 # + summary - Title of the calendar
-# + description - Description of the calendar (Optional)
-# + location - Geographic location of the calendar as free-form text (Optional)
+# + description - Description of the calendar
+# + location - Geographic location of the calendar as free-form text
 # + timeZone - The time zone of the calendar
 # + conferenceProperties - Conferencing properties for this calendar
 public type CalendarResource record {
@@ -167,7 +167,7 @@ public type CalendarResource record {
  # + updated - Last modification time of the event
  # + summary - Title of the event
  # + description - Description of the event
- # + location - Geographic location of the event as free-form text (Optional)
+ # + location - Geographic location of the event as free-form text
  # + colorId - The color id of the event
  # + creator - The creator of the event
  # + organizer - The organizer of the event
@@ -178,7 +178,7 @@ public type CalendarResource record {
  # + recurringEventId - The id of the recurring event
  # + originalStartTime - The start time of the event in recurring events
  # + transparency - Whether the event blocks time on the calendar
- # + visibility - Visibility of the event (Optional)
+ # + visibility - Visibility of the event
  # + iCalUID - Event unique identifier as defined in RFC5545
  # + sequence - Sequence number as per iCalendar
  # + attendees - The attendees of the event
@@ -187,7 +187,7 @@ public type CalendarResource record {
  # + hangoutLink - An absolute link to the Google+ hangout associated with this event
  # + conferenceData - The conference-related information
  # + gadget - A gadget that extends this event
- # + anyoneCanAddSelf - Whether anyone can invite themselves to the event (Optional)
+ # + anyoneCanAddSelf - Whether anyone can invite themselves to the event
  # + guestsCanInviteOthers - Whether attendees other than the organizer can invite others to the event
  # + guestsCanModify - Whether attendees other than the organizer can modify the event
  # + guestsCanSeeOtherGuests - Whether attendees other than the organizer can see who the event's attendees are
@@ -448,10 +448,10 @@ public type Attachment record {
  # Configurations for watch operation
  #
  # + id - A UUID or similar unique string that identifies this channel
- # + token - An arbitrary string delivered to the target address (optional)
+ # + token - An arbitrary string delivered to the target address
  # + type - The type of delivery mechanism used for this channel
  # + address - The address where notifications are delivered for this channel
- # + params - Additional parameters controlling delivery channel behavior (optional)
+ # + params - Additional parameters controlling delivery channel behavior
  public type WatchConfiguration record {
      string id;
      string token;
@@ -492,14 +492,14 @@ public type Attachment record {
  # + summary - Title of the calendar
  # + description - Description of the calendar
  # + location - Geographic location of the calendar
- # + timeZone - The time zone of the calendar (optional)
- # + summaryOverride - The summary that the authenticated user has set for this calendar (optional)
+ # + timeZone - The time zone of the calendar
+ # + summaryOverride - The summary that the authenticated user has set for this calendar
  # + colorId - The color id of the calendar.
- # + selected - Whether the calendar content shows up in the calendar UI (optional)
- # + backgroundColor - The main color of the calendar in the hexadecimal format (optional)
- # + foregroundColor - The foreground color of the calendar in the hexadecimal format (optional)
- # + hidden - Whether the calendar has been hidden from the list (optional)
- # + deleted - The effective access role that the authenticated user has on the calendar (optional)
+ # + selected - Whether the calendar content shows up in the calendar UI
+ # + backgroundColor - The main color of the calendar in the hexadecimal format
+ # + foregroundColor - The foreground color of the calendar in the hexadecimal format
+ # + hidden - Whether the calendar has been hidden from the list
+ # + deleted - The effective access role that the authenticated user has on the calendar
  # + accessRole - The effective access role that the authenticated user has on the calendar
  # + defaultReminders - The default reminders that the authenticated user has for this calendar
  # + conferenceProperties - Conferencing properties for this calendar
