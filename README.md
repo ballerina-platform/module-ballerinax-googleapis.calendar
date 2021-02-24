@@ -1,4 +1,3 @@
-
 [![Build](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/workflows/CI/badge.svg)](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/actions?query=workflow%3ACI)
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/ballerina-platform/module-ballerinax-googleapis.calendar.svg)](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/commits/master)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
@@ -17,7 +16,7 @@ Connects to Google Calendar using Ballerina.
 
 ## Connector Overview
 
-The Google Spreadsheet Ballerina Connector allows you to access the Google Calendar API Version v3 through Ballerina. The connector can be used to implement some of the most common use cases of Google Calendar. The connector provides the capability to programmatically manage events and calendar, CRUD operations on event and calendar operations through the connector endpoints and listener for the events created in the calendar.
+The Google Calendar Ballerina Connector allows you to access the Google Calendar API Version V3 through Ballerina. The connector can be used to implement some of the most common use cases of Google Calendar. The connector provides the capability to programmatically manage events and calendar, CRUD operations on event and calendar operations through the connector endpoints and listener for the events created in the calendar.
 
 # Prerequisites
 
