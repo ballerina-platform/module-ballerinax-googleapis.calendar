@@ -99,405 +99,596 @@ channelId = "<channel_id>"
 
 Samples are available at : https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/samples
 
-### Create Event
+### Create Calendar
 ```ballerina
-    import ballerina/log;
-    import ballerinax/googleapis_calendar as calendar;
-    
-    configurable string clientId = ?;
-    configurable string clientSecret = ?;
-    configurable string refreshToken = ?;
-    configurable string refreshUrl = ?;
-    configurable string calendarId = ?;
-    
-    public function main() {
-    
-        calendar:CalendarConfiguration config = {
-           oauth2Config: {
-               clientId: clientId,
-               clientSecret: clientSecret,
-               refreshToken: refreshToken,
-               refreshUrl: refreshUrl
-           }
-        };
-        calendar:Client calendarClient = new (config);
-    
-        calendar:InputEvent event = {
-           'start: {
-               dateTime:  "2021-02-28T09:00:00+0530"
-           },
-           end: {
-               dateTime:  "2021-02-28T09:00:00+0530"
-           },
-           summary: "Sample Event"
-        };
-        calendar:Event|error res = calendarClient->createEvent(calendarId, event);
-        if (res is calendar:Event) {
-           log:print(res.id);
-        } else {
-           log:printError(res.message());
-        }
-    }
-```
+import ballerina/log;
+import ballerinax/googleapis_calendar as calendar;
 
-### Create Quick Event
-```ballerina
-    import ballerina/log;
-    import ballerinax/googleapis_calendar as calendar;
-    
-    configurable string clientId = ?;
-    configurable string clientSecret = ?;
-    configurable string refreshToken = ?;
-    configurable string refreshUrl = ?;
-    configurable string calendarId = ?;
-    
-    public function main() {
-    
-        calendar:CalendarConfiguration config = {
-            oauth2Config: {
-                clientId: clientId,
-                clientSecret: clientSecret,
-                refreshToken: refreshToken,
-                refreshUrl: refreshUrl
-            }
-        };
-    
-        calendar:Client calendarClient = new (config);
-    
-        calendar:Event|error res = calendarClient->quickAddEvent(calendarId, "Sample Event");
-        if (res is calendar:Event) {
-            log:print(res.id);
-        } else {
-            log:printError(res.message());
-        }
-    }
-```
-### Get Event
-```ballerina
-    import ballerina/log;
-    import ballerinax/googleapis_calendar as calendar;
-    
-    configurable string clientId = ?;
-    configurable string clientSecret = ?;
-    configurable string refreshToken = ?;
-    configurable string refreshUrl = ?;
-    configurable string calendarId = ?;
-    configurable string eventId = ?;
-    
-    public function main() {
-      
-        calendar:CalendarConfiguration config = {
-            oauth2Config: {
-                clientId: clientId,
-                clientSecret: clientSecret,
-                refreshToken: refreshToken,
-                refreshUrl: refreshUrl
-            }
-        };
-        calendar:Client calendarClient = new (config);
-    
-        calendar:Event|error res = calendarClient->getEvent(calendarId, eventId);
-        if (res is calendar:Event) {
-            log:print(res.id);
-        } else {
-            log:printError(res.message());
-        }
-    }`
-```
+configurable string clientId = ?;
+configurable string clientSecret = ?;
+configurable string refreshToken = ?;
+configurable string refreshUrl = ?;
 
-### Get Events
-```ballerina
-    import ballerina/log;
-    import ballerinax/googleapis_calendar as calendar;
-    
-    configurable string clientId = ?;
-    configurable string clientSecret = ?;
-    configurable string refreshToken = ?;
-    configurable string refreshUrl = ?;
-    configurable string calendarId = ?;
-    
-    public function main() returns @tainted error? {
-    
-        calendar:CalendarConfiguration config = {
-            oauth2Config: {
-                clientId: clientId,
-                clientSecret: clientSecret,
-                refreshToken: refreshToken,
-                refreshUrl: refreshUrl
-            }
-        };
-    
-        calendar:Client calendarClient = new (config);
-    
-        stream<calendar:Event>|error res = calendarClient->getEvents(calendarId);
-        if (res is stream<calendar:Event>) {
-            var eve = res.next();
-            string id = check eve?.value?.id;
-            log:print(id);
-        } else {
-            log:printError(res.message());
-        }
-    }
-```
+public function main() {
 
-### Update Event
-```ballerina
-    import ballerina/log;
-    import ballerinax/googleapis_calendar as calendar;
-    
-    configurable string clientId = ?;
-    configurable string clientSecret = ?;
-    configurable string refreshToken = ?;
-    configurable string refreshUrl = ?;
-    configurable string calendarId = ?;
-    configurable string eventId = ?;
-    
-    public function main() {
-    
-        calendar:CalendarConfiguration config = {
-            oauth2Config: {
-                clientId: clientId,
-                clientSecret: clientSecret,
-                refreshToken: refreshToken,
-                refreshUrl: refreshUrl
-            }
-        };
-    
-        calendar:Client calendarClient = new (config);
-    
-        calendar:InputEvent event = {
-            'start: {
-                dateTime:  "2021-02-28T09:00:00+0530"
-            },
-            end: {
-                dateTime:  "2021-02-28T09:00:00+0530"
-            },
-            summary: "Sample Event"
-        };
-    
-        calendar:Event|error res = calendarClient->updateEvent(calendarId, eventId, event);
-        if (res is calendar:Event) {
-            log:print(res.id);
-        } else {
-            log:printError(res.message());
-        }
-    }
-```
+    calendar:CalendarConfiguration config = {
+       oauth2Config: {
+           clientId: clientId,
+           clientSecret: clientSecret,
+           refreshToken: refreshToken,
+           refreshUrl: refreshUrl
+       }
+    };
+    calendar:Client calendarClient = new (config);
 
-### Delete event
-```ballerina
-    import ballerina/log;
-    import ballerinax/googleapis_calendar as calendar;
-    
-    configurable string clientId = ?;
-    configurable string clientSecret = ?;
-    configurable string refreshToken = ?;
-    configurable string refreshUrl = ?;
-    configurable string calendarId = ?;
-    configurable string eventId = ?;
-    
-    public function main() {
-    
-        calendar:CalendarConfiguration config = {
-           oauth2Config: {
-               clientId: clientId,
-               clientSecret: clientSecret,
-               refreshToken: refreshToken,
-               refreshUrl: refreshUrl
-           }
-        };
-    
-        calendar:Client calendarClient = new (config);
-    
-        boolean|error res = calendarClient->deleteEvent(calendarId, eventId);
-        if (res is boolean) {
-            log:print("Event is deleted");
-        } else {
-            log:printError(res.message());
-        }
+    CalendarResource|error res = calendarClient->createCalendar("testCalendar");
+    if (res is calendar:CalendarResource) {
+       log:print(res.id);
+    } else {
+       log:printError(res.message());
     }
-```
-### Create Calendar.
-```ballerina
-  import ballerina/log;
-  import ballerinax/googleapis_calendar as calendar;
-  
-  configurable string clientId = ?;
-  configurable string clientSecret = ?;
-  configurable string refreshToken = ?;
-  configurable string refreshUrl = ?;
-  configurable string calendarId = ?;
-  
-  public function main() {
-  
-      calendar:CalendarConfiguration config = {
-         oauth2Config: {
-             clientId: clientId,
-             clientSecret: clientSecret,
-             refreshToken: refreshToken,
-             refreshUrl: refreshUrl
-         }
-      };
-      calendar:Client calendarClient = new (config);
-  
-      calendar:InputEvent event = {
-         'start: {
-             dateTime:  "2021-02-28T09:00:00+0530"
-         },
-         end: {
-             dateTime:  "2021-02-28T09:00:00+0530"
-         },
-         summary: "Sample Event"
-      };
-      calendar:Event|error res = calendarClient->createEvent(calendarId, event);
-      if (res is calendar:Event) {
-         log:print(res.id);
-      } else {
-         log:printError(res.message());
-      }
-  }
-```
-
-### Get Calendars
-```ballerina
-    import ballerina/log;
-    import ballerinax/googleapis_calendar as calendar;
-    
-    configurable string clientId = ?;
-    configurable string clientSecret = ?;
-    configurable string refreshToken = ?;
-    configurable string refreshUrl = ?;
-    
-    public function main() returns @tainted error? {
-    
-        calendar:CalendarConfiguration config = {
-            oauth2Config: {
-                clientId: clientId,
-                clientSecret: clientSecret,
-                refreshToken: refreshToken,
-                refreshUrl: refreshUrl
-            }
-        };
-        calendar:Client calendarClient = new (config);
-    
-        stream<calendar:Calendar>|error res = calendarClient->getCalendars();
-        if (res is stream<calendar:Calendar>) {
-            var cal = res.next();
-            string id = check cal?.value?.id;
-            log:print(id);
-        } else {
-            log:printError(res.message());
-        }
-    }
+}
 ```
 
 ### Delete Calendar
 ```ballerina
-    import ballerina/log;
-    import ballerinax/googleapis_calendar as calendar;
-    
-    configurable string clientId = ?;
-    configurable string clientSecret = ?;
-    configurable string refreshToken = ?;
-    configurable string refreshUrl = ?;
-    
-    public function main() returns @tainted error? {
-    
-        calendar:CalendarConfiguration config = {
-            oauth2Config: {
-                clientId: clientId,
-                clientSecret: clientSecret,
-                refreshToken: refreshToken,
-                refreshUrl: refreshUrl
-            }
-        };
-        calendar:Client calendarClient = new (config);
-    
-        stream<calendar:Calendar>|error res = calendarClient->getCalendars();
-        if (res is stream<calendar:Calendar>) {
-            var cal = res.next();
-            string id = check cal?.value?.id;
-            log:print(id);
-        } else {
-            log:printError(res.message());
-        }
+import ballerina/log;
+import ballerinax/googleapis_calendar as calendar;
+
+configurable string clientId = ?;
+configurable string clientSecret = ?;
+configurable string refreshToken = ?;
+configurable string refreshUrl = ?;
+configurable string calendarId = ?;
+
+public function main() {
+
+    calendar:CalendarConfiguration config = {
+       oauth2Config: {
+           clientId: clientId,
+           clientSecret: clientSecret,
+           refreshToken: refreshToken,
+           refreshUrl: refreshUrl
+       }
+    };
+
+    calendar:Client calendarClient = new (config);
+
+    boolean|error res = calendarClient->deleteCalendar(calendarId);
+    if (res is boolean) {
+        log:print("Calendar is deleted");
+    } else {
+        log:printError(res.message());
     }
+}
+```
+
+### Create Event
+```ballerina
+import ballerina/log;
+import ballerinax/googleapis_calendar as calendar;
+
+configurable string clientId = ?;
+configurable string clientSecret = ?;
+configurable string refreshToken = ?;
+configurable string refreshUrl = ?;
+configurable string calendarId = ?;
+
+public function main() {
+
+    calendar:CalendarConfiguration config = {
+       oauth2Config: {
+           clientId: clientId,
+           clientSecret: clientSecret,
+           refreshToken: refreshToken,
+           refreshUrl: refreshUrl
+       }
+    };
+    calendar:Client calendarClient = new (config);
+
+    calendar:InputEvent event = {
+       'start: {
+           dateTime:  "2021-02-28T09:00:00+0530"
+       },
+       end: {
+           dateTime:  "2021-02-28T09:00:00+0530"
+       },
+       summary: "Sample Event"
+    };
+    calendar:Event|error res = calendarClient->createEvent(calendarId, event);
+    if (res is calendar:Event) {
+       log:print(res.id);
+    } else {
+       log:printError(res.message());
+    }
+}
+```
+
+### Create Quick Event
+```ballerina
+import ballerina/log;
+import ballerinax/googleapis_calendar as calendar;
+
+configurable string clientId = ?;
+configurable string clientSecret = ?;
+configurable string refreshToken = ?;
+configurable string refreshUrl = ?;
+configurable string calendarId = ?;
+
+public function main() {
+
+    calendar:CalendarConfiguration config = {
+        oauth2Config: {
+            clientId: clientId,
+            clientSecret: clientSecret,
+            refreshToken: refreshToken,
+            refreshUrl: refreshUrl
+        }
+    };
+
+    calendar:Client calendarClient = new (config);
+
+    calendar:Event|error res = calendarClient->quickAddEvent(calendarId, "Sample Event");
+    if (res is calendar:Event) {
+        log:print(res.id);
+    } else {
+        log:printError(res.message());
+    }
+}
+```
+### Get Event
+```ballerina
+import ballerina/log;
+import ballerinax/googleapis_calendar as calendar;
+
+configurable string clientId = ?;
+configurable string clientSecret = ?;
+configurable string refreshToken = ?;
+configurable string refreshUrl = ?;
+configurable string calendarId = ?;
+configurable string eventId = ?;
+
+public function main() {
+
+    calendar:CalendarConfiguration config = {
+        oauth2Config: {
+            clientId: clientId,
+            clientSecret: clientSecret,
+            refreshToken: refreshToken,
+            refreshUrl: refreshUrl
+        }
+    };
+    calendar:Client calendarClient = new (config);
+
+    calendar:Event|error res = calendarClient->getEvent(calendarId, eventId);
+    if (res is calendar:Event) {
+        log:print(res.id);
+    } else {
+        log:printError(res.message());
+    }
+}`
+```
+
+### Get Events
+```ballerina
+import ballerina/log;
+import ballerinax/googleapis_calendar as calendar;
+
+configurable string clientId = ?;
+configurable string clientSecret = ?;
+configurable string refreshToken = ?;
+configurable string refreshUrl = ?;
+configurable string calendarId = ?;
+
+public function main() returns @tainted error? {
+
+    calendar:CalendarConfiguration config = {
+        oauth2Config: {
+            clientId: clientId,
+            clientSecret: clientSecret,
+            refreshToken: refreshToken,
+            refreshUrl: refreshUrl
+        }
+    };
+
+    calendar:Client calendarClient = new (config);
+
+    stream<calendar:Event>|error res = calendarClient->getEvents(calendarId);
+    if (res is stream<calendar:Event>) {
+        var eve = res.next();
+        string id = check eve?.value?.id;
+        log:print(id);
+    } else {
+        log:printError(res.message());
+    }
+}
+```
+
+### Update Event
+```ballerina
+import ballerina/log;
+import ballerinax/googleapis_calendar as calendar;
+
+configurable string clientId = ?;
+configurable string clientSecret = ?;
+configurable string refreshToken = ?;
+configurable string refreshUrl = ?;
+configurable string calendarId = ?;
+configurable string eventId = ?;
+
+public function main() {
+
+    calendar:CalendarConfiguration config = {
+        oauth2Config: {
+            clientId: clientId,
+            clientSecret: clientSecret,
+            refreshToken: refreshToken,
+            refreshUrl: refreshUrl
+        }
+    };
+
+    calendar:Client calendarClient = new (config);
+
+    calendar:InputEvent event = {
+        'start: {
+            dateTime:  "2021-02-28T09:00:00+0530"
+        },
+        end: {
+            dateTime:  "2021-02-28T09:00:00+0530"
+        },
+        summary: "Sample Event"
+    };
+
+    calendar:Event|error res = calendarClient->updateEvent(calendarId, eventId, event);
+    if (res is calendar:Event) {
+        log:print(res.id);
+    } else {
+        log:printError(res.message());
+    }
+}
+```
+
+### Delete event
+```ballerina
+import ballerina/log;
+import ballerinax/googleapis_calendar as calendar;
+
+configurable string clientId = ?;
+configurable string clientSecret = ?;
+configurable string refreshToken = ?;
+configurable string refreshUrl = ?;
+configurable string calendarId = ?;
+configurable string eventId = ?;
+
+public function main() {
+
+    calendar:CalendarConfiguration config = {
+       oauth2Config: {
+           clientId: clientId,
+           clientSecret: clientSecret,
+           refreshToken: refreshToken,
+           refreshUrl: refreshUrl
+       }
+    };
+
+    calendar:Client calendarClient = new (config);
+
+    boolean|error res = calendarClient->deleteEvent(calendarId, eventId);
+    if (res is boolean) {
+        log:print("Event is deleted");
+    } else {
+        log:printError(res.message());
+    }
+}
+```
+### Create Calendar.
+```ballerina
+import ballerina/log;
+import ballerinax/googleapis_calendar as calendar;
+
+configurable string clientId = ?;
+configurable string clientSecret = ?;
+configurable string refreshToken = ?;
+configurable string refreshUrl = ?;
+configurable string calendarId = ?;
+
+public function main() {
+
+    calendar:CalendarConfiguration config = {
+       oauth2Config: {
+           clientId: clientId,
+           clientSecret: clientSecret,
+           refreshToken: refreshToken,
+           refreshUrl: refreshUrl
+       }
+    };
+    calendar:Client calendarClient = new (config);
+
+    calendar:InputEvent event = {
+       'start: {
+           dateTime:  "2021-02-28T09:00:00+0530"
+       },
+       end: {
+           dateTime:  "2021-02-28T09:00:00+0530"
+       },
+       summary: "Sample Event"
+    };
+    calendar:Event|error res = calendarClient->createEvent(calendarId, event);
+    if (res is calendar:Event) {
+       log:print(res.id);
+    } else {
+       log:printError(res.message());
+    }
+}
+```
+
+### Get Calendars
+```ballerina
+import ballerina/log;
+import ballerinax/googleapis_calendar as calendar;
+
+configurable string clientId = ?;
+configurable string clientSecret = ?;
+configurable string refreshToken = ?;
+configurable string refreshUrl = ?;
+
+public function main() returns @tainted error? {
+
+    calendar:CalendarConfiguration config = {
+        oauth2Config: {
+            clientId: clientId,
+            clientSecret: clientSecret,
+            refreshToken: refreshToken,
+            refreshUrl: refreshUrl
+        }
+    };
+    calendar:Client calendarClient = new (config);
+
+    stream<calendar:Calendar>|error res = calendarClient->getCalendars();
+    if (res is stream<calendar:Calendar>) {
+        var cal = res.next();
+        string id = check cal?.value?.id;
+        log:print(id);
+    } else {
+        log:printError(res.message());
+    }
+}
+```
+
+### Delete Calendar
+```ballerina
+import ballerina/log;
+import ballerinax/googleapis_calendar as calendar;
+
+configurable string clientId = ?;
+configurable string clientSecret = ?;
+configurable string refreshToken = ?;
+configurable string refreshUrl = ?;
+
+public function main() returns @tainted error? {
+
+    calendar:CalendarConfiguration config = {
+        oauth2Config: {
+            clientId: clientId,
+            clientSecret: clientSecret,
+            refreshToken: refreshToken,
+            refreshUrl: refreshUrl
+        }
+    };
+    calendar:Client calendarClient = new (config);
+
+    stream<calendar:Calendar>|error res = calendarClient->getCalendars();
+    if (res is stream<calendar:Calendar>) {
+        var cal = res.next();
+        string id = check cal?.value?.id;
+        log:print(id);
+    } else {
+        log:printError(res.message());
+    }
+}
 ```
 
 ## Watch Channel
 ```ballerina
-    import ballerina/log;
-    import ballerinax/googleapis_calendar as calendar;
-    
-    configurable string clientId = ?;
-    configurable string clientSecret = ?;
-    configurable string refreshToken = ?;
-    configurable string refreshUrl = ?;
-    configurable string calendarId = ?;
-    configurable string address = ?;
-    
-    public function main() {
-    
-        calendar:CalendarConfiguration config = {
-            oauth2Config: {
-                clientId: clientId,
-                clientSecret: clientSecret,
-                refreshToken: refreshToken,
-                refreshUrl: refreshUrl
-            }
-        };
-    
-        calendar:Client calendarClient = new (config);
-    
-        calendar:WatchConfiguration watchConfig = {
-            id: "testId",
-            token: "testToken",
-            'type: "webhook",
-            address: address,
-            params: {
-                ttl: "300"
-            }
-        };
-        calendar:WatchResponse|error res = calendarClient->watchEvents(calendarId, watchConfig);
-        if (res is calendar:WatchResponse) {
-            log:print(res.id);
-        } else {
-            log:printError(res.message());
+import ballerina/log;
+import ballerinax/googleapis_calendar as calendar;
+
+configurable string clientId = ?;
+configurable string clientSecret = ?;
+configurable string refreshToken = ?;
+configurable string refreshUrl = ?;
+configurable string calendarId = ?;
+configurable string address = ?;
+
+public function main() {
+
+    calendar:CalendarConfiguration config = {
+        oauth2Config: {
+            clientId: clientId,
+            clientSecret: clientSecret,
+            refreshToken: refreshToken,
+            refreshUrl: refreshUrl
         }
+    };
+
+    calendar:Client calendarClient = new (config);
+
+    calendar:WatchConfiguration watchConfig = {
+        id: "testId",
+        token: "testToken",
+        'type: "webhook",
+        address: address,
+        params: {
+            ttl: "300"
+        }
+    };
+    calendar:WatchResponse|error res = calendarClient->watchEvents(calendarId, watchConfig);
+    if (res is calendar:WatchResponse) {
+        log:print(res.id);
+    } else {
+        log:printError(res.message());
     }
+}
 ```
 
 ## Stop Channel
 ```ballerina
-    import ballerina/log;
-    import ballerinax/googleapis_calendar as calendar;
-    
-    configurable string clientId = ?;
-    configurable string clientSecret = ?;
-    configurable string refreshToken = ?;
-    configurable string refreshUrl = ?;
-    configurable string calendarId = ?;
-    configurable string testChannelId = ?;
-    configurable string testResourceId = ?;
-    
-    public function main() {
-    
-        calendar:CalendarConfiguration config = {
-            oauth2Config: {
-                clientId: clientId,
-                clientSecret: clientSecret,
-                refreshToken: refreshToken,
-                refreshUrl: refreshUrl
-            }
-        };
-    
-        calendar:Client calendarClient = new (config);
-    
-        boolean|error res = calendarClient->stopChannel(testChannelId, testResourceId);
-        if (res is boolean) {
-            log:print("Channel is terminated");
-        } else {
-            log:printError(res.message());
+import ballerina/log;
+import ballerinax/googleapis_calendar as calendar;
+
+configurable string clientId = ?;
+configurable string clientSecret = ?;
+configurable string refreshToken = ?;
+configurable string refreshUrl = ?;
+configurable string calendarId = ?;
+configurable string testChannelId = ?;
+configurable string testResourceId = ?;
+
+public function main() {
+
+    calendar:CalendarConfiguration config = {
+        oauth2Config: {
+            clientId: clientId,
+            clientSecret: clientSecret,
+            refreshToken: refreshToken,
+            refreshUrl: refreshUrl
         }
+    };
+
+    calendar:Client calendarClient = new (config);
+
+    boolean|error res = calendarClient->stopChannel(testChannelId, testResourceId);
+    if (res is boolean) {
+        log:print("Channel is terminated");
+    } else {
+        log:printError(res.message());
     }
+}
+```
+
+## Listener
+
+### Create Event Trigger
+```ballerina
+import ballerina/http;
+import ballerina/log;
+import ballerinax/googleapis_calendar as calendar;
+import ballerinax/googleapis_calendar.'listener as listen;
+
+configurable string clientId = ?;
+configurable string clientSecret = ?;
+configurable string refreshToken = ?;
+configurable string refreshUrl = ?;
+configurable string channelId = ?;
+configurable string resourceId = ?;
+configurable string calendarId = ?;
+
+calendar:CalendarConfiguration config = {
+    oauth2Config: {
+        clientId: clientId,
+        clientSecret: clientSecret,
+        refreshToken: refreshToken,
+        refreshUrl: refreshUrl   
+    }
+};
+
+calendar:Client calendarClient = new (config);
+listener listen:Listener googleListener = new (4567,calendarClient, channelId, resourceId, calendarId);
+
+service /calendar on googleListener {
+    resource function post events(http:Caller caller, http:Request request){
+        listen:EventInfo payload = checkpanic googleListener.getEventType(caller, request);
+        if(payload?.eventType is string && payload?.event is calendar:Event) {
+            if (payload?.eventType == listen:CREATED) {
+                var event = payload?.event;
+                string? summary = event?.summary;        
+                if (summary is string) {
+                    log:print(summary);
+                } 
+            }
+        }      
+    }
+}
+```
+
+### Update Event Trigger
+```ballerina
+import ballerina/http;
+import ballerina/log;
+import ballerinax/googleapis_calendar as calendar;
+import ballerinax/googleapis_calendar.'listener as listen;
+
+configurable string clientId = ?;
+configurable string clientSecret = ?;
+configurable string refreshToken = ?;
+configurable string refreshUrl = ?;
+configurable string channelId = ?;
+configurable string resourceId = ?;
+configurable string calendarId = ?;
+
+calendar:CalendarConfiguration config = {
+    oauth2Config: {
+        clientId: clientId,
+        clientSecret: clientSecret,
+        refreshToken: refreshToken,
+        refreshUrl: refreshUrl   
+    }
+};
+
+calendar:Client calendarClient = new (config);
+listener listen:Listener googleListener = new (4567,calendarClient, channelId, resourceId, calendarId);
+
+service /calendar on googleListener {
+    resource function post events(http:Caller caller, http:Request request){
+        listen:EventInfo payload = checkpanic googleListener.getEventType(caller, request);
+        if(payload?.eventType is string && payload?.event is calendar:Event) {
+            if (payload?.eventType == listen:UPDATED) {
+                var event = payload?.event;
+                string? summary = event?.summary;        
+                if (summary is string) {
+                    log:print(summary);
+                } 
+            }
+        }      
+    }
+}
+```
+
+### Delete Event Trigger
+```ballerina
+import ballerina/http;
+import ballerina/log;
+import ballerinax/googleapis_calendar as calendar;
+import ballerinax/googleapis_calendar.'listener as listen;
+
+configurable string clientId = ?;
+configurable string clientSecret = ?;
+configurable string refreshToken = ?;
+configurable string refreshUrl = ?;
+configurable string channelId = ?;
+configurable string resourceId = ?;
+configurable string calendarId = ?;
+
+calendar:CalendarConfiguration config = {
+    oauth2Config: {
+        clientId: clientId,
+        clientSecret: clientSecret,
+        refreshToken: refreshToken,
+        refreshUrl: refreshUrl   
+    }
+};
+
+calendar:Client calendarClient = new (config);
+listener listen:Listener googleListener = new (4567,calendarClient, channelId, resourceId, calendarId);
+
+service /calendar on googleListener {
+    resource function post events(http:Caller caller, http:Request request){
+        listen:EventInfo payload = checkpanic googleListener.getEventType(caller, request);
+        if(payload?.eventType is string && payload?.event is calendar:Event) {
+            if (payload?.eventType == listen:DELETED) {
+                log:print("Event deleted");
+            }
+        }      
+    }
+}
 ```

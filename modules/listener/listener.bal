@@ -31,9 +31,9 @@ public class Listener {
     public isolated function init(int port, calendar:Client calendarClient, string channelId, string resourceId, string calendarId ) {
         self.httpListener = checkpanic new (port);
         self.calendarClient = calendarClient;
-        self.calendarId = channelId;
-        self.resourceId = resourceId;
         self.channelId = channelId;
+        self.resourceId = resourceId;
+        self.calendarId = calendarId;
     }
 
     public isolated function attach(service object {} s, string[]|string? name = ()) returns error? {
