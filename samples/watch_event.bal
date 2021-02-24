@@ -1,33 +1,36 @@
-import ballerina/config;
 import ballerina/log;
 import ballerinax/googleapis_calendar as calendar;
 
+configurable string clientId = ?;
+configurable string clientSecret = ?;
+configurable string refreshToken = ?;
+configurable string refreshUrl = ?;
+configurable string calendarId = ?;
+configurable string address = ?;
+
 public function main() {
 
-    calendar:CalendarConfiguration calendarConfig = {
+    calendar:CalendarConfiguration config = {
         oauth2Config: {
-            accessToken: config:getAsString("ACCESS_TOKEN"),
-            refreshConfig: {
-                refreshUrl: config:getAsString("REFRESH_URL"),
-                refreshToken: config:getAsString("REFRESH_TOKEN"),
-                clientId: config:getAsString("CLIENT_ID"),
-                clientSecret: config:getAsString("CLIENT_SECRET")
-            }
+            clientId: clientId,
+            clientSecret: clientSecret,
+            refreshToken: refreshToken,
+            refreshUrl: refreshUrl
         }
     };
 
-    calendar:Client calendarClient = new (calendarConfig);
+    calendar:Client calendarClient = new (config);
 
     calendar:WatchConfiguration watchConfig = {
         id: "testId",
         token: "testToken",
         'type: "webhook",
-        address: config:getAsString("ADDRESS"),
+        address: address,
         params: {
             ttl: "300"
         }
     };
-    calendar:WatchResponse|error res = calendarClient->watchEvents(config:getAsString("CALENDAR_ID"), watchConfig);
+    calendar:WatchResponse|error res = calendarClient->watchEvents(calendarId, watchConfig);
     if (res is calendar:WatchResponse) {
         log:print(res.id);
     } else {

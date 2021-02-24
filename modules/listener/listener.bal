@@ -19,23 +19,21 @@ import ballerinax/googleapis_calendar as calendar;
 
 string? syncToken = ();
 
-
 # Object representing the Google Webhook (WebSub Subscriber Service) Listener.
-#
 public class Listener {
 
     private http:Listener httpListener;
     private string calendarId;
     private string resourceId;
     private string channelId;
-    private calendar:CalendarClient calendarClient;
+    private calendar:Client calendarClient;
 
-    public isolated function init(int port, calendar:CalendarClient calendarClient, string chId, string resId, string calId ) {
+    public isolated function init(int port, calendar:Client calendarClient, string channelId, string resourceId, string calendarId ) {
         self.httpListener = checkpanic new (port);
         self.calendarClient = calendarClient;
-        self.calendarId = calId;
-        self.resourceId = resId;
-        self.channelId = chId;
+        self.calendarId = channelId;
+        self.resourceId = resourceId;
+        self.channelId = channelId;
     }
 
     public isolated function attach(service object {} s, string[]|string? name = ()) returns error? {
@@ -107,6 +105,6 @@ public class Listener {
                 return error(EVENT_STREAM_MAPPING_ERROR);
             }
         }
-        return error (INVALID_ID_ERROR);
+        return error(INVALID_ID_ERROR);
     }
 }

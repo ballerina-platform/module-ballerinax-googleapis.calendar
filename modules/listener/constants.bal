@@ -15,7 +15,6 @@
 // under the License.
 
 # Represents event type
-#
 public enum EventType {
     CREATED,
     UPDATED,

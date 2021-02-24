@@ -1,26 +1,30 @@
-import ballerina/config;
 import ballerina/log;
 import ballerinax/googleapis_calendar as calendar;
 
+configurable string clientId = ?;
+configurable string clientSecret = ?;
+configurable string refreshToken = ?;
+configurable string refreshUrl = ?;
+configurable string calendarId = ?;
+configurable string testChannelId = ?;
+configurable string testResourceId = ?;
+
 public function main() {
 
-    calendar:CalendarConfiguration calendarConfig = {
+    calendar:CalendarConfiguration config = {
         oauth2Config: {
-            accessToken: config:getAsString("ACCESS_TOKEN"),
-            refreshConfig: {
-                refreshUrl: config:getAsString("REFRESH_URL"),
-                refreshToken: config:getAsString("REFRESH_TOKEN"),
-                clientId: config:getAsString("CLIENT_ID"),
-                clientSecret: config:getAsString("CLIENT_SECRET")
-            }
+            clientId: clientId,
+            clientSecret: clientSecret,
+            refreshToken: refreshToken,
+            refreshUrl: refreshUrl
         }
     };
 
-    calendar:Client calendarClient = new (calendarConfig);
+    calendar:Client calendarClient = new (config);
 
     boolean|error res = calendarClient->stopChannel(testChannelId, testResourceId);
     if (res is boolean) {
-        log:print(res.id);
+        log:print("Channel is terminated");
     } else {
         log:printError(res.message());
     }
