@@ -43,10 +43,9 @@ The Google Calendar Ballerina Connector allows you to access the Google Calendar
 
 |                             |            Versions             |
 |:---------------------------:|:-------------------------------:|
-| Ballerina Language          |     Swan Lake Alpha2          |
+| Ballerina Language          |     Swan Lake Alpha2            |
 | Google Calendar API         |             V3                  |
 
-## Sample
 
 Instantiate the connector by giving authentication details in the HTTP client config. The HTTP client config has built-in support for OAuth 2.0. Google Calendar uses OAuth 2.0 to authenticate and authorize requests. The Google Calendar connector can be minimally instantiated in the HTTP client config using the access token or the client ID, client secret, and refresh token.
 
@@ -67,7 +66,7 @@ access token and refresh token).
 Add the project configuration file by creating a `Config.toml` file under the root path of the project structure.
 This file should have following configurations. Add the tokens obtained in the previous step to the `Config.toml` file.
 
-For client operations
+#### For client operations
 ```
 [ballerinax.googleapis_calendar]
 accessToken = "<access_token>"
@@ -80,7 +79,7 @@ calendarId = "<calendar_id>"
 addressUrl = "<address_url>"
 ```
 
-For listener operations
+#### For listener operations
 ```
 [ballerinax.googleapis_calendar]
 accessToken = "<access_token>"
@@ -380,47 +379,6 @@ public function main() {
     }
 }
 ```
-### Create Calendar.
-```ballerina
-import ballerina/log;
-import ballerinax/googleapis_calendar as calendar;
-
-configurable string clientId = ?;
-configurable string clientSecret = ?;
-configurable string refreshToken = ?;
-configurable string refreshUrl = ?;
-configurable string calendarId = ?;
-
-public function main() {
-
-    calendar:CalendarConfiguration config = {
-       oauth2Config: {
-           clientId: clientId,
-           clientSecret: clientSecret,
-           refreshToken: refreshToken,
-           refreshUrl: refreshUrl
-       }
-    };
-    calendar:Client calendarClient = new (config);
-
-    calendar:InputEvent event = {
-       'start: {
-           dateTime:  "2021-02-28T09:00:00+0530"
-       },
-       end: {
-           dateTime:  "2021-02-28T09:00:00+0530"
-       },
-       summary: "Sample Event"
-    };
-    calendar:Event|error res = calendarClient->createEvent(calendarId, event);
-    if (res is calendar:Event) {
-       log:print(res.id);
-    } else {
-       log:printError(res.message());
-    }
-}
-```
-
 ### Get Calendars
 ```ballerina
 import ballerina/log;
@@ -454,40 +412,7 @@ public function main() returns @tainted error? {
 }
 ```
 
-### Delete Calendar
-```ballerina
-import ballerina/log;
-import ballerinax/googleapis_calendar as calendar;
-
-configurable string clientId = ?;
-configurable string clientSecret = ?;
-configurable string refreshToken = ?;
-configurable string refreshUrl = ?;
-
-public function main() returns @tainted error? {
-
-    calendar:CalendarConfiguration config = {
-        oauth2Config: {
-            clientId: clientId,
-            clientSecret: clientSecret,
-            refreshToken: refreshToken,
-            refreshUrl: refreshUrl
-        }
-    };
-    calendar:Client calendarClient = new (config);
-
-    stream<calendar:Calendar>|error res = calendarClient->getCalendars();
-    if (res is stream<calendar:Calendar>) {
-        var cal = res.next();
-        string id = check cal?.value?.id;
-        log:print(id);
-    } else {
-        log:printError(res.message());
-    }
-}
-```
-
-## Watch Channel
+### Watch Channel
 ```ballerina
 import ballerina/log;
 import ballerinax/googleapis_calendar as calendar;
@@ -530,7 +455,7 @@ public function main() {
 }
 ```
 
-## Stop Channel
+### Stop Channel
 ```ballerina
 import ballerina/log;
 import ballerinax/googleapis_calendar as calendar;

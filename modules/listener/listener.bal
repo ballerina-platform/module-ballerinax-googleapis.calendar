@@ -19,7 +19,6 @@ import ballerinax/googleapis_calendar as calendar;
 
 string? syncToken = ();
 
-# Object representing the Google Webhook (WebSub Subscriber Service) Listener.
 public class Listener {
 
     private http:Listener httpListener;
@@ -28,7 +27,8 @@ public class Listener {
     private string channelId;
     private calendar:Client calendarClient;
 
-    public isolated function init(int port, calendar:Client calendarClient, string channelId, string resourceId, string calendarId ) {
+    public isolated function init(int port, calendar:Client calendarClient, string channelId, string resourceId,
+                                    string calendarId ) {
         self.httpListener = checkpanic new (port);
         self.calendarClient = calendarClient;
         self.channelId = channelId;
@@ -64,10 +64,10 @@ public class Listener {
     public function getEventType(http:Caller caller, http:Request request) returns @tainted error|EventInfo {
         EventInfo info  = {};
         if (request.getHeader(GOOGLE_CHANNEL_ID) == self.channelId && request.getHeader(GOOGLE_RESOURCE_ID) == 
-        self.resourceId) {
+            self.resourceId) {
             http:Response response = new;
             response.statusCode = http:STATUS_OK;
-            if ( request.getHeader(GOOGLE_RESOURCE_STATE) == SYNC) {
+            if (request.getHeader(GOOGLE_RESOURCE_STATE) == SYNC) {
                 calendar:EventStreamResponse|error resp = self.calendarClient->getEventResponse(self.calendarId);
                 if (resp is calendar:EventStreamResponse) {
                     syncToken = <@untainted>resp?.nextSyncToken;
@@ -75,8 +75,8 @@ public class Listener {
                 check caller->respond(response);
                 return info;
             } else {
-                calendar:EventStreamResponse resp = check self.calendarClient->getEventResponse(self.calendarId,
-                1, syncToken);
+                calendar:EventStreamResponse resp = check self.calendarClient->getEventResponse(self.calendarId, 1,
+                    syncToken);
                 syncToken = <@untainted>resp?.nextSyncToken;
                 stream<calendar:Event>? events = resp?.items;
                 check caller->respond(response);

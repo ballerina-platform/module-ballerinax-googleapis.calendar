@@ -14,23 +14,19 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/oauth2;
 import ballerina/http;
 
 # Client for Google Calendar connector.
 # 
 # + calendarClient - HTTP client endpoint
 public client class Client {
-
     public http:Client calendarClient;
     CalendarConfiguration calendarConfiguration;
 
     public function init(CalendarConfiguration calendarConfig) {
-
         self.calendarConfiguration = calendarConfig;
         http:ClientSecureSocket? socketConfig = calendarConfig?.secureSocketConfig;
 
-        // Create an HTTP client.
         self.calendarClient = checkpanic new (BASE_URL, {
             auth: calendarConfig.oauth2Config,
             secureSocket: socketConfig
@@ -80,7 +76,7 @@ public client class Client {
     # + optional - Record that contains optional query parameters
     # + return - Created Event on success else an error
     remote function createEvent(string calendarId, InputEvent event, CreateEventOptional? optional = ()) returns
-            @tainted Event|error {
+                                @tainted Event|error {
         json payload = check event.cloneWithType(json);
         http:Request req = new;
         string path = prepareUrlWithEventOptional(calendarId, optional);
@@ -96,8 +92,8 @@ public client class Client {
     # + text - Event description
     # + sendUpdates - Configuration for notifing the creation.
     # + return - Created event id on success else an error
-    remote function quickAddEvent(string calendarId, string text, string? sendUpdates = ()) 
-            returns @tainted Event|error {
+    remote function quickAddEvent(string calendarId, string text, string? sendUpdates = ()) returns @tainted 
+                                    Event|error {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, QUICK_ADD]);
         if (sendUpdates is string) {
             path = prepareQueryUrl([path], [TEXT, SEND_UPDATES], [text, sendUpdates]);
@@ -117,7 +113,7 @@ public client class Client {
     # + optional - Record that contains optional query parameters
     # + return - Updated event on success else an error
     remote function updateEvent(string calendarId, string eventId, InputEvent event, CreateEventOptional? optional = ())
-            returns @tainted Event|error {
+                                returns @tainted Event|error {
         json payload = check event.cloneWithType(json);
         http:Request req = new;
         string path = prepareUrlWithEventOptional(calendarId, optional, eventId);
@@ -135,7 +131,7 @@ public client class Client {
     # + pageToken - Token for retrieving next page
     # + return - Event stream on success, else an error
     remote function getEvents(string calendarId, int? count = (), string? syncToken = (), string? pageToken = ())
-            returns @tainted stream<Event>|error {
+                                returns @tainted stream<Event>|error {
         EventStreamResponse response = check self->getEventResponse(calendarId, count, syncToken, pageToken);
         stream<Event>? events = response?.items;
         if (events is stream<Event>) {
@@ -210,8 +206,8 @@ public client class Client {
     # + syncToken - Token for getting incremental sync
     # + pageToken - Token for retrieving next page
     # + return - List of EventResponse object on success, else an error
-    remote function getEventResponse(string calendarId, int? count = (), string? syncToken = (), 
-    string? pageToken = ()) returns @tainted EventStreamResponse|error {
+    remote function getEventResponse(string calendarId, int? count = (), string? syncToken = (), string? pageToken = ())
+                                        returns @tainted EventStreamResponse|error {
         EventStreamResponse response = {};
         Event[] allEvents = [];
         return getEventsStream(self.calendarClient, calendarId, response, allEvents, count, syncToken, pageToken);
@@ -219,6 +215,6 @@ public client class Client {
 }
 
 public type CalendarConfiguration record {
-    oauth2:DirectTokenConfig oauth2Config;
+    http:OAuth2DirectTokenConfig oauth2Config;
     http:ClientSecureSocket secureSocketConfig?;
 };

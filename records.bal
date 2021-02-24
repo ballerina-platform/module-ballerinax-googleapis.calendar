@@ -99,7 +99,7 @@ string timeZone;
 ConferenceProperties conferenceProperties;
 };
 
-# Define Event response
+# Define Event response.
 #
 # + kind - Type of the collection
 # + etag - ETag of the collection
@@ -124,7 +124,7 @@ public type EventResponse record {
     Event[] items;
 };
 
-# Define Event Stream Resource
+# Define Event Stream Resource.
 #
 # + kind - Type of the collection
 # + etag - ETag of the collection
@@ -156,7 +156,7 @@ public type Reminder record {
     int minutes;
 };
 
-# Define Event Resource
+# Define Event Resource.
 #
 # + kind - Type of the resource
 # + etag - ETag of the resource
@@ -253,7 +253,7 @@ public type Shared record {|
     string...;
 |};
 
-# Define conference-related information
+# Define conference-related information.
 #
 # + createRequest - A request to generate a new conference and attach it to the event
 # + entryPoints - Information about individual conference entry points
@@ -270,7 +270,7 @@ public type ConferenceData record {
     string notes?;
 };
 
-# A request to generate a new conference and attach it to the event
+# A request to generate a new conference and attach it to the event.
 #
 # + requestId - The client-generated unique ID for this request
 # + conferenceSolutionKey - The conference solution
@@ -288,14 +288,14 @@ public type ConferenceSolutionKey record {
     string 'type;
 };
 
-# Define status
+# Define status.
 #
 # + statusCode - The current status of the conference create request
 public type Status record {
     string statusCode;
 };
 
-# Define conference entry points
+# Define conference entry points.
 #
 # + entryPointType - The type of the conference entry point
 # + uri - The URI of the entry point
@@ -318,7 +318,7 @@ public type EntryPoint record {
     string regionCode?;
 };
 
-# Define conference solution
+# Define conference solution.
 #
 # + key - The key which can uniquely identify the conference solution for this event
 # + name - The user-visible name of this solution
@@ -329,14 +329,14 @@ public type ConferenceSolution record {
     string iconUri;
 };
 
-# Define key record
+# Define key record.
 #
 # + type - The conference solution type
 public type Key record {
     string 'type;
 };
 
-# Define attendee record
+# Define attendee record.
 #
 # + id - The attendee's Profile ID
 # + email - The attendee's email address
@@ -361,7 +361,7 @@ public type Attendee record {
     string additionalGuests?;
 };
 
-# Define user record
+# Define user record.
 #
 # + id - Id of the user
 # + email - Email of the user
@@ -374,7 +374,7 @@ public type User record {
     boolean self?;
 };
 
-# Define time record
+# Define time record.
 #
 # + date - The date, in the format "yyyy-mm-dd"
 # + dateTime - The time, as a combined date-time value
@@ -385,7 +385,7 @@ public type Time record {
     string timeZone?;
 };
 
-# Define gadget record
+# Define gadget record.
 #
 # + preferences - Preferences
 # + type - Type of the gadget
@@ -406,14 +406,12 @@ public type Gadget record {
     string display?;
 };
 
-# Define Preferences record
-#
-#
+# Define Preferences record.
 public type Preferences record {|
     string...;
 |};
 
-# Define reminder record
+# Define reminder record.
 #
 # + useDefault - Whether the default reminders of the calendar apply to the event
 # + overrides - List the reminders specific to the event
@@ -422,7 +420,7 @@ public type Reminders record {
     Reminder[] overrides?;
 };
 
-# Define source record
+# Define source record.
 #
 # + url - URL of the source pointing to a resource
 # + title - Title of the source
@@ -431,7 +429,7 @@ public type Source record {
     string title;
 };
 
-# Define attachment record
+# Define attachment record.
 #
 # + fileUrl - URL link to the attachment
 # + title - Attachment title
@@ -446,7 +444,7 @@ string iconLink?;
 string fileId?;
 };
 
-# Configurations for watch operation
+# Configurations for watch operation.
 #
 # + id - A UUID or similar unique string that identifies this channel
 # + token - An arbitrary string delivered to the target address
@@ -468,12 +466,12 @@ public type Parameter record {
     string ttl;
 };
 
-# Define watch response
+# Define watch response.
 #
 # + kind - Identifies this as a notification channel used to watch for changes to a resource
 # + id - A UUID or similar unique string that identifies this channel
 # + resourceId - An opaque ID that identifies the resource being watched on this channel
-# + resourceUri - 	A version-specific identifier for the watched resource
+# + resourceUri - A version-specific identifier for the watched resource
 # + token - An arbitrary string delivered to the target address
 # + expiration - Date and time of notification channel expiration
 public type WatchResponse record {
@@ -485,7 +483,7 @@ public type WatchResponse record {
     string expiration?;
 };
 
-# Refer calendar record
+# Refer calendar record.
 #
 # + kind - Type of the resource
 # + etag - ETag of the resource
@@ -528,21 +526,21 @@ public type Calendar record {
     NotificationSettings notificationSettings?;
 };
 
-#  Define conference properties
+#  Define conference properties.
 #
 # + allowedConferenceSolutionTypes -Types of conference solutions that are supported for this calendar
 public type ConferenceProperties record {
     string[] allowedConferenceSolutionTypes;
 };
 
-# Define notification settings
+# Define notification settings.
 #
 # + notifications - The list of notifications set for this calendar
 public type NotificationSettings record {
     Notification[] notifications;
 };
 
-# Define notification record
+# Define notification record.
 #
 # + type - The method used to deliver the notification
 # + method - The type of notification
@@ -551,7 +549,7 @@ public type Notification record {
     string method;
 };
 
-# Define optionals for calendar list request
+# Define optionals for calendar list request.
 #
 # + minAccessRole - The minimum access role for the user in the returned entries
 # + pageToken - Token used to access the next page of this result
@@ -566,7 +564,7 @@ public type CalendarListOptional record {
     string? syncToken = ();
 };
 
-# Define calendar list response
+# Define calendar list response.
 #
 # + kind - Type of the collection
 # + etag - ETag of the collection
