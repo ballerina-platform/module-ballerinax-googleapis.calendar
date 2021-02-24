@@ -17,12 +17,13 @@
 import ballerina/log;
 import ballerina/test;
 import ballerina/time;
+import ballerina/os;
 
-configurable string clientId = ?;
-configurable string clientSecret = ?;
-configurable string refreshToken = ?;
-configurable string refreshUrl = ?;
-configurable string addressUrl = ?;
+configurable string clientId = os:getEnv("CLIENT_ID");
+configurable string clientSecret = os:getEnv("CLIENT_SECRET");
+configurable string refreshToken = os:getEnv("REFRESH_TOKEN");
+configurable string refreshUrl = os:getEnv("REFRESH_URL");
+configurable string addressUrl = os:getEnv("ADDRESS");
 
 CalendarConfiguration config = {
     oauth2Config: {
