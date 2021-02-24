@@ -35,14 +35,6 @@ public client class Client {
             auth: calendarConfig.oauth2Config,
             secureSocket: socketConfig
         });
-
-
-        // http:BearerAuthHandler bearerHandler = new (oauth2Provider);
-        // http:ClientSecureSocket? socketConfig = calendarConfig?.secureSocketConfig;
-        // self.calendarClient = new (BASE_URL, {
-        //     auth: {authHandler: bearerHandler},
-        //     secureSocket: socketConfig
-        // });
     }
 
     # Get Calendars
