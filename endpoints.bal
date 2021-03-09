@@ -116,7 +116,7 @@ public client class Client {
         label: "Create quick add event"
     }
     remote function quickAddEvent(@display{label: "Calendar id"} string calendarId, 
-                                  @display{label: "Event description"}string text, 
+                                  @display{label: "Event description"} string text, 
                                   @display{label: "Send updates of creation"} string? sendUpdates = ()) 
                                   returns @tainted @display{label: "Event"} Event|error {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, QUICK_ADD]);
@@ -166,7 +166,7 @@ public client class Client {
     }
     remote function getEvents(@display{label: "Calendar id"} string calendarId, 
                               @display{label: "Number of events required (optional)"} int? count = (), 
-                              @display{label: "Token for incremental sync (optional)"}string? syncToken = (), 
+                              @display{label: "Token for incremental sync (optional)"} string? syncToken = (), 
                               @display{label: "Token for retrieving next page (optional)"} string? pageToken = ())
                               returns @tainted @display{label: "Stream of Event"} stream<Event>|error {
         EventStreamResponse response = check self->getEventResponse(calendarId, count, syncToken, pageToken);
@@ -242,8 +242,8 @@ public client class Client {
     }
     remote function stopChannel(@display{label: "Channel id"} string id, 
                                 @display{label: "Resource id"} string resourceId, 
-                                @display{label: "An arbitrary string to not being spoofed (optional)"} string? token = 
-                                ()) returns @tainted @display{label: "Result"} boolean|error {
+                                @display{label: "An arbitrary string to not being spoofed (optional)"} string? token 
+                                = ()) returns @tainted @display{label: "Result"} boolean|error {
         json payload = {
             id: id,
             resourceId: resourceId,
