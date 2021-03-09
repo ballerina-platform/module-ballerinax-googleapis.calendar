@@ -59,6 +59,7 @@ const string ERR_EVENT = "Error occurred while constructing Event record.";
 const string ERR_WATCH_RESPONSE = "Error occurred while constructing WatchResponse record.";
 const string ERR_CALENDAR_RESPONSE = "Error occurred while constructing CalendarResponse record.";
 const string ERR_EVENTS = "Error occurred while getting Events.";
+const string ERR_CALENDAR_RESOURCE = "Error occurred while constructing CalendarResource record.";
 
 // Log constants
 const string PAYLOAD = " payload: ";

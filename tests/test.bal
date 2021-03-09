@@ -14,32 +14,38 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/config;
 import ballerina/log;
 import ballerina/test;
 import ballerina/time;
+import ballerina/os;
+
+configurable string clientId = os:getEnv("CLIENT_ID");
+configurable string clientSecret = os:getEnv("CLIENT_SECRET");
+configurable string refreshToken = os:getEnv("REFRESH_TOKEN");
+configurable string refreshUrl = os:getEnv("REFRESH_URL");
+configurable string addressUrl = os:getEnv("ADDRESS");
 
 CalendarConfiguration config = {
     oauth2Config: {
-        accessToken: config:getAsString("ACCESS_TOKEN"),
-        refreshConfig: {
-            clientId: config:getAsString("CLIENT_ID"),
-            clientSecret: config:getAsString("CLIENT_SECRET"),
-            refreshUrl: config:getAsString("REFRESH_URL"),
-            refreshToken: config:getAsString("REFRESH_TOKEN")
-        }
+        clientId: clientId,
+        clientSecret: clientSecret,
+        refreshToken: refreshToken,
+        refreshUrl: refreshUrl   
     }
 };
 
-CalendarClient calendarClient = new(config); 
+Client calendarClient = new(config); 
 
 string testEventId = "";
 string testChannelId = "";
 string testResourceId = "";
 string testQuickAddEventId = "";
-string testCalendarId = "primary";
+string testCalendarId = "";
 
-@test:Config {}function testGetCalendars() {
+@test:Config {
+    dependsOn: [testCreateCalendar]
+}
+function testGetCalendars() {
     log:print("calendarClient -> getCalendars()");
     stream<Calendar>|error res = calendarClient->getCalendars();
     if (res is stream<Calendar>) {
@@ -56,7 +62,32 @@ CreateEventOptional optional = {
     supportsAttachments: false
 };
 
-@test:Config{}
+@test:Config {}
+function testCreateCalendar() {
+    log:print("calendarClient -> createCalendar()");
+    CalendarResource|error res = calendarClient->createCalendar("testCalendar");
+    if (res is CalendarResource) {
+        test:assertNotEquals(res.id, "", msg = "Expect event id");
+        testCalendarId = <@untainted> res.id;
+    } else {
+        test:assertFail(res.message());
+    }
+}
+
+@test:AfterSuite {}
+function testDeleteCalendar() {
+    log:print("calendarClient -> deleteCalendar()");
+    boolean|error res = calendarClient->deleteCalendar(testCalendarId);
+    if (res is boolean) {
+        test:assertTrue(res, msg = "Expects true on success");
+    } else {
+        test:assertFail(res.message());
+    }
+}
+
+@test:Config {
+    dependsOn: [testCreateCalendar]
+}
 function testCreateEvent() {
     InputEvent event = setEvent("Event Created");
     log:print("calendarClient -> createEvent()");
@@ -69,7 +100,9 @@ function testCreateEvent() {
     }
 }
 
-@test:Config{}
+@test:Config {
+    dependsOn: [testCreateCalendar]
+}
 function testquickAdd() {
     log:print("calendarClient -> quickAddEvent()");
     Event|error res = calendarClient->quickAddEvent(testCalendarId, "Hello", "none");
@@ -82,7 +115,7 @@ function testquickAdd() {
 }
 
 @test:Config {
-    dependsOn: ["testGetEvent", "testquickAdd"]
+    dependsOn: [testGetEvent, testquickAdd]
 }
 function testGetEvents() {
     log:print("calendarClient -> getEvents()");
@@ -96,7 +129,7 @@ function testGetEvents() {
 }
 
 @test:Config {
-    dependsOn: ["testCreateEvent"]
+    dependsOn: [testCreateEvent]
 }
 function testGetEvent() {
     log:print("calendarClient -> getEvent()");
@@ -109,7 +142,7 @@ function testGetEvent() {
 }
 
 @test:Config{
-    dependsOn: ["testCreateEvent"]
+    dependsOn: [testCreateEvent]
 }
 function testUpdatevent() {
     InputEvent event = setEvent("Event Updated");
@@ -123,7 +156,7 @@ function testUpdatevent() {
 }
 
 @test:Config {
-    dependsOn: ["testGetEvent", "testUpdatevent"]
+    dependsOn: [testGetEvent, testUpdatevent]
 }
 function testDeleteEvent() {
     log:print("calendarClient -> deleteEvent()");
@@ -140,13 +173,15 @@ WatchConfiguration watchConfig = {
     id: "testId",
     token: "testToken",
     'type: "webhook",
-    address: config:getAsString("ADDRESS"),
+    address: addressUrl,
     params: {
         ttl: "20000"
     }
 };
 
-@test:Config{}
+@test:Config{
+    dependsOn: [testCreateCalendar]
+}
 function testWatchEvents() {
     log:print("calendarClient -> watchEvents()");
     WatchResponse|error res = calendarClient->watchEvents(testCalendarId, watchConfig);
@@ -160,7 +195,7 @@ function testWatchEvents() {
 }
 
 @test:Config{
-    dependsOn: ["testWatchEvents"]
+    dependsOn: [testWatchEvents]
 }
 function testStopChannel() {
     log:print("calendarClient -> stopChannel()");
@@ -173,7 +208,7 @@ function testStopChannel() {
 }
 
 @test:Config {
-    dependsOn: ["testGetEvent"]
+    dependsOn: [testGetEvent]
 }
 function testGetEventResponse() {
     log:print("calendarClient -> getEventResponse()");
@@ -187,8 +222,8 @@ function testGetEventResponse() {
 
 isolated function setEvent (string summary) returns InputEvent {
     time:Time time = time:currentTime();
-    string startTime = checkpanic time:format(time:addDuration(time, 0, 0, 0, 4, 0, 0, 0), TIME_FORMAT);
-    string endTime = checkpanic time:format(time:addDuration(time, 0, 0, 0, 5, 0, 0, 0), TIME_FORMAT);
+    string startTime = checkpanic time:format(checkpanic time:addDuration(time, {hours: 4}), TIME_FORMAT);
+    string endTime = checkpanic time:format(checkpanic time:addDuration(time, {hours: 5}), TIME_FORMAT);
     InputEvent event = {
         'start: {
             dateTime: startTime

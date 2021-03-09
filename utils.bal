@@ -72,7 +72,7 @@ returns string {
 # + optional - Record that contains optional parameters
 # + eventId - Event id
 # + return - The prepared URL with encoded query
-function prepareUrlWithEventOptional(string calendarId, CreateEventOptional? optional = (), 
+isolated function prepareUrlWithEventOptional(string calendarId, CreateEventOptional? optional = (), 
 string? eventId = ()) returns string {
     string[] value = [];
     map<string> optionalMap = {};
@@ -93,9 +93,9 @@ string? eventId = ()) returns string {
         if (optional.supportsAttachments is boolean) {
             optionalMap[SUPPORTS_ATTACHMENTS] = optional.supportsAttachments.toString();
         }
-        optionalMap.forEach(function(string val) {
+        foreach var val in optionalMap {
             value.push(val);
-        });
+        }
         path = prepareQueryUrl([path], optionalMap.keys(), value);
     }
     return path;
@@ -105,7 +105,7 @@ string? eventId = ()) returns string {
 # 
 # + optional - Record that contains optional parameters
 # + return - The prepared URL with encoded query
-function prepareUrlWithCalendarOptional(CalendarListOptional? optional = ()) returns string {
+isolated function prepareUrlWithCalendarOptional(CalendarListOptional? optional = ()) returns string {
     string[] value = [];
     map<string> optionalMap = {};
     string path = prepareUrl([CALENDAR_PATH, USERS, ME, CALENDAR_LIST]);  
@@ -125,9 +125,9 @@ function prepareUrlWithCalendarOptional(CalendarListOptional? optional = ()) ret
         if (optional.syncToken is string) {
             optionalMap[SYNC_TOKEN] = optional.syncToken.toString();
         }
-        optionalMap.forEach(function(string val) {
+        foreach var val in optionalMap {
             value.push(val);
-        });
+        }
         path = prepareQueryUrl([path], optionalMap.keys(), value);
     }
     return path;
@@ -151,7 +151,8 @@ isolated function checkAndSetErrors(http:Response|http:PayloadType|error httpRes
         } else {
             json|error jsonResponse = httpResponse.getJsonPayload();
             if (jsonResponse is json) {
-                return error(HTTP_ERROR_MSG + jsonResponse.'error.message.toString());
+                json err = check jsonResponse.'error.message;
+                return error(HTTP_ERROR_MSG + err.toString());
             } else {
                 return error(ERR_EXTRACTING_ERROR_MSG, jsonResponse);
             }
