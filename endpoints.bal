@@ -19,6 +19,9 @@ import ballerina/http;
 # Client for Google Calendar connector.
 # 
 # + calendarClient - HTTP client endpoint
+@display {
+    label: "Google Calendar Client"
+}
 public client class Client {
     public http:Client calendarClient;
     CalendarConfiguration calendarConfiguration;
@@ -37,7 +40,11 @@ public client class Client {
     # 
     # + optional - Record that contains optionals
     # + return - Stream of Calendars on success else an error
-    remote function getCalendars(CalendarListOptional? optional = ()) returns @tainted stream<Calendar>|error {
+    @display {
+        label: "Get calendars"
+    }
+    remote function getCalendars(@display{label: "Optional query parameters"} CalendarListOptional? optional = ()) 
+                                 returns @tainted @display{label: "Stream of Calendars"} stream<Calendar>|error {
         Calendar[] allCalendars = [];
         return getCalendarsStream(self.calendarClient, allCalendars, optional);
     }
@@ -46,7 +53,11 @@ public client class Client {
     # 
     # + title - Calendar name
     # + return - Created Event on success else an error
-    remote function createCalendar(string title) returns @tainted CalendarResource|error {
+    @display {
+        label: "Create calendar"
+    }
+    remote function createCalendar(@display{label: "Calendar name"} string title) 
+                                   returns @tainted @display{label: "Calendar"} CalendarResource|error {
         http:Request req = new;
         string path = prepareUrl([CALENDAR_PATH, CALENDAR]);
         json payload = {
@@ -62,7 +73,11 @@ public client class Client {
     # 
     # + calendarId - Calendar id
     # + return - True on success, else an error
-    remote function deleteCalendar(string calendarId) returns @tainted boolean|error {
+    @display {
+        label: "Delete calendar"
+    }
+    remote function deleteCalendar(@display{label: "Calendar id"} string calendarId) 
+                                   returns @tainted @display{label: "Result"} boolean|error {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId]);
         var httpResponse = self.calendarClient->delete(path);
         json resp = check checkAndSetErrors(httpResponse);
@@ -75,8 +90,13 @@ public client class Client {
     # + event - Record that contains event information.
     # + optional - Record that contains optional query parameters
     # + return - Created Event on success else an error
-    remote function createEvent(string calendarId, InputEvent event, CreateEventOptional? optional = ()) returns
-                                @tainted Event|error {
+    @display {
+        label: "Create event"
+    }
+    remote function createEvent(@display{label: "Calendar id"} string calendarId, 
+                                @display{label: "Event details"} InputEvent event, 
+                                @display{label: "Optional query parameters"} CreateEventOptional? optional = ()) 
+                                returns @tainted @display{label: "Event"} Event|error {
         json payload = check event.cloneWithType(json);
         http:Request req = new;
         string path = prepareUrlWithEventOptional(calendarId, optional);
@@ -92,8 +112,13 @@ public client class Client {
     # + text - Event description
     # + sendUpdates - Configuration for notifing the creation.
     # + return - Created event id on success else an error
-    remote function quickAddEvent(string calendarId, string text, string? sendUpdates = ()) returns @tainted 
-                                    Event|error {
+    @display {
+        label: "Create quick add event"
+    }
+    remote function quickAddEvent(@display{label: "Calendar id"} string calendarId, 
+                                  @display{label: "Event description"}string text, 
+                                  @display{label: "Send updates of creation"} string? sendUpdates = ()) 
+                                  returns @tainted @display{label: "Event"} Event|error {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, QUICK_ADD]);
         if (sendUpdates is string) {
             path = prepareQueryUrl([path], [TEXT, SEND_UPDATES], [text, sendUpdates]);
@@ -112,8 +137,14 @@ public client class Client {
     # + event - Record that contains updated information
     # + optional - Record that contains optional query parameters
     # + return - Updated event on success else an error
-    remote function updateEvent(string calendarId, string eventId, InputEvent event, CreateEventOptional? optional = ())
-                                returns @tainted Event|error {
+    @display {
+        label: "Update existing event"
+    }
+    remote function updateEvent(@display{label: "Calendar id"} string calendarId, 
+                                @display{label: "Event id"} string eventId, 
+                                @display{label: "Event details"} InputEvent event, 
+                                @display{label: "Optional query parameters"} CreateEventOptional? optional = ())
+                                returns @tainted @display{label: "Event"} Event|error {
         json payload = check event.cloneWithType(json);
         http:Request req = new;
         string path = prepareUrlWithEventOptional(calendarId, optional, eventId);
@@ -130,8 +161,14 @@ public client class Client {
     # + syncToken - Token for getting incremental sync
     # + pageToken - Token for retrieving next page
     # + return - Event stream on success, else an error
-    remote function getEvents(string calendarId, int? count = (), string? syncToken = (), string? pageToken = ())
-                                returns @tainted stream<Event>|error {
+    @display {
+        label: "Get events"
+    }
+    remote function getEvents(@display{label: "Calendar id"} string calendarId, 
+                              @display{label: "Number of events required (optional)"} int? count = (), 
+                              @display{label: "Token for incremental sync (optional)"}string? syncToken = (), 
+                              @display{label: "Token for retrieving next page (optional)"} string? pageToken = ())
+                              returns @tainted @display{label: "Stream of Event"} stream<Event>|error {
         EventStreamResponse response = check self->getEventResponse(calendarId, count, syncToken, pageToken);
         stream<Event>? events = response?.items;
         if (events is stream<Event>) {
@@ -145,7 +182,12 @@ public client class Client {
     # + calendarId - Calendar id
     # + eventId - Event id
     # + return - An Event object on success, else an error 
-    remote function getEvent(string calendarId, string eventId) returns @tainted Event|error {
+    @display {
+        label: "Get an event"
+    }
+    remote function getEvent(@display{label: "Calendar id"} string calendarId, 
+                             @display{label: "Event id"} string eventId) 
+                             returns @tainted @display{label: "Event"} Event|error {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, eventId]);
         var httpResponse = self.calendarClient->get(path);
         json resp = check checkAndSetErrors(httpResponse);
@@ -157,7 +199,12 @@ public client class Client {
     # + calendarId - Calendar id
     # + eventId - Event id
     # + return - True on success, else an error
-    remote function deleteEvent(string calendarId, string eventId) returns @tainted boolean|error {
+    @display {
+        label: "Delete event"
+    }
+    remote function deleteEvent(@display{label: "Calendar id"} string calendarId, 
+                                @display{label: "Event id"} string eventId) 
+                                returns @tainted @display{label: "Result"} boolean|error {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, eventId]);
         var httpResponse = self.calendarClient->delete(path);
         json resp = check checkAndSetErrors(httpResponse);
@@ -169,7 +216,12 @@ public client class Client {
     # + calendarId - Calendar id
     # + config - Configuration for the subscription
     # + return - WatchResponse object on success else an error
-    remote function watchEvents(string calendarId, WatchConfiguration config) returns @tainted WatchResponse|error {
+    @display {
+        label: "Create notification subscription"
+    }
+    remote function watchEvents(@display{label: "Calendar id"} string calendarId, 
+                                @display{label: "Subscription configuration"} WatchConfiguration config) 
+                                returns @tainted @display{label: "Subscription result"} WatchResponse|error {
         json payload = check config.cloneWithType(json);
         http:Request req = new;
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, WATCH]);
@@ -185,7 +237,13 @@ public client class Client {
     # + resourceId - Id of resource being watched
     # + token - An arbitrary string delivered to the target address with each notification (optional)
     # + return - true on success else an error
-    remote function stopChannel(string id, string resourceId, string? token = ()) returns @tainted boolean|error {
+    @display {
+        label: "Stop channel from subscription"
+    }
+    remote function stopChannel(@display{label: "Channel id"} string id, 
+                                @display{label: "Resource id"} string resourceId, 
+                                @display{label: "An arbitrary string to not being spoofed (optional)"} string? token = 
+                                ()) returns @tainted @display{label: "Result"} boolean|error {
         json payload = {
             id: id,
             resourceId: resourceId,
@@ -206,8 +264,14 @@ public client class Client {
     # + syncToken - Token for getting incremental sync
     # + pageToken - Token for retrieving next page
     # + return - List of EventResponse object on success, else an error
-    remote function getEventResponse(string calendarId, int? count = (), string? syncToken = (), string? pageToken = ())
-                                        returns @tainted EventStreamResponse|error {
+    @display {
+        label: "Get event response"
+    }
+    remote function getEventResponse(@display{label: "Calendar id"} string calendarId, 
+                                    @display{label: "Number of events required (optional)"} int? count = (), 
+                                    @display{label: "Token for incremental sync (optional)"} string? syncToken = (), 
+                                    @display{label: "Token for retrieving next page (optional)"} string? pageToken = ())
+                                    returns @tainted @display{label: "Event response"} EventStreamResponse|error {
         EventStreamResponse response = {};
         Event[] allEvents = [];
         return getEventsStream(self.calendarClient, calendarId, response, allEvents, count, syncToken, pageToken);
