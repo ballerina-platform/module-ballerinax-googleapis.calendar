@@ -8,7 +8,7 @@ configurable string refreshUrl = ?;
 configurable string calendarId = ?;
 configurable string eventId = ?;
 
-public function main() {
+public function main() returns error? {
 
     calendar:CalendarConfiguration config = {
        oauth2Config: {
@@ -19,7 +19,7 @@ public function main() {
        }
     };
 
-    calendar:Client calendarClient = new (config);
+    calendar:Client calendarClient = check new (config);
 
     boolean|error res = calendarClient->deleteEvent(calendarId, eventId);
     if (res is boolean) {

@@ -23,7 +23,7 @@ configurable string clientId = os:getEnv("CLIENT_ID");
 configurable string clientSecret = os:getEnv("CLIENT_SECRET");
 configurable string refreshToken = os:getEnv("REFRESH_TOKEN");
 configurable string refreshUrl = os:getEnv("REFRESH_URL");
-configurable string addressUrl = os:getEnv("ADDRESS");
+configurable string address = os:getEnv("ADDRESS");
 
 CalendarConfiguration config = {
     oauth2Config: {
@@ -34,7 +34,7 @@ CalendarConfiguration config = {
     }
 };
 
-Client calendarClient = new(config); 
+Client calendarClient = check new (config); 
 
 string testEventId = "";
 string testChannelId = "";
@@ -169,22 +169,22 @@ function testDeleteEvent() {
     }
 }
 
-WatchConfiguration watchConfig = {
-    id: "testId",
-    token: "testToken",
-    'type: "webhook",
-    address: addressUrl,
-    params: {
-        ttl: "20000"
-    }
-};
+// WatchConfiguration watchConfig = {
+//     id: "testId",
+//     token: "testToken",
+//     'type: "webhook",
+//     address: addressUrl,
+//     params: {
+//         ttl: "20000"
+//     }
+// };
 
 @test:Config{
-    dependsOn: [testCreateCalendar]
+   // dependsOn: [testCreateCalendar]
 }
 function testWatchEvents() {
     log:print("calendarClient -> watchEvents()");
-    WatchResponse|error res = calendarClient->watchEvents(testCalendarId, watchConfig);
+    WatchResponse|error res = calendarClient->watchEvents("primary", address);
     if (res is WatchResponse) {
         test:assertNotEquals(res.id, "", msg = "Expects channel id");
         testChannelId = <@untainted> res.id;

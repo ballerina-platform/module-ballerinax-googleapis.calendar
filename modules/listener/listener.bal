@@ -15,28 +15,37 @@
 // under the License.
 
 import ballerina/http;
+import ballerina/log;
 import ballerinax/googleapis_calendar as calendar;
 
 string? syncToken = ();
 
+# Listener for Google Calendar connector   
 public class Listener {
 
     private http:Listener httpListener;
-    private string calendarId;
-    private string resourceId;
-    private string channelId;
     private calendar:Client calendarClient;
+    private string calendarId;
+    private string address;
+    private string? expiration;
+    private string resourceId = "";
+    private string channelId = "";
 
-    public isolated function init(int port, calendar:Client calendarClient, string channelId, string resourceId,
-                                    string calendarId ) {
-        self.httpListener = checkpanic new (port);
+    public isolated  function init(int port, calendar:Client calendarClient, string calendarId, string address, 
+                                    string? expiration = ()) returns error? {
+        self.httpListener = check new (port);
         self.calendarClient = calendarClient;
-        self.channelId = channelId;
-        self.resourceId = resourceId;
+        self.address = address;
         self.calendarId = calendarId;
+        self.expiration = expiration;
     }
 
-    public isolated function attach(service object {} s, string[]|string? name = ()) returns error? {
+    public function attach(service object {} s, string[]|string? name = ()) returns error? {
+        calendar:WatchResponse res = check self.calendarClient->watchEvents(self.calendarId, self.address, 
+            self.expiration);
+        self.resourceId = res.resourceId;
+        self.channelId = res.id;
+        log:print("Subscribed to channel id : "+ self.channelId + " resourcs id :  "+ self.resourceId);
         return self.httpListener.attach(s, name);
     }
 
@@ -48,7 +57,9 @@ public class Listener {
         return self.httpListener.'start();
     }
 
-    public isolated function gracefulStop() returns error? {
+    public function gracefulStop() returns error? {
+        var res = check self.calendarClient->stopChannel(self.channelId, self.resourceId);
+        log:print("Subscription stopped");
         return self.httpListener.gracefulStop();
     }
 
@@ -92,7 +103,7 @@ public class Listener {
                             if (created.substring(0, 19) == updated.substring(0, 19)) {
                                 info.eventType = CREATED;
                                 return info;
-                            } else  {
+                            } else {
                                 info.eventType = UPDATED;
                                 return info;
                             }

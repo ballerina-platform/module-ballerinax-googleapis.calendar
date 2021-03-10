@@ -51,7 +51,6 @@ access token and refresh token).
 Add the project configuration file by creating a `Config.toml` file under the root path of the project structure.
 This file should have following configurations. Add the tokens obtained in the previous step to the `Config.toml` file.
 
-For client operations
 ```
 [ballerinax.googleapis_calendar]
 accessToken = "<access_token>"
@@ -61,25 +60,11 @@ refreshToken = "<refresh_token>"
 refreshUrl = "<refresh_URL>"
 
 calendarId = "<calendar_id>"
-addressUrl = "<address_url>"
-```
-
-For listener operations
-```
-[ballerinax.googleapis_calendar]
-accessToken = "<access_token>"
-clientId = "<client_id">
-clientSecret = "<client_secret>"
-refreshToken = "<refresh_token>"
-refreshUrl = "<refresh_URL>"
-
-calendarId = "<calendar_id>"
-resourceId = "<resource_id>"
-channelId = "<channel_id>"
+address = "<address>"
 ```
 
 ## Setup listener
-* Call watctEvents remote method to enable channel
+* Call watchEvents remote method to enable channel
 * Start listener with the required parameters taken from watch response
 
 # **Samples**
@@ -97,7 +82,7 @@ configurable string refreshUrl = ?;
 configurable string calendarId = ?;
 configurable string address = ?;
 
-public function main() {
+public function main() returns error? {
 
     calendar:CalendarConfiguration config = {
         oauth2Config: {
@@ -110,16 +95,7 @@ public function main() {
 
     calendar:Client calendarClient = new (config);
 
-    calendar:WatchConfiguration watchConfig = {
-        id: "testId",
-        token: "testToken",
-        'type: "webhook",
-        address: address,
-        params: {
-            ttl: "300"
-        }
-    };
-    calendar:WatchResponse|error res = calendarClient->watchEvents(calendarId, watchConfig);
+    calendar:WatchResponse|error res = calendarClient->watchEvents(calendarId, address, "300");
     if (res is calendar:WatchResponse) {
         log:print(res.id);
     } else {
@@ -141,7 +117,7 @@ configurable string calendarId = ?;
 configurable string testChannelId = ?;
 configurable string testResourceId = ?;
 
-public function main() {
+public function main() returns error? {
 
     calendar:CalendarConfiguration config = {
         oauth2Config: {
@@ -152,7 +128,7 @@ public function main() {
         }
     };
 
-    calendar:Client calendarClient = new (config);
+    calendar:Client calendarClient = check new (config);
 
     boolean|error res = calendarClient->stopChannel(testChannelId, testResourceId);
     if (res is boolean) {
@@ -172,13 +148,14 @@ import ballerina/log;
 import ballerinax/googleapis_calendar as calendar;
 import ballerinax/googleapis_calendar.'listener as listen;
 
+configurable int port = ?;
 configurable string clientId = ?;
 configurable string clientSecret = ?;
 configurable string refreshToken = ?;
 configurable string refreshUrl = ?;
-configurable string channelId = ?;
-configurable string resourceId = ?;
 configurable string calendarId = ?;
+configurable string address = ?;
+configurable string expiration = ?;
 
 calendar:CalendarConfiguration config = {
     oauth2Config: {
@@ -189,12 +166,12 @@ calendar:CalendarConfiguration config = {
     }
 };
 
-calendar:Client calendarClient = new (config);
-listener listen:Listener googleListener = new (4567,calendarClient, channelId, resourceId, calendarId);
+calendar:Client calendarClient = check new (config);
+listener listen:Listener googleListener = new (port, calendarClient, calendarId, address, expiration);
 
 service /calendar on googleListener {
-    resource function post events(http:Caller caller, http:Request request){
-        listen:EventInfo payload = checkpanic googleListener.getEventType(caller, request);
+    resource function post events(http:Caller caller, http:Request request)  returns error? {
+        listen:EventInfo payload = check googleListener.getEventType(caller, request);
         if(payload?.eventType is string && payload?.event is calendar:Event) {
             if (payload?.eventType == listen:CREATED) {
                 var event = payload?.event;
@@ -215,13 +192,14 @@ import ballerina/log;
 import ballerinax/googleapis_calendar as calendar;
 import ballerinax/googleapis_calendar.'listener as listen;
 
+configurable int port = ?;
 configurable string clientId = ?;
 configurable string clientSecret = ?;
 configurable string refreshToken = ?;
 configurable string refreshUrl = ?;
-configurable string channelId = ?;
-configurable string resourceId = ?;
 configurable string calendarId = ?;
+configurable string address = ?;
+configurable string expiration = ?;
 
 calendar:CalendarConfiguration config = {
     oauth2Config: {
@@ -232,12 +210,12 @@ calendar:CalendarConfiguration config = {
     }
 };
 
-calendar:Client calendarClient = new (config);
-listener listen:Listener googleListener = new (4567,calendarClient, channelId, resourceId, calendarId);
+calendar:Client calendarClient = check new (config);
+listener listen:Listener googleListener = new (port, calendarClient, calendarId, address, expiration);
 
 service /calendar on googleListener {
-    resource function post events(http:Caller caller, http:Request request){
-        listen:EventInfo payload = checkpanic googleListener.getEventType(caller, request);
+    resource function post events(http:Caller caller, http:Request request) returns error? {
+        listen:EventInfo payload = check googleListener.getEventType(caller, request);
         if(payload?.eventType is string && payload?.event is calendar:Event) {
             if (payload?.eventType == listen:UPDATED) {
                 var event = payload?.event;
@@ -258,13 +236,14 @@ import ballerina/log;
 import ballerinax/googleapis_calendar as calendar;
 import ballerinax/googleapis_calendar.'listener as listen;
 
+configurable int port = ?;
 configurable string clientId = ?;
 configurable string clientSecret = ?;
 configurable string refreshToken = ?;
 configurable string refreshUrl = ?;
-configurable string channelId = ?;
-configurable string resourceId = ?;
 configurable string calendarId = ?;
+configurable string address = ?;
+configurable string expiration = ?;
 
 calendar:CalendarConfiguration config = {
     oauth2Config: {
@@ -275,12 +254,12 @@ calendar:CalendarConfiguration config = {
     }
 };
 
-calendar:Client calendarClient = new (config);
-listener listen:Listener googleListener = new (4567,calendarClient, channelId, resourceId, calendarId);
+calendar:Client calendarClient = check new (config);
+listener listen:Listener googleListener = new (port, calendarClient, calendarId, address, expiration);
 
 service /calendar on googleListener {
-    resource function post events(http:Caller caller, http:Request request){
-        listen:EventInfo payload = checkpanic googleListener.getEventType(caller, request);
+    resource function post events(http:Caller caller, http:Request request) returns error? {
+        listen:EventInfo payload = check googleListener.getEventType(caller, request);
         if(payload?.eventType is string && payload?.event is calendar:Event) {
             if (payload?.eventType == listen:DELETED) {
                 log:print("Event deleted");

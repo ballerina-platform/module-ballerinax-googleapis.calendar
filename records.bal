@@ -444,28 +444,6 @@ string iconLink?;
 string fileId?;
 };
 
-# Configurations for watch operation.
-#
-# + id - A UUID or similar unique string that identifies this channel
-# + token - An arbitrary string delivered to the target address
-# + type - The type of delivery mechanism used for this channel
-# + address - The address where notifications are delivered for this channel
-# + params - Additional parameters controlling delivery channel behavior
-public type WatchConfiguration record {
-    string id;
-    string token;
-    string 'type;
-    string address;
-    Parameter params?;
-};
-
-# Define Parameter record
-#
-# + ttl - The time-to-live in seconds for the notification channel
-public type Parameter record {
-    string ttl;
-};
-
 # Define watch response.
 #
 # + kind - Identifies this as a notification channel used to watch for changes to a resource

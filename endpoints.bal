@@ -15,6 +15,7 @@
 // under the License.
 
 import ballerina/http;
+import ballerina/uuid;
 
 # Client for Google Calendar connector.
 # 
@@ -23,11 +24,11 @@ public client class Client {
     public http:Client calendarClient;
     CalendarConfiguration calendarConfiguration;
 
-    public function init(CalendarConfiguration calendarConfig) {
+    public function init(CalendarConfiguration calendarConfig) returns error? {
         self.calendarConfiguration = calendarConfig;
         http:ClientSecureSocket? socketConfig = calendarConfig?.secureSocketConfig;
 
-        self.calendarClient = checkpanic new (BASE_URL, {
+        self.calendarClient = check new (BASE_URL, {
             auth: calendarConfig.oauth2Config,
             secureSocket: socketConfig
         });
@@ -167,10 +168,29 @@ public client class Client {
     # Create subscription to get notification.
     # 
     # + calendarId - Calendar id
-    # + config - Configuration for the subscription
+    # + address - The address where notifications are delivered for this channel
+    # + expiration - The time-to-live in seconds for the notification channel
     # + return - WatchResponse object on success else an error
-    remote function watchEvents(string calendarId, WatchConfiguration config) returns @tainted WatchResponse|error {
-        json payload = check config.cloneWithType(json);
+    remote function watchEvents(string calendarId, string address, string? expiration = ()) returns @tainted WatchResponse|error {
+        json payload;
+        if (expiration is string) {
+            payload = {
+                id: uuid:createType1AsString(),
+                token: uuid:createType1AsString(),
+                'type: WEBHOOK,
+                address: address,
+                params: {
+                    ttl: expiration
+                }           
+            };
+        } else {
+            payload = {
+                id: uuid:createType1AsString(),
+                token: uuid:createType1AsString(),
+                'type: WEBHOOK,
+                address: address         
+            };
+        }
         http:Request req = new;
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, WATCH]);
         req.setJsonPayload(payload);

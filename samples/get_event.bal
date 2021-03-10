@@ -8,7 +8,7 @@ configurable string refreshUrl = ?;
 configurable string calendarId = ?;
 configurable string eventId = ?;
 
-public function main() {
+public function main() returns error? {
   
     calendar:CalendarConfiguration config = {
         oauth2Config: {
@@ -18,7 +18,7 @@ public function main() {
             refreshUrl: refreshUrl
         }
     };
-    calendar:Client calendarClient = new (config);
+    calendar:Client calendarClient = check new (config);
 
     calendar:Event|error res = calendarClient->getEvent(calendarId, eventId);
     if (res is calendar:Event) {

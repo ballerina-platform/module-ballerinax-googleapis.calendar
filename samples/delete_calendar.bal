@@ -7,7 +7,7 @@ configurable string refreshToken = ?;
 configurable string refreshUrl = ?;
 configurable string calendarId = ?;
 
-public function main() {
+public function main() returns error?{
 
     calendar:CalendarConfiguration config = {
        oauth2Config: {
@@ -18,7 +18,7 @@ public function main() {
        }
     };
 
-    calendar:Client calendarClient = new (config);
+    calendar:Client calendarClient = check  new (config);
 
     boolean|error res = calendarClient->deleteCalendar(calendarId);
     if (res is boolean) {

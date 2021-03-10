@@ -7,7 +7,7 @@ configurable string refreshToken = ?;
 configurable string refreshUrl = ?;
 configurable string calendarId = ?;
 
-public function main() {
+public function main() returns error? {
 
     calendar:CalendarConfiguration config = {
        oauth2Config: {
@@ -17,7 +17,7 @@ public function main() {
            refreshUrl: refreshUrl
        }
     };
-    calendar:Client calendarClient = new (config);
+    calendar:Client calendarClient = check new (config);
 
     calendar:InputEvent event = {
        'start: {
