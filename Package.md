@@ -26,8 +26,17 @@ The Google Calendar Ballerina Connector allows you to access the Google Calendar
 * Download the Ballerina [distribution](https://ballerinalang.org/downloads/) SLAlpha2
   Ballerina Swan Lake Alpha Version 2 is required.
 
-* Instantiate the connector by giving authentication details in the HTTP client config. The HTTP client config has built-in support for BasicAuth and OAuth 2.0. Google Calendar uses OAuth 2.0 to authenticate and authorize requests. 
-  * The Google Calendar connector can be minimally instantiated in the HTTP client config using the access token or the client ID, client secret, and refresh token.
+## Compatibility
+
+|                             |            Versions             |
+|:---------------------------:|:-------------------------------:|
+| Ballerina Language          |     Swan Lake Alpha2            |
+| Google Calendar API         |             V3                  |
+
+
+**Obtaining Tokens to Run the Sample**
+
+* Instantiate the connector by giving authentication details in the HTTP client config. The HTTP client config has built-in support for OAuth 2.0. Google Calendar uses OAuth 2.0 to authenticate and authorize requests. The Google Calendar connector can be minimally instantiated in the HTTP client config using the access token or the client ID, client secret, and refresh token.
     * Access Token
     * Client ID
     * Client Secret
@@ -38,17 +47,8 @@ The Google Calendar Ballerina Connector allows you to access the Google Calendar
     * Callback address
     * Expiration time
 
-## Compatibility
 
-|                             |            Versions             |
-|:---------------------------:|:-------------------------------:|
-| Ballerina Language          |     Swan Lake Alpha2            |
-| Google Calendar API         |             V3                  |
-
-
-Instantiate the connector by giving authentication details in the HTTP client config. The HTTP client config has built-in support for OAuth 2.0. Google Calendar uses OAuth 2.0 to authenticate and authorize requests. The Google Calendar connector can be minimally instantiated in the HTTP client config using the access token or the client ID, client secret, and refresh token.
-
-**Obtaining Tokens to Run the Sample**
+**Obtaining Tokens**
 
 1. Visit [Google API Console](https://console.developers.google.com), click **Create Project**, and follow the wizard to create a new project.
 2. Go to **Credentials -> OAuth consent screen**, enter a product name to be shown to users, and click **Save**.
@@ -60,33 +60,16 @@ access token and refresh token).
 6. In a separate browser window or tab, visit [OAuth 2.0 playground](https://developers.google.com/oauthplayground), select the required Google Calendar scopes, and then click **Authorize APIs**.
 7. When you receive your authorization code, click **Exchange authorization code for tokens** to obtain the refresh token and access token. 
 
-**Add project configurations file**
+**Add configurations file**
 
 Add the project configuration file by creating a `Config.toml` file under the root path of the project structure.
 This file should have following configurations. Add the tokens obtained in the previous step to the `Config.toml` file.
 
-#### For client operations
 ```
-[ballerinax.googleapis_calendar]
-accessToken = "<access_token>"
 clientId = "<client_id">
 clientSecret = "<client_secret>"
 refreshToken = "<refresh_token>"
 refreshUrl = "<refresh_URL>"
-
-calendarId = "<calendar_id>"
-address = "<address>"
-```
-
-#### For listener operations
-```
-[ballerinax.googleapis_calendar]
-accessToken = "<access_token>"
-clientId = "<client_id">
-clientSecret = "<client_secret>"
-refreshToken = "<refresh_token>"
-refreshUrl = "<refresh_URL>"
-
 calendarId = "<calendar_id>"
 address = "<address>"
 ```
@@ -94,7 +77,15 @@ address = "<address>"
  **Samples**
 
 Samples are available at : https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/samples
+To run a sample, create a new TOML file with name `Config.toml` in the same directory as the `.bal` file with above-mentioned configurable values. Configurable value port is additionally required in order to use listener.
 
+```
+port = "<port>"
+```
+Run this command inside sample directory:
+    ```shell
+    $ bal run "<ballerina_file>"
+    ```
 ### Create Calendar
 ```ballerina
 import ballerina/log;

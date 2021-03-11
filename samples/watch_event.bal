@@ -19,9 +19,9 @@ public function main() returns error? {
         }
     };
 
-    calendar:Client calendarClient = new (config);
+    calendar:Client calendarClient = check new (config);
 
-    calendar:WatchResponse|error res = calendarClient->watchEvents(calendarId, address, "300");
+    calendar:WatchResponse|error res = calendarClient->watchEvents(calendarId, address);
     if (res is calendar:WatchResponse) {
         log:print(res.id);
     } else {

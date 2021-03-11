@@ -25,6 +25,34 @@
                         }        
                     },
                     {
+                        "name": "createCalendar",
+                        "displayName": "Create calendar",
+                        "parameters" : [
+                            {
+                                "name": "title",
+                                "displayName": "Calendar name"
+                            }
+                        ],
+                        "returnValue": {
+                            "name": "CalendarResource",
+                            "displayName": "Calendar"
+                        }
+                    },
+                    {
+                        "name": "deleteCalendar",
+                        "displayName": "Delete calendar",
+                        "parameters" : [
+                            {
+                                "name": "calendarId",
+                                "displayName": "Calendar id"
+                            }
+                        ],
+                        "returnValue": {
+                            "name": "boolean",
+                            "displayName": "Result"
+                        }
+                    },
+                    {
                         "name": "createEvent",
                         "displayName": "Create event",
                         "parameters" : [
@@ -38,14 +66,13 @@
                             },
                             {
                                 "name": "optional",
-                                "displayName": "Optional quary parameters"
+                                "displayName": "Optional query parameters"
                             }
                         ],
                         "returnValue": {
                             "name": "Event",
                             "displayName": "Event"
                         }
-        
                     },
                     {
                         "name": "quickAddEvent",
@@ -88,7 +115,7 @@
                             },
                             {
                                 "name": "optional",
-                                "displayName": "Optional quary parameters"
+                                "displayName": "Optional query parameters"
                             }
                         ],
                         "returnValue": {
@@ -171,8 +198,8 @@
                                 "displayName": "Calendar id"
                             },
                             {
-                                "name": "config",
-                                "displayName": "Subscription configuration"
+                                "name": "address",
+                                "displayName": "Subscription callback URL"
                             }
                         ],
                         "returnValue": {

@@ -18,13 +18,41 @@ Connects to Google Calendar using Ballerina.
 
 The Google Calendar Ballerina Connector allows you to access the Google Calendar API Version V3 through Ballerina. The connector can be used to implement some of the most common use cases of Google Calendar. The connector provides the capability to programmatically manage events and calendar, CRUD operations on event and calendar operations through the connector endpoints and listener for the events created in the calendar.
 
+![image](docs/images/calendar_connector.png)
+
 # Prerequisites
 
-* Java 11 Installed
-  Java Development Kit (JDK) with version 11 is required.
+* Java Development Kit (JDK) with version 11 is required.
 
-* Download the Ballerina [distribution](https://ballerinalang.org/downloads/) SLAlpha2
-  Ballerina Swan Lake Alpha Version 2 is required.
+* Ballerina Swan Lake Alpha Version 2 is required.
+ Download the Ballerina [distribution](https://ballerinalang.org/downloads/) SLAlpha2
+
+
+## Compatibility
+
+|                             |            Versions             |
+|:---------------------------:|:-------------------------------:|
+| Ballerina Language          |     Swan Lake Alpha2            |
+| Google Calendar API         |             V3                  |
+
+
+**Building the source**
+1. Clone this repository using the following command:
+    ```shell
+    $ git clone https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar.git
+    ```
+
+2. Run this command from the `module-ballerinax-googleapis.calendar` root directory to build without tests:
+    ```shell
+    $ bal build --skip-tests
+    ```
+
+3. Following configuration is required to run with tests.
+    ```shell
+    $ bal build
+    ```
+
+**Add configurations file**
 
 * Instantiate the connector by giving authentication details in the HTTP client config. The HTTP client config has built-in support for BasicAuth and OAuth 2.0. Google Calendar uses OAuth 2.0 to authenticate and authorize requests. 
   * The Google Calendar connector can be minimally instantiated in the HTTP client config using the access token or the client ID, client secret, and refresh token.
@@ -38,17 +66,20 @@ The Google Calendar Ballerina Connector allows you to access the Google Calendar
     * Callback address
     * Expiration time
 
-## Compatibility
+Add the project configuration file by creating a `Config.toml` file under the root path of the project structure.
+This file should have following configurations. Add the tokens obtained in the next step to the `Config.toml` file.
 
-|                             |            Versions             |
-|:---------------------------:|:-------------------------------:|
-| Ballerina Language          |     Swan Lake Alpha2            |
-| Google Calendar API         |             V3                  |
+```
+[ballerinax.googleapis_calendar]
+clientId = "<client_id">
+clientSecret = "<client_secret>"
+refreshToken = "<refresh_token>"
+refreshUrl = "<refresh_URL>"
+calendarId = "<calendar_id>"
+address = "<address>"
+```
 
-
-Instantiate the connector by giving authentication details in the HTTP client config. The HTTP client config has built-in support for OAuth 2.0. Google Calendar uses OAuth 2.0 to authenticate and authorize requests. The Google Calendar connector can be minimally instantiated in the HTTP client config using the access token or the client ID, client secret, and refresh token.
-
-**Obtaining Tokens to Run the Sample**
+**Obtaining tokens**
 
 1. Visit [Google API Console](https://console.developers.google.com), click **Create Project**, and follow the wizard to create a new project.
 2. Go to **Credentials -> OAuth consent screen**, enter a product name to be shown to users, and click **Save**.
@@ -60,40 +91,19 @@ access token and refresh token).
 6. In a separate browser window or tab, visit [OAuth 2.0 playground](https://developers.google.com/oauthplayground), select the required Google Calendar scopes, and then click **Authorize APIs**.
 7. When you receive your authorization code, click **Exchange authorization code for tokens** to obtain the refresh token and access token. 
 
-**Add project configurations file**
-
-Add the project configuration file by creating a `Config.toml` file under the root path of the project structure.
-This file should have following configurations. Add the tokens obtained in the previous step to the `Config.toml` file.
-
-#### For client operations
-```
-[ballerinax.googleapis_calendar]
-accessToken = "<access_token>"
-clientId = "<client_id">
-clientSecret = "<client_secret>"
-refreshToken = "<refresh_token>"
-refreshUrl = "<refresh_URL>"
-
-calendarId = "<calendar_id>"
-address = "<address>"
-```
-
-#### For listener operations
-```
-[ballerinax.googleapis_calendar]
-accessToken = "<access_token>"
-clientId = "<client_id">
-clientSecret = "<client_secret>"
-refreshToken = "<refresh_token>"
-refreshUrl = "<refresh_URL>"
-
-calendarId = "<calendar_id>"
-address = "<address>"
-```
 
 # **Samples**
 
 Samples are available at : https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/samples
+To run a sample, create a new TOML file with name `Config.toml` in the same directory as the `.bal` file with above-mentioned configurable values. Configurable value port is additionally required in order to use listener.
+
+```
+port = "<port>"
+```
+Run this command inside sample directory:
+    ```shell
+    $ bal run "<ballerina_file>"
+    ```
 
 ### Create Calendar
 ```ballerina
