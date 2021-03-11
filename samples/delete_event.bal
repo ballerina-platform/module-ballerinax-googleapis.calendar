@@ -21,10 +21,10 @@ public function main() returns error? {
 
     calendar:Client calendarClient = check new (config);
 
-    boolean|error res = calendarClient->deleteEvent(calendarId, eventId);
-    if (res is boolean) {
-        log:print("Event is deleted");
-    } else {
+    error? res = calendarClient->deleteEvent(calendarId, eventId);
+    if (res is error) {
         log:printError(res.message());
+    } else {
+        log:print("Event is deleted");
     }
 }

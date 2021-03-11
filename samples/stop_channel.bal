@@ -22,10 +22,10 @@ public function main() returns error? {
 
     calendar:Client calendarClient = check new (config);
 
-    boolean|error res = calendarClient->stopChannel(testChannelId, testResourceId);
-    if (res is boolean) {
-        log:print("Channel is terminated");
-    } else {
+    error? res = calendarClient->stopChannel(testChannelId, testResourceId);
+    if (res is error) {
         log:printError(res.message());
+    } else {
+        log:print("Channel is terminated");
     }
 }

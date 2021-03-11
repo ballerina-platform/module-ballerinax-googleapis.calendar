@@ -18,12 +18,12 @@ public function main() returns error?{
        }
     };
 
-    calendar:Client calendarClient = check  new (config);
+    calendar:Client calendarClient = check new (config);
 
-    boolean|error res = calendarClient->deleteCalendar(calendarId);
-    if (res is boolean) {
-        log:print("Calendar is deleted");
-    } else {
+    error? res = calendarClient->deleteCalendar(calendarId);
+    if (res is error) {
         log:printError(res.message());
+    } else {
+        log:print("Calendar is deleted");
     }
 }

@@ -27,7 +27,7 @@ listener listen:Listener googleListener = new (port, calendarClient, calendarId,
 service /calendar on googleListener {
     resource function post events(http:Caller caller, http:Request request) returns error? {
         listen:EventInfo payload = check googleListener.getEventType(caller, request);
-        if(payload?.eventType is string && payload?.event is calendar:Event) {
+        if (payload?.eventType is string && payload?.event is calendar:Event) {
             if (payload?.eventType == listen:DELETED) {
                 log:print("Event deleted");
             }

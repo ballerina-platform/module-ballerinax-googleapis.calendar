@@ -2,3 +2,7 @@
 org= "ballerinax"
 name= "googleapis_calendar"
 version= "0.1.4"
+license= ["Apache-2.0"]
+authors = ["Ballerina"]
+keywords = ["google", "calendar"]
+repository = "https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar"
