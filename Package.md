@@ -34,8 +34,8 @@ The Google Calendar Ballerina Connector allows you to access the Google Calendar
     * Refresh Token
     * Refresh URL
     * Calendar ID
-  * In order to use listener address is additionally required. Address URL is url path of the listener resource function. Expiration time is an optional parameter.
-    * Address URL
+  * Callback address is additionally required in order to use Google Calendar listener. It is the path of the listener resource function. The time-to-live in seconds for the notification channel is provided in optional parameter expiration time. By default it is 604800 seconds.
+    * Callback address
     * Expiration time
 
 ## Compatibility

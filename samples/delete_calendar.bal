@@ -18,7 +18,7 @@ public function main() returns error?{
        }
     };
 
-    calendar:Client calendarClient = check  new (config);
+    calendar:Client calendarClient = check new (config);
 
     boolean|error res = calendarClient->deleteCalendar(calendarId);
     if (res is boolean) {

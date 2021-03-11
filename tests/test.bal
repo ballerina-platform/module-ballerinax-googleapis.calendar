@@ -169,22 +169,12 @@ function testDeleteEvent() {
     }
 }
 
-// WatchConfiguration watchConfig = {
-//     id: "testId",
-//     token: "testToken",
-//     'type: "webhook",
-//     address: addressUrl,
-//     params: {
-//         ttl: "20000"
-//     }
-// };
-
 @test:Config{
-   // dependsOn: [testCreateCalendar]
+    dependsOn: [testCreateCalendar]
 }
 function testWatchEvents() {
     log:print("calendarClient -> watchEvents()");
-    WatchResponse|error res = calendarClient->watchEvents("primary", address);
+    WatchResponse|error res = calendarClient->watchEvents(testCalendarId, address);
     if (res is WatchResponse) {
         test:assertNotEquals(res.id, "", msg = "Expects channel id");
         testChannelId = <@untainted> res.id;

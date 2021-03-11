@@ -45,7 +45,7 @@ public class Listener {
             self.expiration);
         self.resourceId = res.resourceId;
         self.channelId = res.id;
-        log:print("Subscribed to channel id : "+ self.channelId + " resourcs id :  "+ self.resourceId);
+        log:print("Subscribed to channel id : " + self.channelId + " resourcs id :  " + self.resourceId);
         return self.httpListener.attach(s, name);
     }
 
