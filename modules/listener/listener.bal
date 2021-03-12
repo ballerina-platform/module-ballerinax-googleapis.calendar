@@ -30,7 +30,7 @@ public class Listener {
     private string channelId = "";
     private string? syncToken = ();
 
-    public isolated  function init(int port, calendar:Client calendarClient, string calendarId, string address, 
+    public isolated function init(int port, calendar:Client calendarClient, string calendarId, string address, 
                                     string? expiration = ()) returns error? {
         self.httpListener = check new (port);
         self.calendarClient = calendarClient;
@@ -39,7 +39,7 @@ public class Listener {
         self.expiration = expiration;
     }
 
-    public function attach(service object {} s, string[]|string? name = ()) returns error? {
+    public function attach(service object {} s, string[]|string? name = ()) returns @tainted error? {
         calendar:WatchResponse res = check self.calendarClient->watchEvents(self.calendarId, self.address, 
             self.expiration);
         self.resourceId = res.resourceId;
@@ -56,7 +56,7 @@ public class Listener {
         return self.httpListener.'start();
     }
 
-    public function gracefulStop() returns error? {
+    public function gracefulStop() returns @tainted error? {
         var res = check self.calendarClient->stopChannel(self.channelId, self.resourceId);
         log:print("Subscription stopped");
         return self.httpListener.gracefulStop();
@@ -71,43 +71,34 @@ public class Listener {
     # + caller - http:Caller for acknowleding to the request received
     # + request - http:Request that contains event related data
     # + return - If success, returns EventInfo record, else error
-    public function getEventType(http:Caller caller, http:Request request) returns @tainted error|EventInfo {
+    public function getEventType(http:Caller caller, http:Request request) returns @tainted EventInfo|error {
         EventInfo info  = {};
         if (request.getHeader(GOOGLE_CHANNEL_ID) == self.channelId && request.getHeader(GOOGLE_RESOURCE_ID) == 
             self.resourceId) {
             http:Response response = new;
             response.statusCode = http:STATUS_OK;
             if (request.getHeader(GOOGLE_RESOURCE_STATE) == SYNC) {
-                calendar:EventStreamResponse|error resp = self.calendarClient->getEventResponse(self.calendarId);
-                if (resp is calendar:EventStreamResponse) {
-                    self.syncToken = <@untainted>resp?.nextSyncToken;
-                }
+                calendar:EventStreamResponse resp = check self.calendarClient->getEventResponse(self.calendarId);
+                self.syncToken = resp?.nextSyncToken;
                 check caller->respond(response);
                 return info;
             } else {
                 calendar:EventStreamResponse resp = check self.calendarClient->getEventResponse(self.calendarId, 1,
                     self.syncToken);
-                self.syncToken = <@untainted>resp?.nextSyncToken;
+                self.syncToken = resp?.nextSyncToken;
                 stream<calendar:Event>? events = resp?.items;
                 check caller->respond(response);
                 if (events is stream<calendar:Event>) {
-                    record {|calendar:Event value;|}? env = events.next();
-                    if (env is record {|calendar:Event value;|}) {
-                        info.event = env?.value;
-                        string? created = env?.value?.created;
-                        string? updated = env?.value?.updated;
-                        calendar:Time? 'start = env?.value?.'start;
-                        calendar:Time? end = env?.value?.end;
-                        if (created is string && updated is string && 'start is calendar:Time && end is calendar:Time) {
-                            if (created.substring(0, 19) == updated.substring(0, 19)) {
-                                info.eventType = CREATED;
-                                return info;
-                            } else {
-                                info.eventType = UPDATED;
-                                return info;
-                            }
-                        }
-                        info.eventType = DELETED;
+                    record {|calendar:Event value;|}? event = events.next();
+                    if (event is record {|calendar:Event value;|}) {
+                        info.event = event?.value;
+                        string? created = event?.value?.created;
+                        string? updated = event?.value?.updated;
+                        calendar:Time? 'start = event?.value?.'start;
+                        calendar:Time? end = event?.value?.end;
+                        info.eventType = (created is string && updated is string && 'start is calendar:Time && 
+                            end is calendar:Time) ? ((created.substring(0, 19) == updated.substring(0, 19)) ?
+                            CREATED : UPDATED) : DELETED;
                         return info;
                     }
                     return error(EVENT_MAPPING_ERROR);

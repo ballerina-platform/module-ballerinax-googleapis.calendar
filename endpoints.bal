@@ -234,6 +234,10 @@ public client class Client {
     }
 }
 
+# Holds the parameters used to create a `Client`.
+#
+# + secureSocketConfig - OAuth2 configuration
+# + oauth2Config - Secure socket configuration  
 public type CalendarConfiguration record {
     http:OAuth2DirectTokenConfig oauth2Config;
     http:ClientSecureSocket secureSocketConfig?;

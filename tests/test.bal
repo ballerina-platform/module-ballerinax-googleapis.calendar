@@ -144,7 +144,7 @@ function testGetEvent() {
 @test:Config{
     dependsOn: [testCreateEvent]
 }
-function testUpdatevent() {
+function testUpdateEvent() {
     InputEvent event = setEvent("Event Updated");
     log:print("calendarClient -> updateEvent()");
     Event|error res = calendarClient->updateEvent(testCalendarId, testEventId, event);
@@ -156,7 +156,7 @@ function testUpdatevent() {
 }
 
 @test:Config {
-    dependsOn: [testGetEvent, testUpdatevent]
+    dependsOn: [testGetEvent, testUpdateEvent]
 }
 function testDeleteEvent() {
     log:print("calendarClient -> deleteEvent()");
