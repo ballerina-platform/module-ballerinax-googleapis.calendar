@@ -18,8 +18,6 @@ import ballerina/http;
 import ballerina/log;
 import ballerinax/googleapis_calendar as calendar;
 
-string? syncToken = ();
-
 # Listener for Google Calendar connector   
 public class Listener {
 
@@ -30,6 +28,7 @@ public class Listener {
     private string? expiration;
     private string resourceId = "";
     private string channelId = "";
+    private string? syncToken = ();
 
     public isolated  function init(int port, calendar:Client calendarClient, string calendarId, string address, 
                                     string? expiration = ()) returns error? {
@@ -81,14 +80,14 @@ public class Listener {
             if (request.getHeader(GOOGLE_RESOURCE_STATE) == SYNC) {
                 calendar:EventStreamResponse|error resp = self.calendarClient->getEventResponse(self.calendarId);
                 if (resp is calendar:EventStreamResponse) {
-                    syncToken = <@untainted>resp?.nextSyncToken;
+                    self.syncToken = <@untainted>resp?.nextSyncToken;
                 }
                 check caller->respond(response);
                 return info;
             } else {
                 calendar:EventStreamResponse resp = check self.calendarClient->getEventResponse(self.calendarId, 1,
-                    syncToken);
-                syncToken = <@untainted>resp?.nextSyncToken;
+                    self.syncToken);
+                self.syncToken = <@untainted>resp?.nextSyncToken;
                 stream<calendar:Event>? events = resp?.items;
                 check caller->respond(response);
                 if (events is stream<calendar:Event>) {
