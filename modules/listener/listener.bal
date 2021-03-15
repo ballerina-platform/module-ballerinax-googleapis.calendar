@@ -19,9 +19,7 @@ import ballerinax/googleapis_calendar as calendar;
 
 string? syncToken = ();
 
-@display {
-    label: "Google Calendar Listener"
-}
+@display {label: "Google Calendar Listener"}
 public class Listener {
     private http:Listener httpListener;
     private string calendarId;
