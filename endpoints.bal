@@ -69,7 +69,7 @@ public client class Client {
     # + return - True on success, else an error
     @display {label: "Delete calendar"}
     remote function deleteCalendar(@display {label: "Calendar id"} string calendarId) 
-                                   returns @tainted @display{label: "Result"} boolean|error {
+                                   returns @tainted @display {label: "Result"} boolean|error {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId]);
         var httpResponse = self.calendarClient->delete(path);
         json resp = check checkAndSetErrors(httpResponse);
