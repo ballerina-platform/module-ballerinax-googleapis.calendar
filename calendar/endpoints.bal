@@ -27,7 +27,6 @@ public client class Client {
     public isolated function init(CalendarConfiguration calendarConfig) returns error? {
         self.calendarConfiguration = calendarConfig;
         http:ClientSecureSocket? socketConfig = calendarConfig?.secureSocketConfig;
-
         self.calendarClient = check new (BASE_URL, {
             auth: calendarConfig.oauth2Config,
             secureSocket: socketConfig
@@ -91,10 +90,10 @@ public client class Client {
     # + text - Event description
     # + sendUpdates - Configuration for notifing the creation.
     # + return - Created event id on success else an error
-    remote isolated function quickAddEvent(string calendarId, string text, string? sendUpdates = ()) returns @tainted 
+    remote isolated function quickAddEvent(string calendarId, string text, string? sendUpdates = ()) returns @tainted
                                     Event|error {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, QUICK_ADD]);
-        path = sendUpdates is string ? prepareQueryUrl([path], [TEXT, SEND_UPDATES], [text, sendUpdates]) 
+        path = sendUpdates is string ? prepareQueryUrl([path], [TEXT, SEND_UPDATES], [text, sendUpdates])
             : prepareQueryUrl([path], [TEXT], [text]);
         var response = self.calendarClient->post(path, ());
         json result = check checkAndSetErrors(response);
@@ -108,7 +107,7 @@ public client class Client {
     # + event - Record that contains updated information
     # + optional - Record that contains optional query parameters
     # + return - Updated event on success else an error
-    remote isolated function updateEvent(string calendarId, string eventId, InputEvent event, CreateEventOptional? 
+    remote isolated function updateEvent(string calendarId, string eventId, InputEvent event, CreateEventOptional?
                                             optional = ()) returns @tainted Event|error {
         json payload = check event.cloneWithType(json);
         http:Request req = new;
@@ -125,7 +124,7 @@ public client class Client {
     # + syncToken - Token for getting incremental sync
     # + pageToken - Token for retrieving next page
     # + return - Event stream on success, else an error
-    remote isolated function getEvents(string calendarId, string? syncToken = (), string? pageToken 
+    remote isolated function getEvents(string calendarId, string? syncToken = (), string? pageToken
                                         = ()) returns @tainted stream<Event,error> {
         return new stream<Event,error>(new EventStream(self.calendarClient, calendarId, syncToken, pageToken));
     }
@@ -170,14 +169,14 @@ public client class Client {
                 address: address,
                 params: {
                     ttl: expiration
-                }           
+                }
             };
         } else {
             payload = {
                 id: uuid:createType1AsString(),
                 token: uuid:createType1AsString(),
                 'type: WEBHOOK,
-                address: address         
+                address: address
             };
         }
         http:Request req = new;
@@ -207,14 +206,14 @@ public client class Client {
         _ = check checkAndSetErrors(response);
     }
 
-    # Get event response.
+    # Get events response.
     # 
     # + calendarId - Calendar id
     # + count - Number of events required in one page (optional)
     # + pageToken - Token for retrieving next page
     # + syncToken - Token for getting incremental sync
     # + return - List of EventResponse object on success, else an error
-    remote isolated function getEventsResponse(string calendarId, string? pageToken = (), string? syncToken = (), 
+    remote isolated function getEventsResponse(string calendarId, string? pageToken = (), string? syncToken = (),
                                                 int? count = ()) returns @tainted EventResponse|error {
         string path = prepareUrlWithEventsOptional(calendarId, count, pageToken, syncToken);
         var httpResponse = self.calendarClient->get(path);
@@ -226,9 +225,9 @@ public client class Client {
 
 # Holds the parameters used to create a `Client`.
 #
-# + secureSocketConfig - OAuth2 configuration
-# + oauth2Config - Secure socket configuration  
+# + oauth2Config - OAuth2 configuration
+# + secureSocketConfig- Secure socket configuration
 public type CalendarConfiguration record {
-    http:OAuth2RefreshTokenGrantConfig oauth2Config;
+    http:BearerTokenConfig|http:OAuth2RefreshTokenGrantConfig oauth2Config;
     http:ClientSecureSocket secureSocketConfig?;
 };
