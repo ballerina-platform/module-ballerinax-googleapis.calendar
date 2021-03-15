@@ -50,28 +50,45 @@ access token and refresh token).
 
 ### Add configurations file
 
-* Instantiate the connector by giving authentication details in the HTTP client config. The HTTP client config has built-in support for OAuth 2.0. Google Calendar uses OAuth 2.0 to authenticate and authorize requests. The Google Calendar connector can be minimally instantiated in the HTTP client config using the access token or the client ID, client secret, and refresh token.
-    * Access Token
+* Instantiate the connector by giving authentication details in the HTTP client config. The HTTP client config has built-in support for Bearer Token Authentication and OAuth 2.0. Google Calendar uses OAuth 2.0 to authenticate and authorize requests. It uses the Direct Token Grant Type. The Google Calendar connector can be minimally instantiated in the HTTP client config using the OAuth 2.0 access token.
+    * Access Token 
+    ``` 
+    calendar:CalendarConfiguration config = {
+        oauth2Config: {
+            token: <access token>
+        }
+    }
+    ```
+
+    The Google Calendar connector can also be instantiated in the HTTP client config without the access token using the client ID, client secret, and refresh token.
     * Client ID
     * Client Secret
     * Refresh Token
     * Refresh URL
-    * Calendar ID
-  * Callback address is additionally required in order to use Google Calendar listener. It is the path of the listener resource function. The time-to-live in seconds for the notification channel is provided in optional parameter expiration time. By default it is 604800 seconds.
-    * Callback address
-    * Expiration time
+    ```
+    calendar:CalendarConfiguration config = {
+        oauth2Config: {
+            clientId: <clientId>,
+            clientSecret: <clientSecret>,
+            refreshToken: <refreshToken>,
+            refreshUrl: <refreshUrl>
+        }
+    }
+    ```
+* Callback address is additionally required in order to use Google Calendar listener. It is the path of the listener resource function. The time-to-live in seconds for the notification channel is provided in optional parameter expiration time. By default it is 604800 seconds.
+  * Callback address
+  * Expiration time
 
-Add the project configuration file by creating a `Config.toml` file under the root path of the project structure.
+* Add the project configuration file by creating a `Config.toml` file under the root path of the project structure.
 This file should have following configurations. Add the tokens obtained in the previous step to the `Config.toml` file.
 
-```
-clientId = "<client_id">
-clientSecret = "<client_secret>"
-refreshToken = "<refresh_token>"
-refreshUrl = "<refresh_URL>"
-calendarId = "<calendar_id>"
-address = "<address>"
-```
+  ```
+  clientId = "<client_id">
+  clientSecret = "<client_secret>"
+  refreshToken = "<refresh_token>"
+  refreshUrl = "<refresh_URL>"
+  address = "<address>"
+  ```
 
 
 # Quickstart(s)
