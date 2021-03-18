@@ -19,7 +19,7 @@ import ballerina/http;
 # Client for Google Calendar connector.
 # 
 # + calendarClient - HTTP client endpoint
-@display {label: "Google Calendar Client"}
+@display {label: "Google Calendar Client", iconPath: "GoogleCalendarLogo.png"}
 public client class Client {
     public http:Client calendarClient;
     CalendarConfiguration calendarConfiguration;
