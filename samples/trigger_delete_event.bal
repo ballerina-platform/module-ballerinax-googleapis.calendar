@@ -29,7 +29,7 @@ service /calendar on googleListener {
         listen:EventInfo payload = check googleListener.getEventType(caller, request);
         if (payload?.eventType is string && payload?.event is calendar:Event) {
             if (payload?.eventType == listen:DELETED) {
-                log:print("Event deleted");
+                log:printInfo("Event deleted");
             }
         }      
     }

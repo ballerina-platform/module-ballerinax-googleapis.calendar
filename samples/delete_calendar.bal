@@ -24,6 +24,6 @@ public function main() returns error?{
     if (res is error) {
         log:printError(res.message());
     } else {
-        log:print("Calendar is deleted");
+        log:printInfo("Calendar is deleted");
     }
 }

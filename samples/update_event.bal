@@ -33,7 +33,7 @@ public function main() returns error? {
 
     calendar:Event|error res = calendarClient->updateEvent(calendarId, eventId, event);
     if (res is calendar:Event) {
-        log:print(res.id);
+        log:printInfo(res.id);
     } else {
         log:printError(res.message());
     }

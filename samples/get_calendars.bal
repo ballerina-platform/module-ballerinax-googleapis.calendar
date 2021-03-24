@@ -22,7 +22,7 @@ public function main() returns error? {
     if (res is stream<calendar:Calendar>) {
         var cal = res.next();
         string id = check cal?.value?.id;
-        log:print(id);
+        log:printInfo(id);
     } else {
         log:printError(res.message());
     }

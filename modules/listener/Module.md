@@ -91,7 +91,7 @@ public function main() returns error? {
 
     calendar:WatchResponse|error res = calendarClient->watchEvents(calendarId, address);
     if (res is calendar:WatchResponse) {
-        log:print(res.id);
+        log:printInfo(res.id);
     } else {
         log:printError(res.message());
     }
@@ -131,7 +131,7 @@ public function main() returns error? {
     if (res is error) {
         log:printError(res.message());
     } else {
-        log:print("Channel is terminated");
+        log:printInfo("Channel is terminated");
     }
 }
 ```
@@ -177,7 +177,7 @@ service /calendar on googleListener {
                 var event = payload?.event;
                 string? summary = event?.summary;
                 if (summary is string) {
-                    log:print(summary);
+                    log:printInfo(summary);
                 } 
             }
         }
@@ -224,7 +224,7 @@ service /calendar on googleListener {
                 var event = payload?.event;
                 string? summary = event?.summary;
                 if (summary is string) {
-                    log:print(summary);
+                    log:printInfo(summary);
                 } 
             }
         }
@@ -268,7 +268,7 @@ service /calendar on googleListener {
         listen:EventInfo payload = check googleListener.getEventType(caller, request);
         if (payload?.eventType is string && payload?.event is calendar:Event) {
             if (payload?.eventType == listen:DELETED) {
-                log:print("Event deleted");
+                log:printInfo("Event deleted");
             }
         }
     }

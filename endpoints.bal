@@ -24,7 +24,7 @@ public client class Client {
     public http:Client calendarClient;
     CalendarConfiguration calendarConfiguration;
 
-    public function init(CalendarConfiguration calendarConfig) returns error? {
+    public isolated function init(CalendarConfiguration calendarConfig) returns error? {
         self.calendarConfiguration = calendarConfig;
         http:ClientSecureSocket? socketConfig = calendarConfig?.secureSocketConfig;
 
@@ -47,7 +47,7 @@ public client class Client {
     # 
     # + title - Calendar name
     # + return - Created Event on success else an error
-    remote function createCalendar(string title) returns @tainted CalendarResource|error {
+    remote isolated function createCalendar(string title) returns @tainted CalendarResource|error {
         http:Request req = new;
         string path = prepareUrl([CALENDAR_PATH, CALENDAR]);
         json payload = {
@@ -63,7 +63,7 @@ public client class Client {
     # 
     # + calendarId - Calendar id
     # + return - Error on failure
-    remote function deleteCalendar(string calendarId) returns @tainted error? {
+    remote isolated function deleteCalendar(string calendarId) returns @tainted error? {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId]);
         var httpResponse = self.calendarClient->delete(path);
         _ = check checkAndSetErrors(httpResponse);
@@ -75,7 +75,7 @@ public client class Client {
     # + event - Record that contains event information.
     # + optional - Record that contains optional query parameters
     # + return - Created Event on success else an error
-    remote function createEvent(string calendarId, InputEvent event, CreateEventOptional? optional = ()) returns
+    remote isolated function createEvent(string calendarId, InputEvent event, CreateEventOptional? optional = ()) returns
                                 @tainted Event|error {
         json payload = check event.cloneWithType(json);
         http:Request req = new;
@@ -92,7 +92,7 @@ public client class Client {
     # + text - Event description
     # + sendUpdates - Configuration for notifing the creation.
     # + return - Created event id on success else an error
-    remote function quickAddEvent(string calendarId, string text, string? sendUpdates = ()) returns @tainted 
+    remote isolated function quickAddEvent(string calendarId, string text, string? sendUpdates = ()) returns @tainted 
                                     Event|error {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, QUICK_ADD]);
         if (sendUpdates is string) {
@@ -112,7 +112,7 @@ public client class Client {
     # + event - Record that contains updated information
     # + optional - Record that contains optional query parameters
     # + return - Updated event on success else an error
-    remote function updateEvent(string calendarId, string eventId, InputEvent event, CreateEventOptional? optional = ())
+    remote isolated function updateEvent(string calendarId, string eventId, InputEvent event, CreateEventOptional? optional = ())
                                 returns @tainted Event|error {
         json payload = check event.cloneWithType(json);
         http:Request req = new;
@@ -145,7 +145,7 @@ public client class Client {
     # + calendarId - Calendar id
     # + eventId - Event id
     # + return - An Event object on success, else an error 
-    remote function getEvent(string calendarId, string eventId) returns @tainted Event|error {
+    remote isolated function getEvent(string calendarId, string eventId) returns @tainted Event|error {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, eventId]);
         var httpResponse = self.calendarClient->get(path);
         json resp = check checkAndSetErrors(httpResponse);
@@ -157,7 +157,7 @@ public client class Client {
     # + calendarId - Calendar id
     # + eventId - Event id
     # + return - Error on failure
-    remote function deleteEvent(string calendarId, string eventId) returns @tainted error? {
+    remote isolated function deleteEvent(string calendarId, string eventId) returns @tainted error? {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, eventId]);
         var httpResponse = self.calendarClient->delete(path);
         _ = check checkAndSetErrors(httpResponse);
@@ -169,7 +169,7 @@ public client class Client {
     # + address - The address where notifications are delivered for this channel
     # + expiration - The time-to-live in seconds for the notification channel
     # + return - WatchResponse object on success else an error
-    remote function watchEvents(string calendarId, string address, string? expiration = ()) returns @tainted WatchResponse|error {
+    remote isolated function watchEvents(string calendarId, string address, string? expiration = ()) returns @tainted WatchResponse|error {
         json payload;
         if (expiration is string) {
             payload = {
@@ -203,7 +203,7 @@ public client class Client {
     # + resourceId - Id of resource being watched
     # + token - An arbitrary string delivered to the target address with each notification (optional)
     # + return - Error on failure
-    remote function stopChannel(string id, string resourceId, string? token = ()) returns @tainted error? {
+    remote isolated function stopChannel(string id, string resourceId, string? token = ()) returns @tainted error? {
         json payload = {
             id: id,
             resourceId: resourceId,
@@ -236,6 +236,6 @@ public client class Client {
 # + secureSocketConfig - OAuth2 configuration
 # + oauth2Config - Secure socket configuration  
 public type CalendarConfiguration record {
-    http:OAuth2DirectTokenConfig oauth2Config;
+    http:OAuth2RefreshTokenGrantConfig oauth2Config;
     http:ClientSecureSocket secureSocketConfig?;
 };

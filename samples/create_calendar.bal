@@ -20,7 +20,7 @@ public function main() returns error? {
 
    calendar:CalendarResource|error res = calendarClient->createCalendar("testCalendar");
    if (res is calendar:CalendarResource) {
-      log:print(res.id);
+      log:printInfo(res.id);
    } else {
       log:printError(res.message());
    }

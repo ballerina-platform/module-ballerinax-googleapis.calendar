@@ -24,7 +24,7 @@ public function main() returns error? {
     if (res is stream<calendar:Event>) {
         var eve = res.next();
         string id = check eve?.value?.id;
-        log:print(id);
+        log:printInfo(id);
     } else {
         log:printError(res.message());
     }

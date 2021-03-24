@@ -14,7 +14,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/encoding;
+import ballerina/url;
 import ballerina/http;
 import ballerina/log;
 
@@ -49,7 +49,7 @@ isolated function prepareQueryUrl(string[] paths, string[] queryParamNames, stri
     int i = 0;
     foreach var name in queryParamNames {
         string value = queryParamValues[i];
-        var encoded = encoding:encodeUriComponent(value, ENCODING_CHARSET);
+        var encoded = url:encode(value, ENCODING_CHARSET);
         if (encoded is string) {
             if (first) {
                 url = url + name + EQUAL_SIGN + encoded;
@@ -58,7 +58,7 @@ isolated function prepareQueryUrl(string[] paths, string[] queryParamNames, stri
                 url = url + AMPERSAND + name + EQUAL_SIGN + encoded;
             }
         } else {
-            log:printError("Unable to encode value: " + value, err = encoded);
+            log:printError("Unable to encode value: " + value, 'error = encoded);
             break;
         }
         i = i + 1;

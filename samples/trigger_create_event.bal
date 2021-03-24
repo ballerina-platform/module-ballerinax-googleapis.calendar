@@ -32,7 +32,7 @@ service /calendar on googleListener {
                 var event = payload?.event;
                 string? summary = event?.summary;
                 if (summary is string) {
-                    log:print(summary);
+                    log:printInfo(summary);
                 } 
             }
         }

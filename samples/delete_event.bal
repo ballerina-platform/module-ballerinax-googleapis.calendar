@@ -25,6 +25,6 @@ public function main() returns error? {
     if (res is error) {
         log:printError(res.message());
     } else {
-        log:print("Event is deleted");
+        log:printInfo("Event is deleted");
     }
 }

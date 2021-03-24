@@ -39,12 +39,12 @@ public class Listener {
         self.expiration = expiration;
     }
 
-    public function attach(service object {} s, string[]|string? name = ()) returns @tainted error? {
+    public isolated function attach(service object {} s, string[]|string? name = ()) returns @tainted error? {
         calendar:WatchResponse res = check self.calendarClient->watchEvents(self.calendarId, self.address, 
             self.expiration);
         self.resourceId = res.resourceId;
         self.channelId = res.id;
-        log:print("Subscribed to channel id : " + self.channelId + " resourcs id :  " + self.resourceId);
+        log:printInfo("Subscribed to channel id : " + self.channelId + " resourcs id :  " + self.resourceId);
         return self.httpListener.attach(s, name);
     }
 
@@ -56,9 +56,9 @@ public class Listener {
         return self.httpListener.'start();
     }
 
-    public function gracefulStop() returns @tainted error? {
+    public isolated function gracefulStop() returns @tainted error? {
         check self.calendarClient->stopChannel(self.channelId, self.resourceId);
-        log:print("Subscription stopped");
+        log:printInfo("Subscription stopped");
         return self.httpListener.gracefulStop();
     }
 
@@ -73,11 +73,11 @@ public class Listener {
     # + return - If success, returns EventInfo record, else error
     public function getEventType(http:Caller caller, http:Request request) returns @tainted EventInfo|error {
         EventInfo info  = {};
-        if (request.getHeader(GOOGLE_CHANNEL_ID) == self.channelId && request.getHeader(GOOGLE_RESOURCE_ID) == 
-            self.resourceId) {
+        if (check request.getHeader(GOOGLE_CHANNEL_ID) == self.channelId && check request.getHeader(GOOGLE_RESOURCE_ID)
+            == self.resourceId) {
             http:Response response = new;
             response.statusCode = http:STATUS_OK;
-            if (request.getHeader(GOOGLE_RESOURCE_STATE) == SYNC) {
+            if (check request.getHeader(GOOGLE_RESOURCE_STATE) == SYNC) {
                 calendar:EventStreamResponse resp = check self.calendarClient->getEventResponse(self.calendarId);
                 self.syncToken = resp?.nextSyncToken;
                 check caller->respond(response);
@@ -97,8 +97,8 @@ public class Listener {
                         calendar:Time? 'start = event?.value?.'start;
                         calendar:Time? end = event?.value?.end;
                         info.eventType = (created is string && updated is string && 'start is calendar:Time && 
-                            end is calendar:Time) ? ((created.substring(0, 19) == updated.substring(0, 19)) ?
-                            CREATED : UPDATED) : DELETED;
+                            end is calendar:Time) ? ((created.substring(0, 19) == updated.substring(0, 19)) ? CREATED
+                            : UPDATED) : DELETED;
                         return info;
                     }
                     return error(EVENT_MAPPING_ERROR);

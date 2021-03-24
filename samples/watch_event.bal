@@ -23,7 +23,7 @@ public function main() returns error? {
 
     calendar:WatchResponse|error res = calendarClient->watchEvents(calendarId, address);
     if (res is calendar:WatchResponse) {
-        log:print(res.id);
+        log:printInfo(res.id);
     } else {
         log:printError(res.message());
     }
