@@ -6,22 +6,22 @@ configurable string clientSecret = ?;
 configurable string refreshToken = ?;
 configurable string refreshUrl = ?;
 
-public function main() {
+public function main() returns error? {
 
-    calendar:CalendarConfiguration config = {
-       oauth2Config: {
-           clientId: clientId,
-           clientSecret: clientSecret,
-           refreshToken: refreshToken,
-           refreshUrl: refreshUrl
-       }
-    };
-    calendar:Client calendarClient = new (config);
+   calendar:CalendarConfiguration config = {
+      oauth2Config: {
+         clientId: clientId,
+         clientSecret: clientSecret,
+         refreshToken: refreshToken,
+         refreshUrl: refreshUrl
+      }
+   };
+   calendar:Client calendarClient = check new (config);
 
-    CalendarResource|error res = calendarClient->createCalendar("testCalendar");
-    if (res is calendar:CalendarResource) {
-       log:print(res.id);
-    } else {
-       log:printError(res.message());
-    }
+   calendar:CalendarResource|error res = calendarClient->createCalendar("testCalendar");
+   if (res is calendar:CalendarResource) {
+      log:print(res.id);
+   } else {
+      log:printError(res.message());
+   }
 }

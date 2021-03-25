@@ -15,6 +15,7 @@
 // under the License.
 
 import ballerina/http;
+import ballerina/uuid;
 
 # Client for Google Calendar connector.
 # 
@@ -23,11 +24,11 @@ public client class Client {
     public http:Client calendarClient;
     CalendarConfiguration calendarConfiguration;
 
-    public function init(CalendarConfiguration calendarConfig) {
+    public function init(CalendarConfiguration calendarConfig) returns error? {
         self.calendarConfiguration = calendarConfig;
         http:ClientSecureSocket? socketConfig = calendarConfig?.secureSocketConfig;
 
-        self.calendarClient = checkpanic new (BASE_URL, {
+        self.calendarClient = check new (BASE_URL, {
             auth: calendarConfig.oauth2Config,
             secureSocket: socketConfig
         });
@@ -61,12 +62,11 @@ public client class Client {
     # Delete a calendar.
     # 
     # + calendarId - Calendar id
-    # + return - True on success, else an error
-    remote function deleteCalendar(string calendarId) returns @tainted boolean|error {
+    # + return - Error on failure
+    remote function deleteCalendar(string calendarId) returns @tainted error? {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId]);
         var httpResponse = self.calendarClient->delete(path);
-        json resp = check checkAndSetErrors(httpResponse);
-        return true;
+        _ = check checkAndSetErrors(httpResponse);
     }
 
     # Create an event.
@@ -156,21 +156,39 @@ public client class Client {
     # 
     # + calendarId - Calendar id
     # + eventId - Event id
-    # + return - True on success, else an error
-    remote function deleteEvent(string calendarId, string eventId) returns @tainted boolean|error {
+    # + return - Error on failure
+    remote function deleteEvent(string calendarId, string eventId) returns @tainted error? {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, eventId]);
         var httpResponse = self.calendarClient->delete(path);
-        json resp = check checkAndSetErrors(httpResponse);
-        return true;
+        _ = check checkAndSetErrors(httpResponse);
     }
 
     # Create subscription to get notification.
     # 
     # + calendarId - Calendar id
-    # + config - Configuration for the subscription
+    # + address - The address where notifications are delivered for this channel
+    # + expiration - The time-to-live in seconds for the notification channel
     # + return - WatchResponse object on success else an error
-    remote function watchEvents(string calendarId, WatchConfiguration config) returns @tainted WatchResponse|error {
-        json payload = check config.cloneWithType(json);
+    remote function watchEvents(string calendarId, string address, string? expiration = ()) returns @tainted WatchResponse|error {
+        json payload;
+        if (expiration is string) {
+            payload = {
+                id: uuid:createType1AsString(),
+                token: uuid:createType1AsString(),
+                'type: WEBHOOK,
+                address: address,
+                params: {
+                    ttl: expiration
+                }           
+            };
+        } else {
+            payload = {
+                id: uuid:createType1AsString(),
+                token: uuid:createType1AsString(),
+                'type: WEBHOOK,
+                address: address         
+            };
+        }
         http:Request req = new;
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, WATCH]);
         req.setJsonPayload(payload);
@@ -184,8 +202,8 @@ public client class Client {
     # + id - Channel id
     # + resourceId - Id of resource being watched
     # + token - An arbitrary string delivered to the target address with each notification (optional)
-    # + return - true on success else an error
-    remote function stopChannel(string id, string resourceId, string? token = ()) returns @tainted boolean|error {
+    # + return - Error on failure
+    remote function stopChannel(string id, string resourceId, string? token = ()) returns @tainted error? {
         json payload = {
             id: id,
             resourceId: resourceId,
@@ -195,8 +213,7 @@ public client class Client {
         http:Request req = new;
         req.setJsonPayload(payload);
         var response = self.calendarClient->post(path, req);
-        json result = check checkAndSetErrors(response);
-        return true;
+        _ = check checkAndSetErrors(response);
     }
 
     # Get event response.
@@ -214,6 +231,10 @@ public client class Client {
     }
 }
 
+# Holds the parameters used to create a `Client`.
+#
+# + secureSocketConfig - OAuth2 configuration
+# + oauth2Config - Secure socket configuration  
 public type CalendarConfiguration record {
     http:OAuth2DirectTokenConfig oauth2Config;
     http:ClientSecureSocket secureSocketConfig?;

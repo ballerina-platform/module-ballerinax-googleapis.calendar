@@ -8,7 +8,7 @@ configurable string refreshUrl = ?;
 configurable string calendarId = ?;
 configurable string address = ?;
 
-public function main() {
+public function main() returns error? {
 
     calendar:CalendarConfiguration config = {
         oauth2Config: {
@@ -19,18 +19,9 @@ public function main() {
         }
     };
 
-    calendar:Client calendarClient = new (config);
+    calendar:Client calendarClient = check new (config);
 
-    calendar:WatchConfiguration watchConfig = {
-        id: "testId",
-        token: "testToken",
-        'type: "webhook",
-        address: address,
-        params: {
-            ttl: "300"
-        }
-    };
-    calendar:WatchResponse|error res = calendarClient->watchEvents(calendarId, watchConfig);
+    calendar:WatchResponse|error res = calendarClient->watchEvents(calendarId, address);
     if (res is calendar:WatchResponse) {
         log:print(res.id);
     } else {

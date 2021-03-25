@@ -9,7 +9,7 @@ configurable string calendarId = ?;
 configurable string testChannelId = ?;
 configurable string testResourceId = ?;
 
-public function main() {
+public function main() returns error? {
 
     calendar:CalendarConfiguration config = {
         oauth2Config: {
@@ -20,12 +20,12 @@ public function main() {
         }
     };
 
-    calendar:Client calendarClient = new (config);
+    calendar:Client calendarClient = check new (config);
 
-    boolean|error res = calendarClient->stopChannel(testChannelId, testResourceId);
-    if (res is boolean) {
-        log:print("Channel is terminated");
-    } else {
+    error? res = calendarClient->stopChannel(testChannelId, testResourceId);
+    if (res is error) {
         log:printError(res.message());
+    } else {
+        log:print("Channel is terminated");
     }
 }

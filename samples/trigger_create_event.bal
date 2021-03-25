@@ -3,13 +3,14 @@ import ballerina/log;
 import ballerinax/googleapis_calendar as calendar;
 import ballerinax/googleapis_calendar.'listener as listen;
 
+configurable int port = ?;
 configurable string clientId = ?;
 configurable string clientSecret = ?;
 configurable string refreshToken = ?;
 configurable string refreshUrl = ?;
-configurable string channelId = ?;
-configurable string resourceId = ?;
 configurable string calendarId = ?;
+configurable string address = ?;
+configurable string expiration = ?;
 
 calendar:CalendarConfiguration config = {
     oauth2Config: {
@@ -20,20 +21,20 @@ calendar:CalendarConfiguration config = {
     }
 };
 
-calendar:Client calendarClient = new (config);
-listener listen:Listener googleListener = new (4567,calendarClient, channelId, resourceId, calendarId);
+calendar:Client calendarClient = check new (config);
+listener listen:Listener googleListener = new (port, calendarClient, calendarId, address, expiration);
 
 service /calendar on googleListener {
-    resource function post events(http:Caller caller, http:Request request){
-        listen:EventInfo payload = checkpanic googleListener.getEventType(caller, request);
-        if(payload?.eventType is string && payload?.event is calendar:Event) {
+    resource function post events(http:Caller caller, http:Request request)  returns error? {
+        listen:EventInfo payload = check googleListener.getEventType(caller, request);
+        if (payload?.eventType is string && payload?.event is calendar:Event) {
             if (payload?.eventType == listen:CREATED) {
                 var event = payload?.event;
-                string? summary = event?.summary;        
+                string? summary = event?.summary;
                 if (summary is string) {
                     log:print(summary);
                 } 
             }
-        }      
+        }
     }
 }

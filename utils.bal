@@ -42,7 +42,7 @@ isolated function prepareUrl(string[] paths) returns string {
 # + queryParamValues - An array of query param values
 # + return - The prepared URL with encoded query
 isolated function prepareQueryUrl(string[] paths, string[] queryParamNames, string[] queryParamValues) 
-returns string {
+                                    returns string {
     string url = prepareUrl(paths);
     url = url + QUESTION_MARK;
     boolean first = true;
@@ -73,13 +73,11 @@ returns string {
 # + eventId - Event id
 # + return - The prepared URL with encoded query
 isolated function prepareUrlWithEventOptional(string calendarId, CreateEventOptional? optional = (), 
-string? eventId = ()) returns string {
+                                                string? eventId = ()) returns string {
     string[] value = [];
     map<string> optionalMap = {};
     string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS]);
-    if (eventId is string) {
-        path = prepareUrl([path, eventId]);
-    }   
+    path = eventId is string ? prepareUrl([path, eventId]) : path;
     if (optional is CreateEventOptional) {
         if (optional.conferenceDataVersion is int) {
             optionalMap[CONFERENCE_DATA_VERSION] = optional.conferenceDataVersion.toString();
@@ -172,9 +170,9 @@ isolated function checkAndSetErrors(http:Response|http:PayloadType|error httpRes
 # + syncToken - Token for getting incremental sync
 # + pageToken - Token for retrieving next page
 # + return - EventStreamResponse record on success, else an error
-function getEventsStream(http:Client calendarClient, string calendarId, @tainted EventStreamResponse 
-response, @tainted Event[] events, int? count = (), string? syncToken = (), string? pageToken = ()) 
-returns @tainted EventStreamResponse|error {
+function getEventsStream(http:Client calendarClient, string calendarId, @tainted EventStreamResponse response,
+                            @tainted Event[] events, int? count = (), string? syncToken = (), string? pageToken = ()) 
+                            returns @tainted EventStreamResponse|error {
     string[] value = [];
     map<string> optionals = {};
     if (syncToken is string) {
@@ -232,7 +230,7 @@ returns @tainted EventStreamResponse|error {
 # + optional - Record that contains optional parameters
 # + return - Calendar stream on success, else an error
 function getCalendarsStream(http:Client calendarClient, @tainted Calendar[] calendars, CalendarListOptional? 
-optional = ()) returns @tainted stream<Calendar>|error {
+                            optional = ()) returns @tainted stream<Calendar>|error {
     string path = <@untainted> prepareUrlWithCalendarOptional(optional);
     var httpResponse = calendarClient->get(path);
     json resp = check checkAndSetErrors(httpResponse);

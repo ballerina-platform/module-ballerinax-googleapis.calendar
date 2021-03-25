@@ -23,7 +23,7 @@ configurable string clientId = os:getEnv("CLIENT_ID");
 configurable string clientSecret = os:getEnv("CLIENT_SECRET");
 configurable string refreshToken = os:getEnv("REFRESH_TOKEN");
 configurable string refreshUrl = os:getEnv("REFRESH_URL");
-configurable string addressUrl = os:getEnv("ADDRESS");
+configurable string address = os:getEnv("ADDRESS");
 
 CalendarConfiguration config = {
     oauth2Config: {
@@ -34,7 +34,7 @@ CalendarConfiguration config = {
     }
 };
 
-Client calendarClient = new(config); 
+Client calendarClient = check new (config); 
 
 string testEventId = "";
 string testChannelId = "";
@@ -77,10 +77,8 @@ function testCreateCalendar() {
 @test:AfterSuite {}
 function testDeleteCalendar() {
     log:print("calendarClient -> deleteCalendar()");
-    boolean|error res = calendarClient->deleteCalendar(testCalendarId);
-    if (res is boolean) {
-        test:assertTrue(res, msg = "Expects true on success");
-    } else {
+    error? res = calendarClient->deleteCalendar(testCalendarId);
+    if (res is error) {
         test:assertFail(res.message());
     }
 }
@@ -144,7 +142,7 @@ function testGetEvent() {
 @test:Config{
     dependsOn: [testCreateEvent]
 }
-function testUpdatevent() {
+function testUpdateEvent() {
     InputEvent event = setEvent("Event Updated");
     log:print("calendarClient -> updateEvent()");
     Event|error res = calendarClient->updateEvent(testCalendarId, testEventId, event);
@@ -156,35 +154,23 @@ function testUpdatevent() {
 }
 
 @test:Config {
-    dependsOn: [testGetEvent, testUpdatevent]
+    dependsOn: [testGetEvent, testUpdateEvent]
 }
 function testDeleteEvent() {
     log:print("calendarClient -> deleteEvent()");
-    boolean|error res = calendarClient->deleteEvent(testCalendarId, testEventId);
-    boolean|error resp = calendarClient->deleteEvent(testCalendarId, testQuickAddEventId);
-    if (res is boolean) {
-        test:assertTrue(res, msg = "Expects true on success");
-    } else {
+    error? res = calendarClient->deleteEvent(testCalendarId, testEventId);
+    error? resp = calendarClient->deleteEvent(testCalendarId, testQuickAddEventId);
+    if (res is error) {
         test:assertFail(res.message());
     }
 }
-
-WatchConfiguration watchConfig = {
-    id: "testId",
-    token: "testToken",
-    'type: "webhook",
-    address: addressUrl,
-    params: {
-        ttl: "20000"
-    }
-};
 
 @test:Config{
     dependsOn: [testCreateCalendar]
 }
 function testWatchEvents() {
     log:print("calendarClient -> watchEvents()");
-    WatchResponse|error res = calendarClient->watchEvents(testCalendarId, watchConfig);
+    WatchResponse|error res = calendarClient->watchEvents(testCalendarId, address);
     if (res is WatchResponse) {
         test:assertNotEquals(res.id, "", msg = "Expects channel id");
         testChannelId = <@untainted> res.id;
@@ -199,10 +185,8 @@ function testWatchEvents() {
 }
 function testStopChannel() {
     log:print("calendarClient -> stopChannel()");
-    boolean|error res = calendarClient->stopChannel(testChannelId, testResourceId);
-    if (res is boolean) {
-        test:assertTrue(res, msg = "Expects true on success");
-    } else {
+    error? res = calendarClient->stopChannel(testChannelId, testResourceId);
+    if (res is error) {
         test:assertFail(res.message());
     }
 }

@@ -6,7 +6,7 @@ configurable string clientSecret = ?;
 configurable string refreshToken = ?;
 configurable string refreshUrl = ?;
 
-public function main() returns @tainted error? {
+public function main() returns error? {
 
     calendar:CalendarConfiguration config = {
         oauth2Config: {
@@ -16,7 +16,7 @@ public function main() returns @tainted error? {
             refreshUrl: refreshUrl
         }
     };
-    calendar:Client calendarClient = new (config);
+    calendar:Client calendarClient = check new (config);
 
     stream<calendar:Calendar>|error res = calendarClient->getCalendars();
     if (res is stream<calendar:Calendar>) {
