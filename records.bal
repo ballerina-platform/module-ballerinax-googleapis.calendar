@@ -89,14 +89,14 @@ public type CreateEventOptional record {
 # + timeZone - The time zone of the calendar
 # + conferenceProperties - Conferencing properties for this calendar
 public type CalendarResource record {
-string kind;
-string etag;
-string id;
-string summary;
-string description?;
-string location?;
-string timeZone;
-ConferenceProperties conferenceProperties;
+    string kind;
+    string etag;
+    string id;
+    string summary;
+    string description?;
+    string location?;
+    string timeZone;
+    ConferenceProperties conferenceProperties;
 };
 
 # Define Event response.
@@ -122,29 +122,6 @@ public type EventResponse record {
     string nextSyncToken?;
     string nextPageToken?;
     Event[] items;
-};
-
-# Define Event Stream Resource.
-#
-# + kind - Type of the collection
-# + etag - ETag of the collection
-# + summary - Title of the calendar.
-# + updated - Last modification time of the calendar
-# + timeZone - The time zone of the calendar
-# + accessRole - The user's access role for this calendar.
-# + defaultReminders - The default reminders on the calendar for the authenticated user
-# + nextSyncToken - Token used to retrieve only the entries that have changed since this result was returned
-# + items - List of events on the calendar.
-public type EventStreamResponse record {
-    string kind?;
-    string etag?;
-    string summary?;
-    string updated?;
-    string timeZone?;
-    string accessRole?;
-    Reminder[] defaultReminders?;
-    string nextSyncToken?;
-    stream<Event> items?;
 };
 
 # Represent default reminders on the calendar for the authenticated user.
@@ -437,11 +414,11 @@ public type Source record {
 # + iconLink - URL link to the attachment's icon
 # + fileId - ID of the attached file
 public type Attachment record {
-string fileUrl;
-string title?;
-string mimeType?;
-string iconLink?;
-string fileId?;
+    string fileUrl;
+    string title?;
+    string mimeType?;
+    string iconLink?;
+    string fileId?;
 };
 
 # Define watch response.
@@ -530,16 +507,14 @@ public type Notification record {
 # Define optionals for calendar list request.
 #
 # + minAccessRole - The minimum access role for the user in the returned entries
-# + pageToken - Token used to access the next page of this result
 # + showDeleted - Whether to include deleted calendar list entries in the result
 # + showHidden - Whether to show hidden entries
 # + syncToken - Token used to access the next page of this result
 public type CalendarListOptional record {
-    string? minAccessRole = ();
-    string? pageToken = ();
-    boolean? showDeleted = ();
-    boolean? showHidden = ();
-    string? syncToken = ();
+    string minAccessRole?;
+    boolean showDeleted?;
+    boolean showHidden?;
+    string syncToken?;
 };
 
 # Define calendar list response.

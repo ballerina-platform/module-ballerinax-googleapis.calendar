@@ -67,45 +67,50 @@ public class Listener {
     }
 
     # Returns calendar event according to the incoming request.
-    # 
+    #
     # + caller - http:Caller for acknowleding to the request received
     # + request - http:Request that contains event related data
     # + return - If success, returns EventInfo record, else error
     public function getEventType(http:Caller caller, http:Request request) returns @tainted EventInfo|error {
-        EventInfo info  = {};
+        EventInfo info = {};
         if (check request.getHeader(GOOGLE_CHANNEL_ID) == self.channelId && check request.getHeader(GOOGLE_RESOURCE_ID)
             == self.resourceId) {
             http:Response response = new;
             response.statusCode = http:STATUS_OK;
             if (check request.getHeader(GOOGLE_RESOURCE_STATE) == SYNC) {
-                calendar:EventStreamResponse resp = check self.calendarClient->getEventResponse(self.calendarId);
-                self.syncToken = resp?.nextSyncToken;
+                self.syncToken = check self.getNextPageToken(self.calendarClient, self.calendarId);
                 check caller->respond(response);
                 return info;
             } else {
-                calendar:EventStreamResponse resp = check self.calendarClient->getEventResponse(self.calendarId, 1,
-                    self.syncToken);
-                self.syncToken = resp?.nextSyncToken;
-                stream<calendar:Event>? events = resp?.items;
+                calendar:EventResponse resp = check self.calendarClient->getEventResponse(self.calendarId, syncToken 
+                    = self.syncToken);
                 check caller->respond(response);
-                if (events is stream<calendar:Event>) {
-                    record {|calendar:Event value;|}? event = events.next();
-                    if (event is record {|calendar:Event value;|}) {
-                        info.event = event?.value;
-                        string? created = event?.value?.created;
-                        string? updated = event?.value?.updated;
-                        calendar:Time? 'start = event?.value?.'start;
-                        calendar:Time? end = event?.value?.end;
-                        info.eventType = (created is string && updated is string && 'start is calendar:Time && 
-                            end is calendar:Time) ? ((created.substring(0, 19) == updated.substring(0, 19)) ? CREATED
-                            : UPDATED) : DELETED;
-                        return info;
-                    }
-                    return error(EVENT_MAPPING_ERROR);
-                }
-                return error(EVENT_STREAM_MAPPING_ERROR);
+                self.syncToken = resp?.nextSyncToken;
+                calendar:Event[] events = resp?.items;
+                calendar:Event event = events[0];
+                info.event = event;
+                string? created = event?.created;
+                string? updated = event?.updated;
+                calendar:Time? 'start = event?.'start;
+                calendar:Time? end = event?.end;
+                info.eventType = (created is string && updated is string && 'start is calendar:Time && end is
+                    calendar:Time) ? ((created.substring(0, 19) == updated.substring(0, 19)) ? CREATED : UPDATED)
+                    : DELETED;
+                return info;
             }
         }
         return error(INVALID_ID_ERROR);
+    }
+
+    function getNextPageToken(calendar:Client httpClient, string calendarId, string? pageToken = ()) returns 
+        @tainted string?|error {
+        calendar:EventResponse resp = check httpClient->getEventResponse(calendarId, pageToken = pageToken);
+        string? nextPageToken = resp?.nextPageToken;
+        if (nextPageToken is string) {
+            var token = check self.getNextPageToken(httpClient, calendarId, nextPageToken);
+        }
+        log:printInfo(resp?.nextPageToken.toString());
+        log:printInfo(resp?.nextSyncToken.toString());
+        return resp?.nextSyncToken;
     }
 }

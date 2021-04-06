@@ -38,9 +38,8 @@ public client class Client {
     # 
     # + optional - Record that contains optionals
     # + return - Stream of Calendars on success else an error
-    remote function getCalendars(CalendarListOptional? optional = ()) returns @tainted stream<Calendar>|error {
-        Calendar[] allCalendars = [];
-        return getCalendarsStream(self.calendarClient, allCalendars, optional);
+    remote isolated function getCalendars(CalendarListOptional? optional = ()) returns @tainted stream<Calendar,error> {
+        return new stream<Calendar,error>(new CalendarStream(self.calendarClient, optional));
     }
 
     # Create a calendar.
@@ -95,11 +94,13 @@ public client class Client {
     remote isolated function quickAddEvent(string calendarId, string text, string? sendUpdates = ()) returns @tainted 
                                     Event|error {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, QUICK_ADD]);
-        if (sendUpdates is string) {
-            path = prepareQueryUrl([path], [TEXT, SEND_UPDATES], [text, sendUpdates]);
-        } else {
-            path = prepareQueryUrl([path], [TEXT], [text]);
-        }
+        path = sendUpdates is string ? prepareQueryUrl([path], [TEXT, SEND_UPDATES], [text, sendUpdates]) 
+            : prepareQueryUrl([path], [TEXT], [text]);
+        // if (sendUpdates is string) {
+        //     path = prepareQueryUrl([path], [TEXT, SEND_UPDATES], [text, sendUpdates]);
+        // } else {
+        //     path = prepareQueryUrl([path], [TEXT], [text]);
+        // }
         var response = self.calendarClient->post(path, ());
         json result = check checkAndSetErrors(response);
         return toEvent(result);
@@ -126,18 +127,13 @@ public client class Client {
     # Get all events.
     # 
     # + calendarId - Calendar id
-    # + count - Number events required (optional)
+    # + count - Number of events required in one page (optional)
     # + syncToken - Token for getting incremental sync
     # + pageToken - Token for retrieving next page
     # + return - Event stream on success, else an error
-    remote function getEvents(string calendarId, int? count = (), string? syncToken = (), string? pageToken = ())
-                                returns @tainted stream<Event>|error {
-        EventStreamResponse response = check self->getEventResponse(calendarId, count, syncToken, pageToken);
-        stream<Event>? events = response?.items;
-        if (events is stream<Event>) {
-            return events;
-        }
-        return error(ERR_EVENTS);       
+    remote isolated function getEvents(string calendarId, int? count = (), string? syncToken = (), string? pageToken = ())
+                                returns @tainted stream<Event,error> {
+        return new stream<Event,error>(new EventStream(self.calendarClient, calendarId, count, syncToken, pageToken));
     }
 
     # Get an event.
@@ -219,15 +215,17 @@ public client class Client {
     # Get event response.
     # 
     # + calendarId - Calendar id
-    # + count - Number events required (optional)
-    # + syncToken - Token for getting incremental sync
+    # + count - Number of events required in one page (optional)
     # + pageToken - Token for retrieving next page
+    # + syncToken - Token for getting incremental sync
     # + return - List of EventResponse object on success, else an error
-    remote function getEventResponse(string calendarId, int? count = (), string? syncToken = (), string? pageToken = ())
-                                        returns @tainted EventStreamResponse|error {
-        EventStreamResponse response = {};
-        Event[] allEvents = [];
-        return getEventsStream(self.calendarClient, calendarId, response, allEvents, count, syncToken, pageToken);
+    remote isolated function getEventResponse(string calendarId, int? count = (), string? pageToken = (), string? syncToken = ())
+                                        returns @tainted EventResponse|error {
+        string path = prepareUrlWithEventsOptional(calendarId, count, pageToken, syncToken);
+        var httpResponse = self.calendarClient->get(path);
+        json resp = check checkAndSetErrors(httpResponse);
+        return toEventResponse(resp);
+
     }
 }
 

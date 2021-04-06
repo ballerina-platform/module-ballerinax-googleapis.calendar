@@ -47,12 +47,14 @@ string testCalendarId = "";
 }
 function testGetCalendars() {
     log:printInfo("calendarClient -> getCalendars()");
-    stream<Calendar>|error res = calendarClient->getCalendars();
-    if (res is stream<Calendar>) {
-        var calendar = res.next();
-        test:assertNotEquals(calendar?.value?.id, "", msg = "Found 0 records");
+    stream<Calendar,error> resultStream = calendarClient->getCalendars();
+    record {|Calendar value;|}|error? res = resultStream.next();
+    if (res is record {|Calendar value;|}) {
+        test:assertNotEquals(res.value["id"], "", msg = "Found 0 records");
     } else {
-        test:assertFail(res.message());
+        if(res is error){
+            test:assertFail(res.message());
+        }
     }
 }
 
@@ -113,16 +115,18 @@ function testquickAdd() {
 }
 
 @test:Config {
-    dependsOn: [testGetEvent, testquickAdd]
+   // dependsOn: [testGetEvent, testquickAdd]
 }
 function testGetEvents() {
     log:printInfo("calendarClient -> getEvents()");
-    stream<Event>|error res = calendarClient->getEvents(testCalendarId);
-    if (res is stream<Event>) {
-        var event = res.next();
-        test:assertNotEquals(event?.value, "", msg = "Found 0 records");
+    stream<Event,error> resultStream = calendarClient->getEvents("primary");
+    record {|Event value;|}|error? res = resultStream.next();
+    if (res is record {|Event value;|}) {
+        test:assertNotEquals(res.value["id"], "", msg = "Found 0 records");
     } else {
-        test:assertFail(res.message());
+        if(res is error){
+            test:assertFail(res.message());
+        }
     }
 }
 
@@ -196,8 +200,8 @@ function testStopChannel() {
 }
 function testGetEventResponse() {
     log:printInfo("calendarClient -> getEventResponse()");
-    EventStreamResponse|error res = calendarClient->getEventResponse(testCalendarId);
-    if (res is EventStreamResponse) {
+    EventResponse|error res = calendarClient->getEventResponse(testCalendarId);
+    if (res is EventResponse) {
         test:assertNotEquals(res?.kind, "", msg = "Expects event kind");
     } else {
         test:assertFail(res.message());

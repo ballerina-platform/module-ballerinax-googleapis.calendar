@@ -26,9 +26,7 @@ isolated function prepareUrl(string[] paths) returns string {
     string url = EMPTY_STRING;
     if (paths.length() > 0) {
         foreach var path in paths {
-            if (!path.startsWith(FORWARD_SLASH)) {
-                url = url + FORWARD_SLASH;
-            }
+            url = (!path.startsWith(FORWARD_SLASH)) ? (url + FORWARD_SLASH) : url;
             url = url + path;
         }
     }
@@ -103,25 +101,25 @@ isolated function prepareUrlWithEventOptional(string calendarId, CreateEventOpti
 # 
 # + optional - Record that contains optional parameters
 # + return - The prepared URL with encoded query
-isolated function prepareUrlWithCalendarOptional(CalendarListOptional? optional = ()) returns string {
+isolated function prepareUrlWithCalendarOptional(string? pageToken = (), CalendarListOptional? optional = ()) returns string {
     string[] value = [];
     map<string> optionalMap = {};
     string path = prepareUrl([CALENDAR_PATH, USERS, ME, CALENDAR_LIST]);  
     if (optional is CalendarListOptional) {
-        if (optional.minAccessRole is string) {
-            optionalMap[MIN_ACCESS_ROLE] = optional.minAccessRole.toString();
+        if (optional?.minAccessRole is string) {
+            optionalMap[MIN_ACCESS_ROLE] = optional?.minAccessRole.toString();
         }
-        if (optional.pageToken is string) {
-            optionalMap[PAGE_TOKEN] = optional.pageToken.toString();
+        if (pageToken is string) {
+            optionalMap[PAGE_TOKEN] = pageToken;
         }
-        if (optional.showDeleted is boolean) {
-            optionalMap[SHOW_DELETED] = optional.showDeleted.toString();
+        if (optional?.showDeleted is boolean) {
+            optionalMap[SHOW_DELETED] = optional?.showDeleted.toString();
         }
-        if (optional.showHidden is boolean) {
-            optionalMap[SHOW_HIDDEN] = optional.showHidden.toString();
+        if (optional?.showHidden is boolean) {
+            optionalMap[SHOW_HIDDEN] = optional?.showHidden.toString();
         }
-        if (optional.syncToken is string) {
-            optionalMap[SYNC_TOKEN] = optional.syncToken.toString();
+        if (optional?.syncToken is string) {
+            optionalMap[SYNC_TOKEN] = optional?.syncToken.toString();
         }
         foreach var val in optionalMap {
             value.push(val);
@@ -129,6 +127,32 @@ isolated function prepareUrlWithCalendarOptional(CalendarListOptional? optional 
         path = prepareQueryUrl([path], optionalMap.keys(), value);
     }
     return path;
+}
+
+# Prepare URL with optional parameters.
+# 
+# + calendarId - Record that contains optional parameters
+# + count -  Number of events required in one page
+# + pageToken - Token for retrieving next page
+# + syncToken - Token for getting incremental sync
+# + return - The prepared URL with encoded query
+isolated function prepareUrlWithEventsOptional(string calendarId, int? count, string? pageToken, string? syncToken)
+    returns string {
+    string[] value = [];
+    map<string> optionals = {};    
+    if (count is int) {
+        optionals[MAX_RESULTS] = count.toString();
+    }
+    if (pageToken is string) {
+        optionals[PAGE_TOKEN] = pageToken;
+    }
+    if (syncToken is string) {
+        optionals[SYNC_TOKEN] = syncToken;
+    }
+    foreach var val in optionals {
+        value.push(val);
+    }
+    return <@untainted> prepareQueryUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS], optionals.keys(), value);
 }
 
 # Check HTTP response and return JSON payload on success else an error.
@@ -157,98 +181,5 @@ isolated function checkAndSetErrors(http:Response|http:PayloadType|error httpRes
         }
     } else {
         return error(HTTP_ERROR_MSG + (<error>httpResponse).message());
-    }
-}
-
-# Get events stream.
-# 
-# + calendarClient - Calendar client
-# + calendarId - Calendar id
-# + response - EventStreamResponse record
-# + events - Event array
-# + count - Number events required (optional)
-# + syncToken - Token for getting incremental sync
-# + pageToken - Token for retrieving next page
-# + return - EventStreamResponse record on success, else an error
-function getEventsStream(http:Client calendarClient, string calendarId, @tainted EventStreamResponse response,
-                            @tainted Event[] events, int? count = (), string? syncToken = (), string? pageToken = ()) 
-                            returns @tainted EventStreamResponse|error {
-    string[] value = [];
-    map<string> optionals = {};
-    if (syncToken is string) {
-        optionals[SYNC_TOKEN] = syncToken;
-    }
-    if (count is int) {
-        optionals[MAX_RESULTS] = count.toString();
-    }
-    if (pageToken is string) {
-        optionals[PAGE_TOKEN] = pageToken;
-    }
-    optionals.forEach(function(string val) {
-        value.push(val);
-    });
-    string path = <@untainted> prepareQueryUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS], optionals.keys(), value);
-    var httpResponse = calendarClient->get(path);
-    json resp = check checkAndSetErrors(httpResponse);
-    EventResponse|error res = resp.cloneWithType(EventResponse);
-    if (res is EventResponse) {
-        int i = events.length();
-        foreach Event item in res.items {
-            events[i] = item;
-            i = i + 1;
-        }
-        stream<Event> eventStream = (<@untainted>events).toStream();
-        string? nextPageToken = res?.nextPageToken;
-        if (nextPageToken is string) {
-            var streams = check getEventsStream(calendarClient, calendarId, response, events, count,
-            syncToken, nextPageToken);          
-        } 
-        else {
-            string? nextSyncToken = res?.nextSyncToken;
-            if (nextSyncToken is string) {    
-                response.nextSyncToken = nextSyncToken;       
-            }        
-        }
-        response.kind = res.kind;
-        response.etag = res.etag;
-        response.summary = res.summary;
-        response.updated = res.updated;
-        response.timeZone = res.timeZone;
-        response.accessRole = res.accessRole;
-        response.defaultReminders = res.defaultReminders;  
-        response.items = eventStream;          
-        return response;      
-    } else {
-        return error(ERR_EVENT_RESPONSE, res);
-    }
-}
-
-# Get calendars stream.
-# 
-# + calendarClient - Calendar client
-# + calendars - Calendar array
-# + optional - Record that contains optional parameters
-# + return - Calendar stream on success, else an error
-function getCalendarsStream(http:Client calendarClient, @tainted Calendar[] calendars, CalendarListOptional? 
-                            optional = ()) returns @tainted stream<Calendar>|error {
-    string path = <@untainted> prepareUrlWithCalendarOptional(optional);
-    var httpResponse = calendarClient->get(path);
-    json resp = check checkAndSetErrors(httpResponse);
-    CalendarResponse|error res = resp.cloneWithType(CalendarResponse);
-    if (res is CalendarResponse) {
-        int i = calendars.length();
-        foreach Calendar item in res.items {
-            calendars[i] = item;
-            i = i + 1;
-        }
-        stream<Calendar> calendarStream = (<@untainted>calendars).toStream();
-        string? pageToken = res?.nextPageToken;
-        if (pageToken is string && optional is CalendarListOptional) {
-            optional.pageToken = pageToken;       
-            var streams = check getCalendarsStream(calendarClient, calendars, optional);
-        }
-        return calendarStream;
-    } else {
-        return error(ERR_CALENDAR_RESPONSE, res);
     }
 }

@@ -30,6 +30,20 @@ isolated function toEvent(json payload) returns Event|error {
     }
 }
 
+# Convert json to Event.
+# 
+# + payload - Json response
+# + return - An Event record on success else an error
+isolated function toEventResponse(json payload) returns EventResponse|error {
+    EventResponse|error res = payload.cloneWithType(EventResponse);
+    if (res is EventResponse) {
+        return res;
+    } else {
+        log:printError(ERR_EVENT + PAYLOAD + payload.toJsonString(), 'error = res);
+        return error(ERR_EVENT, res);
+    }
+}
+
 # Convert json to Calendar.
 # 
 # + payload - Json response
