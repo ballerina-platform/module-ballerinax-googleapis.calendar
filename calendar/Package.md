@@ -23,14 +23,13 @@ The Google Calendar Ballerina Connector allows you to access the Google Calendar
 * Java 11 Installed
   Java Development Kit (JDK) with version 11 is required.
 
-* Download the Ballerina [distribution](https://ballerinalang.org/downloads/) SLAlpha2
-  Ballerina Swan Lake Alpha Version 2 is required.
+* Download the required Ballerina [distribution](https://ballerinalang.org/downloads/) version
 
 ## Compatibility
 
 |                             |            Versions             |
 |:---------------------------:|:-------------------------------:|
-| Ballerina Language          |     Swan Lake Alpha2            |
+| Ballerina Language          |     Swan Lake Alpha4            |
 | Google Calendar API         |             V3                  |
 
 
@@ -646,17 +645,8 @@ calendar:Client calendarClient = check new (config);
 listener listen:Listener googleListener = new (port, calendarClient, calendarId, address, expiration);
 
 service /calendar on googleListener {
-    resource function post events(http:Caller caller, http:Request request) returns error? {
-        listen:EventInfo payload = check googleListener.getEventType(caller, request);
-        if (payload?.eventType is string && payload?.event is calendar:Event) {
-            if (payload?.eventType == listen:CREATED) {
-                var event = payload?.event;
-                string? summary = event?.summary;
-                if (summary is string) {
-                    log:printInfo(summary);
-                } 
-            }
-        }
+    remote function onNewEvent(calendar:Event event) returns error? {
+        log:printInfo("Created new event : ", event);
     }
 }
 ```
@@ -693,17 +683,8 @@ calendar:Client calendarClient = check new (config);
 listener listen:Listener googleListener = new (port, calendarClient, calendarId, address, expiration);
 
 service /calendar on googleListener {
-    resource function post events(http:Caller caller, http:Request request) returns error? {
-        listen:EventInfo payload = check googleListener.getEventType(caller, request);
-        if (payload?.eventType is string && payload?.event is calendar:Event) {
-            if (payload?.eventType == listen:UPDATED) {
-                var event = payload?.event;
-                string? summary = event?.summary;
-                if (summary is string) {
-                    log:printInfo(summary);
-                }
-            }
-        }
+    remote function onEventUpdate(calendar:Event event) returns error? {
+        log:printInfo("Updated an event : ", event);
     }
 }
 ```
@@ -740,13 +721,8 @@ calendar:Client calendarClient = check new (config);
 listener listen:Listener googleListener = new (port, calendarClient, calendarId, address, expiration);
 
 service /calendar on googleListener {
-    resource function post events(http:Caller caller, http:Request request) returns error? {
-        listen:EventInfo payload = check googleListener.getEventType(caller, request);
-        if (payload?.eventType is string && payload?.event is calendar:Event) {
-            if (payload?.eventType == listen:DELETED) {
-                log:printInfo("Event deleted");
-            }
-        }
-    }
+    remote function onEventDelete(calendar:Event event) returns error? {
+           log:printInfo("Deleted an event : ", event);
+   }
 }
 ```

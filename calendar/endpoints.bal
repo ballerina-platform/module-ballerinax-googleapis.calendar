@@ -74,8 +74,8 @@ public client class Client {
     # + event - Record that contains event information.
     # + optional - Record that contains optional query parameters
     # + return - Created Event on success else an error
-    remote isolated function createEvent(string calendarId, InputEvent event, CreateEventOptional? optional = ()) returns
-                                @tainted Event|error {
+    remote isolated function createEvent(string calendarId, InputEvent event, CreateEventOptional? optional = ())
+        returns @tainted Event|error {
         json payload = check event.cloneWithType(json);
         http:Request req = new;
         string path = prepareUrlWithEventOptional(calendarId, optional);
@@ -96,11 +96,6 @@ public client class Client {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, QUICK_ADD]);
         path = sendUpdates is string ? prepareQueryUrl([path], [TEXT, SEND_UPDATES], [text, sendUpdates]) 
             : prepareQueryUrl([path], [TEXT], [text]);
-        // if (sendUpdates is string) {
-        //     path = prepareQueryUrl([path], [TEXT, SEND_UPDATES], [text, sendUpdates]);
-        // } else {
-        //     path = prepareQueryUrl([path], [TEXT], [text]);
-        // }
         var response = self.calendarClient->post(path, ());
         json result = check checkAndSetErrors(response);
         return toEvent(result);
@@ -113,8 +108,8 @@ public client class Client {
     # + event - Record that contains updated information
     # + optional - Record that contains optional query parameters
     # + return - Updated event on success else an error
-    remote isolated function updateEvent(string calendarId, string eventId, InputEvent event, CreateEventOptional? optional = ())
-                                returns @tainted Event|error {
+    remote isolated function updateEvent(string calendarId, string eventId, InputEvent event, CreateEventOptional? 
+                                            optional = ()) returns @tainted Event|error {
         json payload = check event.cloneWithType(json);
         http:Request req = new;
         string path = prepareUrlWithEventOptional(calendarId, optional, eventId);
@@ -131,8 +126,8 @@ public client class Client {
     # + syncToken - Token for getting incremental sync
     # + pageToken - Token for retrieving next page
     # + return - Event stream on success, else an error
-    remote isolated function getEvents(string calendarId, int? count = (), string? syncToken = (), string? pageToken = ())
-                                returns @tainted stream<Event,error> {
+    remote isolated function getEvents(string calendarId, int? count = (), string? syncToken = (), string? pageToken 
+                                        = ()) returns @tainted stream<Event,error> {
         return new stream<Event,error>(new EventStream(self.calendarClient, calendarId, count, syncToken, pageToken));
     }
 
@@ -165,7 +160,8 @@ public client class Client {
     # + address - The address where notifications are delivered for this channel
     # + expiration - The time-to-live in seconds for the notification channel
     # + return - WatchResponse object on success else an error
-    remote isolated function watchEvents(string calendarId, string address, string? expiration = ()) returns @tainted WatchResponse|error {
+    remote isolated function watchEvents(string calendarId, string address, string? expiration = ()) returns @tainted
+        WatchResponse|error {
         json payload;
         if (expiration is string) {
             payload = {
@@ -219,8 +215,8 @@ public client class Client {
     # + pageToken - Token for retrieving next page
     # + syncToken - Token for getting incremental sync
     # + return - List of EventResponse object on success, else an error
-    remote isolated function getEventResponse(string calendarId, int? count = (), string? pageToken = (), string? syncToken = ())
-                                        returns @tainted EventResponse|error {
+    remote isolated function getEventResponse(string calendarId, int? count = (), string? pageToken = (), string? 
+                                                syncToken = ()) returns @tainted EventResponse|error {
         string path = prepareUrlWithEventsOptional(calendarId, count, pageToken, syncToken);
         var httpResponse = self.calendarClient->get(path);
         json resp = check checkAndSetErrors(httpResponse);

@@ -6,3 +6,10 @@ license= ["Apache-2.0"]
 authors = ["Ballerina"]
 keywords = ["google", "calendar"]
 repository = "https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar"
+
+
+[[platform.java11.dependency]]
+path = "../java-wrapper/build/libs/java-wrapper-0.1.4.jar"
+groupId = "org.ballerinalang.googleapis.calendar"
+artifactId = "java-wrapper"
+version = "0.1.4"

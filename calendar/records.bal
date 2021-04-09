@@ -435,7 +435,7 @@ public type WatchResponse record {
     string resourceId;
     string resourceUri;
     string token?;
-    string expiration?;
+    string expiration;
 };
 
 # Refer calendar record.

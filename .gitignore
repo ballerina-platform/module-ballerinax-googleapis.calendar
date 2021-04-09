@@ -11,7 +11,6 @@
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.nar
 *.ear
@@ -24,12 +23,19 @@ hs_err_pid*
 
 #Ballerina configuartion file
 ballerina.conf
+Config.toml
 
 #Target folder of ballerina project
-/target
+*/target
 
 #json files created inside resources folder
 **/resources
 
 # IDEA file
 .idea
+
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build

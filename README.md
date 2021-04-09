@@ -25,7 +25,7 @@ The Google Calendar Ballerina Connector allows you to access the Google Calendar
 
 |                             |            Versions             |
 |:---------------------------:|:-------------------------------:|
-| Ballerina Language          |     Swan Lake Alpha2            |
+| Ballerina Language          |     Swan Lake Alpha4            |
 | Google Calendar API         |             V3                  |
 
 
@@ -644,17 +644,8 @@ calendar:Client calendarClient = check new (config);
 listener listen:Listener googleListener = new (port, calendarClient, calendarId, address, expiration);
 
 service /calendar on googleListener {
-    resource function post events(http:Caller caller, http:Request request) returns error? {
-        listen:EventInfo payload = check googleListener.getEventType(caller, request);
-        if (payload?.eventType is string && payload?.event is calendar:Event) {
-            if (payload?.eventType == listen:CREATED) {
-                var event = payload?.event;
-                string? summary = event?.summary;
-                if (summary is string) {
-                    log:printInfo(summary);
-                }
-            }
-        }
+    remote function onNewEvent(calendar:Event event) returns error? {
+        log:printInfo("Created new event : ", event);
     }
 }
 ```
@@ -691,17 +682,8 @@ calendar:Client calendarClient = check new (config);
 listener listen:Listener googleListener = new (port, calendarClient, calendarId, address, expiration);
 
 service /calendar on googleListener {
-    resource function post events(http:Caller caller, http:Request request) returns error? {
-        listen:EventInfo payload = check googleListener.getEventType(caller, request);
-        if (payload?.eventType is string && payload?.event is calendar:Event) {
-            if (payload?.eventType == listen:UPDATED) {
-                var event = payload?.event;
-                string? summary = event?.summary;
-                if (summary is string) {
-                    log:printInfo(summary);
-                } 
-            }
-        }
+    remote function onEventUpdate(calendar:Event event) returns error? {
+        log:printInfo("Updated an event : ", event);
     }
 }
 ```
@@ -738,27 +720,22 @@ calendar:Client calendarClient = check new (config);
 listener listen:Listener googleListener = new (port, calendarClient, calendarId, address, expiration);
 
 service /calendar on googleListener {
-    resource function post events(http:Caller caller, http:Request request) returns error? {
-        listen:EventInfo payload = check googleListener.getEventType(caller, request);
-        if (payload?.eventType is string && payload?.event is calendar:Event) {
-            if (payload?.eventType == listen:DELETED) {
-                log:printInfo("Event deleted");
-            }
-        }
-    }
+    remote function onEventDelete(calendar:Event event) returns error? {
+           log:printInfo("Deleted an event : ", event);
+   }
 }
 ```
 
 ### Building the Source
 
-Execute the commands below to build from the source after installing Ballerina SLAlpha2 version.
+Execute the commands below to build from the source after installing Ballerina.
 
 1. To clone the repository:
 Clone this repository using the following command:
 ```shell
     git clone https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar.git
 ```
-Execute the commands below to build from the source after installing Ballerina SLAlpha2 version.
+Execute the commands below to build from the source after installing Ballerina.
 
 2. To build the module:
 Run this command from the module-ballerinax-googleapis.calendar root directory:

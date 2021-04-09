@@ -39,8 +39,7 @@ isolated function prepareUrl(string[] paths) returns string {
 # + queryParamNames - An array of query param names
 # + queryParamValues - An array of query param values
 # + return - The prepared URL with encoded query
-isolated function prepareQueryUrl(string[] paths, string[] queryParamNames, string[] queryParamValues) 
-                                    returns string {
+isolated function prepareQueryUrl(string[] paths, string[] queryParamNames, string[] queryParamValues) returns string {
     string url = prepareUrl(paths);
     url = url + QUESTION_MARK;
     boolean first = true;
@@ -70,8 +69,8 @@ isolated function prepareQueryUrl(string[] paths, string[] queryParamNames, stri
 # + optional - Record that contains optional parameters
 # + eventId - Event id
 # + return - The prepared URL with encoded query
-isolated function prepareUrlWithEventOptional(string calendarId, CreateEventOptional? optional = (), 
-                                                string? eventId = ()) returns string {
+isolated function prepareUrlWithEventOptional(string calendarId, CreateEventOptional? optional = (),  string? eventId 
+                                                = ()) returns string {
     string[] value = [];
     map<string> optionalMap = {};
     string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS]);
@@ -101,7 +100,8 @@ isolated function prepareUrlWithEventOptional(string calendarId, CreateEventOpti
 # 
 # + optional - Record that contains optional parameters
 # + return - The prepared URL with encoded query
-isolated function prepareUrlWithCalendarOptional(string? pageToken = (), CalendarListOptional? optional = ()) returns string {
+isolated function prepareUrlWithCalendarOptional(string? pageToken = (), CalendarListOptional? optional = ()) returns
+    string {
     string[] value = [];
     map<string> optionalMap = {};
     string path = prepareUrl([CALENDAR_PATH, USERS, ME, CALENDAR_LIST]);  
