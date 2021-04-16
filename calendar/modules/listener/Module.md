@@ -15,7 +15,7 @@ Download the required Ballerina [distribution](https://ballerinalang.org/downloa
 |:---------------------------:|:-------------------------------:|
 | Ballerina Language          |     Swan Lake Alpha4            |
 | Google Calendar API         |             V3                  |
-
+| Java Development Kit (JDK)  |             11                  |
 
 ### Obtaining tokens to run the samples
 

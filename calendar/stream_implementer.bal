@@ -20,15 +20,13 @@ class EventStream {
     private Event[] currentEntries = [];
     private int index = 0;
     private final http:Client httpClient;
-    private final int? count;
     private final string? syncToken;
     private string? pageToken;
     private final string calendarId;
 
-    isolated function init(http:Client httpClient, string calendarId, int? count, string? syncToken, string? pageToken)
+    isolated function init(http:Client httpClient, string calendarId, string? syncToken, string? pageToken)
         {
         self.httpClient = httpClient;
-        self.count = count;
         self.syncToken = syncToken;
         self.pageToken = pageToken;
         self.calendarId = calendarId;
@@ -51,7 +49,7 @@ class EventStream {
     }
 
     isolated function fetchEvents() returns @tainted Event[]|error {
-        string path = <@untainted>prepareUrlWithEventsOptional(self.calendarId, self.count, self.syncToken, self.
+        string path = <@untainted>prepareUrlWithEventsOptional(self.calendarId, (), self.syncToken, self.
             pageToken);
         var httpResponse = check self.httpClient->get(path);
         json resp = check checkAndSetErrors(httpResponse);

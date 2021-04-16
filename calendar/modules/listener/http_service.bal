@@ -52,7 +52,7 @@ service class HttpService {
                 self.syncToken = check self.getNextPageToken(self.calendarClient, self.calendarId);
                 check caller->respond(res);
             } else {
-                calendar:EventResponse resp = check self.calendarClient->getEventResponse(self.calendarId, syncToken
+                calendar:EventResponse resp = check self.calendarClient->getEventsResponse(self.calendarId, syncToken
                   = self.syncToken);
                 check caller->respond(res);
                 self.syncToken = resp?.nextSyncToken;
@@ -84,7 +84,7 @@ service class HttpService {
 
     isolated function getNextPageToken(calendar:Client httpClient, string calendarId, string? pageToken = ()) returns
         @tainted string?|error {
-        calendar:EventResponse resp = check httpClient->getEventResponse(calendarId, pageToken = pageToken);
+        calendar:EventResponse resp = check httpClient->getEventsResponse(calendarId, pageToken = pageToken);
         string? nextPageToken = resp?.nextPageToken;
         if (nextPageToken is string) {
             var token = check self.getNextPageToken(httpClient, calendarId, nextPageToken);

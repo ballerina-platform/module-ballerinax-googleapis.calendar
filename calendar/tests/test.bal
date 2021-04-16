@@ -198,9 +198,9 @@ function testStopChannel() {
 @test:Config {
     dependsOn: [testGetEvent]
 }
-function testGetEventResponse() {
-    log:printInfo("calendarClient -> getEventResponse()");
-    EventResponse|error res = calendarClient->getEventResponse(testCalendarId);
+function testGetEventsResponse() {
+    log:printInfo("calendarClient -> getEventsResponse()");
+    EventResponse|error res = calendarClient->getEventsResponse(testCalendarId);
     if (res is EventResponse) {
         test:assertNotEquals(res?.kind, "", msg = "Expects event kind");
     } else {

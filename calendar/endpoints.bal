@@ -122,13 +122,12 @@ public client class Client {
     # Get all events.
     # 
     # + calendarId - Calendar id
-    # + count - Number of events required in one page (optional)
     # + syncToken - Token for getting incremental sync
     # + pageToken - Token for retrieving next page
     # + return - Event stream on success, else an error
-    remote isolated function getEvents(string calendarId, int? count = (), string? syncToken = (), string? pageToken 
+    remote isolated function getEvents(string calendarId, string? syncToken = (), string? pageToken 
                                         = ()) returns @tainted stream<Event,error> {
-        return new stream<Event,error>(new EventStream(self.calendarClient, calendarId, count, syncToken, pageToken));
+        return new stream<Event,error>(new EventStream(self.calendarClient, calendarId, syncToken, pageToken));
     }
 
     # Get an event.
@@ -215,8 +214,8 @@ public client class Client {
     # + pageToken - Token for retrieving next page
     # + syncToken - Token for getting incremental sync
     # + return - List of EventResponse object on success, else an error
-    remote isolated function getEventResponse(string calendarId, int? count = (), string? pageToken = (), string? 
-                                                syncToken = ()) returns @tainted EventResponse|error {
+    remote isolated function getEventsResponse(string calendarId, string? pageToken = (), string? syncToken = (), 
+                                                int? count = ()) returns @tainted EventResponse|error {
         string path = prepareUrlWithEventsOptional(calendarId, count, pageToken, syncToken);
         var httpResponse = self.calendarClient->get(path);
         json resp = check checkAndSetErrors(httpResponse);

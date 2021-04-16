@@ -31,7 +31,7 @@ The Google Calendar Ballerina Connector allows you to access the Google Calendar
 |:---------------------------:|:-------------------------------:|
 | Ballerina Language          |     Swan Lake Alpha4            |
 | Google Calendar API         |             V3                  |
-
+| Java Development Kit (JDK)  |             11                  |
 
 ### Obtaining Tokens
 
