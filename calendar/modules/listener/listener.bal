@@ -21,6 +21,7 @@ import ballerinax/googleapis_calendar as calendar;
 # Listener for Google Calendar connector
 # 
 # + expirationTime - Expiration time in unix timestamp
+@display {label: "Google Calendar Listener"}
 public class Listener {
 
     private http:Listener httpListener;
