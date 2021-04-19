@@ -20,12 +20,13 @@ public function main() returns error? {
 
     calendar:Client calendarClient = check new (config);
 
-    stream<calendar:Event>|error res = calendarClient->getEvents(calendarId);
-    if (res is stream<calendar:Event>) {
-        var eve = res.next();
-        string id = check eve?.value?.id;
-        log:print(id);
+    stream<calendar:Event,error> resultStream  = calendarClient->getEvents(calendarId);
+    record {|calendar:Event value;|}|error? res = resultStream.next();
+    if (res is record {|calendar:Event value;|}) {
+        log:printInfo(res.value["id"]);
     } else {
-        log:printError(res.message());
+        if (res is error) {
+            log:printError(res.message());
+        }
     }
 }

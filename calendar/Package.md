@@ -23,16 +23,15 @@ The Google Calendar Ballerina Connector allows you to access the Google Calendar
 * Java 11 Installed
   Java Development Kit (JDK) with version 11 is required.
 
-* Download the Ballerina [distribution](https://ballerinalang.org/downloads/) SLAlpha2
-  Ballerina Swan Lake Alpha Version 2 is required.
+* Download the required Ballerina [distribution](https://ballerinalang.org/downloads/) version
 
 ## Compatibility
 
 |                             |            Versions             |
 |:---------------------------:|:-------------------------------:|
-| Ballerina Language          |     Swan Lake Alpha2            |
+| Ballerina Language          |     Swan Lake Alpha4            |
 | Google Calendar API         |             V3                  |
-
+| Java Development Kit (JDK)  |             11                  |
 
 ### Obtaining Tokens
 
@@ -50,28 +49,45 @@ access token and refresh token).
 
 ### Add configurations file
 
-* Instantiate the connector by giving authentication details in the HTTP client config. The HTTP client config has built-in support for OAuth 2.0. Google Calendar uses OAuth 2.0 to authenticate and authorize requests. The Google Calendar connector can be minimally instantiated in the HTTP client config using the access token or the client ID, client secret, and refresh token.
-    * Access Token
+* Instantiate the connector by giving authentication details in the HTTP client config. The HTTP client config has built-in support for Bearer Token Authentication and OAuth 2.0. Google Calendar uses OAuth 2.0 to authenticate and authorize requests. It uses the Direct Token Grant Type. The Google Calendar connector can be minimally instantiated in the HTTP client config using the OAuth 2.0 access token.
+    * Access Token 
+    ``` 
+    calendar:CalendarConfiguration config = {
+        oauth2Config: {
+            token: <access token>
+        }
+    }
+    ```
+
+    The Google Calendar connector can also be instantiated in the HTTP client config without the access token using the client ID, client secret, and refresh token.
     * Client ID
     * Client Secret
     * Refresh Token
     * Refresh URL
-    * Calendar ID
-  * Callback address is additionally required in order to use Google Calendar listener. It is the path of the listener resource function. The time-to-live in seconds for the notification channel is provided in optional parameter expiration time. By default it is 604800 seconds.
-    * Callback address
-    * Expiration time
+    ```
+    calendar:CalendarConfiguration config = {
+        oauth2Config: {
+            clientId: <clientId>,
+            clientSecret: <clientSecret>,
+            refreshToken: <refreshToken>,
+            refreshUrl: <refreshUrl>
+        }
+    }
+    ```
+* Callback address is additionally required in order to use Google Calendar listener. It is the path of the listener resource function. The time-to-live in seconds for the notification channel is provided in optional parameter expiration time. By default it is 604800 seconds.
+  * Callback address
+  * Expiration time
 
-Add the project configuration file by creating a `Config.toml` file under the root path of the project structure.
+* Add the project configuration file by creating a `Config.toml` file under the root path of the project structure.
 This file should have following configurations. Add the tokens obtained in the previous step to the `Config.toml` file.
 
-```
-clientId = "<client_id">
-clientSecret = "<client_secret>"
-refreshToken = "<refresh_token>"
-refreshUrl = "<refresh_URL>"
-calendarId = "<calendar_id>"
-address = "<address>"
-```
+  ```
+  clientId = "<client_id">
+  clientSecret = "<client_secret>"
+  refreshToken = "<refresh_token>"
+  refreshUrl = "<refresh_URL>"
+  address = "<address>"
+  ```
 
 
 # Quickstart(s)
@@ -118,7 +134,7 @@ calendar:Event|error response = calendarClient->quickAddEvent(calendarId, title)
 
 if (response is calendar:Event) {
     // If successful, log event id
-    log:print(response.id);
+    log:printInfo(response.id);
 } else {
     // If unsuccessful
     log:printError("Error: " + response.toString());
@@ -173,7 +189,7 @@ service /calendar on googleListener {
                 var event = payload?.event;
                 string? summary = event?.summary;        
                 if (summary is string) {
-                    log:print(summary);
+                    log:printInfo(summary);
                 } 
             }
         }      
@@ -223,7 +239,7 @@ public function main() returns error? {
     if (res is stream<calendar:Calendar>) {
         var cal = res.next();
         string id = check cal?.value?.id;
-        log:print(id);
+        log:printInfo(id);
     } else {
         log:printError(res.message());
     }
@@ -257,7 +273,7 @@ public function main() returns error? {
 
     calendar:CalendarResource|error res = calendarClient->createCalendar("testCalendar");
     if (res is calendar:CalendarResource) {
-       log:print(res.id);
+       log:printInfo(res.id);
     } else {
        log:printError(res.message());
     }
@@ -295,7 +311,7 @@ public function main() returns error? {
     if (res is error) {
         log:printError(res.message());
     } else {
-        log:print("Calendar is deleted");
+        log:printInfo("Calendar is deleted");
     }
 }
 ```
@@ -337,7 +353,7 @@ public function main() returns error? {
     };
     calendar:Event|error res = calendarClient->createEvent(calendarId, event);
     if (res is calendar:Event) {
-       log:print(res.id);
+       log:printInfo(res.id);
     } else {
        log:printError(res.message());
     }
@@ -373,7 +389,7 @@ public function main() returns error? {
 
     calendar:Event|error res = calendarClient->quickAddEvent(calendarId, "Sample Event");
     if (res is calendar:Event) {
-        log:print(res.id);
+        log:printInfo(res.id);
     } else {
         log:printError(res.message());
     }
@@ -408,7 +424,7 @@ public function main() returns error? {
 
     calendar:Event|error res = calendarClient->getEvent(calendarId, eventId);
     if (res is calendar:Event) {
-        log:print(res.id);
+        log:printInfo(res.id);
     } else {
         log:printError(res.message());
     }
@@ -446,7 +462,7 @@ public function main() returns error? {
     if (res is stream<calendar:Event>) {
         var eve = res.next();
         string id = check eve?.value?.id;
-        log:print(id);
+        log:printInfo(id);
     } else {
         log:printError(res.message());
     }
@@ -493,7 +509,7 @@ public function main() returns error? {
 
     calendar:Event|error res = calendarClient->updateEvent(calendarId, eventId, event);
     if (res is calendar:Event) {
-        log:print(res.id);
+        log:printInfo(res.id);
     } else {
         log:printError(res.message());
     }
@@ -532,7 +548,7 @@ public function main() returns error? {
     if (res is error) {
         log:printError(res.message());
     } else {
-        log:print("Event is deleted");
+        log:printInfo("Event is deleted");
     }
 }
 ```
@@ -567,7 +583,7 @@ public function main() returns error? {
 
     calendar:WatchResponse|error res = calendarClient->watchEvents(calendarId, address);
     if (res is calendar:WatchResponse) {
-        log:print(res.id);
+        log:printInfo(res.id);
     } else {
         log:printError(res.message());
     }
@@ -607,7 +623,7 @@ public function main() returns error? {
     if (res is error) {
         log:printError(res.message());
     } else {
-        log:print("Channel is terminated");
+        log:printInfo("Channel is terminated");
     }
 }
 ```
@@ -646,17 +662,8 @@ calendar:Client calendarClient = check new (config);
 listener listen:Listener googleListener = new (port, calendarClient, calendarId, address, expiration);
 
 service /calendar on googleListener {
-    resource function post events(http:Caller caller, http:Request request) returns error? {
-        listen:EventInfo payload = check googleListener.getEventType(caller, request);
-        if (payload?.eventType is string && payload?.event is calendar:Event) {
-            if (payload?.eventType == listen:CREATED) {
-                var event = payload?.event;
-                string? summary = event?.summary;
-                if (summary is string) {
-                    log:print(summary);
-                } 
-            }
-        }
+    remote function onNewEvent(calendar:Event event) returns error? {
+        log:printInfo("Created new event : ", event);
     }
 }
 ```
@@ -693,17 +700,8 @@ calendar:Client calendarClient = check new (config);
 listener listen:Listener googleListener = new (port, calendarClient, calendarId, address, expiration);
 
 service /calendar on googleListener {
-    resource function post events(http:Caller caller, http:Request request) returns error? {
-        listen:EventInfo payload = check googleListener.getEventType(caller, request);
-        if (payload?.eventType is string && payload?.event is calendar:Event) {
-            if (payload?.eventType == listen:UPDATED) {
-                var event = payload?.event;
-                string? summary = event?.summary;
-                if (summary is string) {
-                    log:print(summary);
-                }
-            }
-        }
+    remote function onEventUpdate(calendar:Event event) returns error? {
+        log:printInfo("Updated an event : ", event);
     }
 }
 ```
@@ -740,13 +738,8 @@ calendar:Client calendarClient = check new (config);
 listener listen:Listener googleListener = new (port, calendarClient, calendarId, address, expiration);
 
 service /calendar on googleListener {
-    resource function post events(http:Caller caller, http:Request request) returns error? {
-        listen:EventInfo payload = check googleListener.getEventType(caller, request);
-        if (payload?.eventType is string && payload?.event is calendar:Event) {
-            if (payload?.eventType == listen:DELETED) {
-                log:print("Event deleted");
-            }
-        }
-    }
+    remote function onEventDelete(calendar:Event event) returns error? {
+           log:printInfo("Deleted an event : ", event);
+   }
 }
 ```

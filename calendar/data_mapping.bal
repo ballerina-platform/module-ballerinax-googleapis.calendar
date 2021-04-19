@@ -25,7 +25,21 @@ isolated function toEvent(json payload) returns Event|error {
     if (res is Event) {
         return res;
     } else {
-        log:printError(ERR_EVENT + PAYLOAD + payload.toJsonString(), err = res);
+        log:printError(ERR_EVENT + PAYLOAD + payload.toJsonString(), 'error = res);
+        return error(ERR_EVENT, res);
+    }
+}
+
+# Convert json to Event.
+# 
+# + payload - Json response
+# + return - An Event record on success else an error
+isolated function toEventResponse(json payload) returns EventResponse|error {
+    EventResponse|error res = payload.cloneWithType(EventResponse);
+    if (res is EventResponse) {
+        return res;
+    } else {
+        log:printError(ERR_EVENT + PAYLOAD + payload.toJsonString(), 'error = res);
         return error(ERR_EVENT, res);
     }
 }
@@ -39,7 +53,7 @@ isolated function toCalendar(json payload) returns CalendarResource|error {
     if (res is CalendarResource) {
         return res;
     } else {
-        log:printError(ERR_CALENDAR_RESOURCE + PAYLOAD + payload.toJsonString(), err = res);
+        log:printError(ERR_CALENDAR_RESOURCE + PAYLOAD + payload.toJsonString(), 'error = res);
         return error(ERR_CALENDAR_RESOURCE, res);
     }
 }
@@ -53,7 +67,7 @@ isolated function toWatchResponse(json payload) returns WatchResponse|error {
     if (res is WatchResponse) {
         return res;
     } else {
-        log:printError(ERR_WATCH_RESPONSE + PAYLOAD + payload.toJsonString(), err = res);
+        log:printError(ERR_WATCH_RESPONSE + PAYLOAD + payload.toJsonString(), 'error = res);
         return error(ERR_WATCH_RESPONSE, res);
     }
 }
@@ -67,7 +81,7 @@ isolated function toEventsUpdated(json payload) returns EventResponse|error {
     if (res is EventResponse) {
         return res;
     } else {
-        log:printError(ERR_EVENT_RESPONSE + PAYLOAD + payload.toJsonString(), err = res);
+        log:printError(ERR_EVENT_RESPONSE + PAYLOAD + payload.toJsonString(), 'error = res);
         return error(ERR_EVENT_RESPONSE, res);
     }
 }

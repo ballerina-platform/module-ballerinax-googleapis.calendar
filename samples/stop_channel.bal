@@ -26,6 +26,6 @@ public function main() returns error? {
     if (res is error) {
         log:printError(res.message());
     } else {
-        log:print("Channel is terminated");
+        log:printInfo("Channel is terminated");
     }
 }

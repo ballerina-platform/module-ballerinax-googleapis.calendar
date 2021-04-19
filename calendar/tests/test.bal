@@ -46,13 +46,15 @@ string testCalendarId = "";
     dependsOn: [testCreateCalendar]
 }
 function testGetCalendars() {
-    log:print("calendarClient -> getCalendars()");
-    stream<Calendar>|error res = calendarClient->getCalendars();
-    if (res is stream<Calendar>) {
-        var calendar = res.next();
-        test:assertNotEquals(calendar?.value?.id, "", msg = "Found 0 records");
+    log:printInfo("calendarClient -> getCalendars()");
+    stream<Calendar,error> resultStream = calendarClient->getCalendars();
+    record {|Calendar value;|}|error? res = resultStream.next();
+    if (res is record {|Calendar value;|}) {
+        test:assertNotEquals(res.value["id"], "", msg = "Found 0 records");
     } else {
-        test:assertFail(res.message());
+        if(res is error){
+            test:assertFail(res.message());
+        }
     }
 }
 
@@ -64,7 +66,7 @@ CreateEventOptional optional = {
 
 @test:Config {}
 function testCreateCalendar() {
-    log:print("calendarClient -> createCalendar()");
+    log:printInfo("calendarClient -> createCalendar()");
     CalendarResource|error res = calendarClient->createCalendar("testCalendar");
     if (res is CalendarResource) {
         test:assertNotEquals(res.id, "", msg = "Expect event id");
@@ -76,7 +78,7 @@ function testCreateCalendar() {
 
 @test:AfterSuite {}
 function testDeleteCalendar() {
-    log:print("calendarClient -> deleteCalendar()");
+    log:printInfo("calendarClient -> deleteCalendar()");
     error? res = calendarClient->deleteCalendar(testCalendarId);
     if (res is error) {
         test:assertFail(res.message());
@@ -88,7 +90,7 @@ function testDeleteCalendar() {
 }
 function testCreateEvent() {
     InputEvent event = setEvent("Event Created");
-    log:print("calendarClient -> createEvent()");
+    log:printInfo("calendarClient -> createEvent()");
     Event|error res = calendarClient->createEvent(testCalendarId, event, optional);
     if (res is Event) {
         test:assertNotEquals(res.id, "", msg = "Expect event id");
@@ -102,7 +104,7 @@ function testCreateEvent() {
     dependsOn: [testCreateCalendar]
 }
 function testquickAdd() {
-    log:print("calendarClient -> quickAddEvent()");
+    log:printInfo("calendarClient -> quickAddEvent()");
     Event|error res = calendarClient->quickAddEvent(testCalendarId, "Hello", "none");
     if (res is Event) {
         test:assertNotEquals(res.id, "", msg = "Expect event id");
@@ -113,16 +115,18 @@ function testquickAdd() {
 }
 
 @test:Config {
-    dependsOn: [testGetEvent, testquickAdd]
+   // dependsOn: [testGetEvent, testquickAdd]
 }
 function testGetEvents() {
-    log:print("calendarClient -> getEvents()");
-    stream<Event>|error res = calendarClient->getEvents(testCalendarId);
-    if (res is stream<Event>) {
-        var event = res.next();
-        test:assertNotEquals(event?.value, "", msg = "Found 0 records");
+    log:printInfo("calendarClient -> getEvents()");
+    stream<Event,error> resultStream = calendarClient->getEvents("primary");
+    record {|Event value;|}|error? res = resultStream.next();
+    if (res is record {|Event value;|}) {
+        test:assertNotEquals(res.value["id"], "", msg = "Found 0 records");
     } else {
-        test:assertFail(res.message());
+        if(res is error){
+            test:assertFail(res.message());
+        }
     }
 }
 
@@ -130,7 +134,7 @@ function testGetEvents() {
     dependsOn: [testCreateEvent]
 }
 function testGetEvent() {
-    log:print("calendarClient -> getEvent()");
+    log:printInfo("calendarClient -> getEvent()");
     Event|error res = calendarClient->getEvent(testCalendarId, testEventId);
     if (res is Event) {
         test:assertTrue(res.id == testEventId, msg = "Found 0 search records!");
@@ -144,7 +148,7 @@ function testGetEvent() {
 }
 function testUpdateEvent() {
     InputEvent event = setEvent("Event Updated");
-    log:print("calendarClient -> updateEvent()");
+    log:printInfo("calendarClient -> updateEvent()");
     Event|error res = calendarClient->updateEvent(testCalendarId, testEventId, event);
     if (res is Event) {
         test:assertNotEquals(res.id, "", msg = "Expect event id");
@@ -157,7 +161,7 @@ function testUpdateEvent() {
     dependsOn: [testGetEvent, testUpdateEvent]
 }
 function testDeleteEvent() {
-    log:print("calendarClient -> deleteEvent()");
+    log:printInfo("calendarClient -> deleteEvent()");
     error? res = calendarClient->deleteEvent(testCalendarId, testEventId);
     error? resp = calendarClient->deleteEvent(testCalendarId, testQuickAddEventId);
     if (res is error) {
@@ -169,7 +173,7 @@ function testDeleteEvent() {
     dependsOn: [testCreateCalendar]
 }
 function testWatchEvents() {
-    log:print("calendarClient -> watchEvents()");
+    log:printInfo("calendarClient -> watchEvents()");
     WatchResponse|error res = calendarClient->watchEvents(testCalendarId, address);
     if (res is WatchResponse) {
         test:assertNotEquals(res.id, "", msg = "Expects channel id");
@@ -184,7 +188,7 @@ function testWatchEvents() {
     dependsOn: [testWatchEvents]
 }
 function testStopChannel() {
-    log:print("calendarClient -> stopChannel()");
+    log:printInfo("calendarClient -> stopChannel()");
     error? res = calendarClient->stopChannel(testChannelId, testResourceId);
     if (res is error) {
         test:assertFail(res.message());
@@ -194,20 +198,20 @@ function testStopChannel() {
 @test:Config {
     dependsOn: [testGetEvent]
 }
-function testGetEventResponse() {
-    log:print("calendarClient -> getEventResponse()");
-    EventStreamResponse|error res = calendarClient->getEventResponse(testCalendarId);
-    if (res is EventStreamResponse) {
+function testGetEventsResponse() {
+    log:printInfo("calendarClient -> getEventsResponse()");
+    EventResponse|error res = calendarClient->getEventsResponse(testCalendarId);
+    if (res is EventResponse) {
         test:assertNotEquals(res?.kind, "", msg = "Expects event kind");
     } else {
         test:assertFail(res.message());
     }
 }
 
-isolated function setEvent (string summary) returns InputEvent {
-    time:Time time = time:currentTime();
-    string startTime = checkpanic time:format(checkpanic time:addDuration(time, {hours: 4}), TIME_FORMAT);
-    string endTime = checkpanic time:format(checkpanic time:addDuration(time, {hours: 5}), TIME_FORMAT);
+isolated function setEvent(string summary) returns InputEvent {
+    time:Utc time = time:utcNow();
+    string startTime =  time:utcToString(time:utcAddSeconds(time, 3600));
+    string endTime = time:utcToString(time:utcAddSeconds(time, 7200));
     InputEvent event = {
         'start: {
             dateTime: startTime

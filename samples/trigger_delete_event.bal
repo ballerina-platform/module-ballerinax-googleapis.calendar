@@ -1,4 +1,3 @@
-import ballerina/http;
 import ballerina/log;
 import ballerinax/googleapis_calendar as calendar;
 import ballerinax/googleapis_calendar.'listener as listen;
@@ -25,12 +24,7 @@ calendar:Client calendarClient = check new (config);
 listener listen:Listener googleListener = new (port, calendarClient, calendarId, address, expiration);
 
 service /calendar on googleListener {
-    resource function post events(http:Caller caller, http:Request request) returns error? {
-        listen:EventInfo payload = check googleListener.getEventType(caller, request);
-        if (payload?.eventType is string && payload?.event is calendar:Event) {
-            if (payload?.eventType == listen:DELETED) {
-                log:print("Event deleted");
-            }
-        }      
-    }
+    remote function onEventDelete(calendar:Event event) returns error? {
+           log:printInfo("Deleted an event : ", event);
+   }
 }
