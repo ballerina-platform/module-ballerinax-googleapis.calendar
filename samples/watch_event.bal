@@ -1,5 +1,5 @@
 import ballerina/log;
-import ballerinax/googleapis_calendar as calendar;
+import ballerinax/googleapis.calendar;
 
 configurable string clientId = ?;
 configurable string clientSecret = ?;

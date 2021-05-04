@@ -1,13 +1,12 @@
 import ballerina/http;
 import ballerina/log;
-import ballerinax/googleapis_calendar as calendar;
+import ballerinax/googleapis.calendar;
 
 service class HttpService {
 
     private boolean isOnNewEventAvailable = false;
     private boolean isOnEventUpdateAvailable = false;
     private boolean isOnEventDeleteAvailable = false;
-
     private SimpleHttpService httpService;
     private calendar:Client calendarClient;
     private string calendarId;
@@ -43,7 +42,7 @@ service class HttpService {
         }
     }
 
-    isolated resource function post events(http:Caller caller, http:Request request) returns error? {
+    isolated resource function post events(http:Caller caller, http:Request request) returns @tainted error? {
         if (check request.getHeader(GOOGLE_CHANNEL_ID) == self.channelId && check request.getHeader(GOOGLE_RESOURCE_ID)
             == self.resourceId) {
             http:Response res = new;

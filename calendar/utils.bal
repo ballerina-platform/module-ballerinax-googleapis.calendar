@@ -98,6 +98,7 @@ isolated function prepareUrlWithEventOptional(string calendarId, CreateEventOpti
 
 # Prepare URL with optional parameters.
 # 
+# + pageToken - Token for retrieving next page
 # + optional - Record that contains optional parameters
 # + return - The prepared URL with encoded query
 isolated function prepareUrlWithCalendarOptional(string? pageToken = (), CalendarListOptional? optional = ()) returns

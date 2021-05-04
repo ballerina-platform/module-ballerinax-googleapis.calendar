@@ -23,8 +23,9 @@ jobs:
             - name: Ballerina Build
               uses: ballerina-platform/ballerina-action/@master
               with:
-                  args: build -c ./calendar
+                  args: build -c
               env:
+                  WORKING_DIR: ./calendar
                   JAVA_HOME: /usr/lib/jvm/default-jvm
                   CLIENT_ID: ${{ secrets.CLIENT_ID }}
                   CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}

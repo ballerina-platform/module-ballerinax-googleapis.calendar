@@ -1,6 +1,6 @@
 import ballerina/log;
-import ballerinax/googleapis_calendar as calendar;
-import ballerinax/googleapis_calendar.'listener as listen;
+import ballerinax/googleapis.calendar;
+import ballerinax/googleapis.calendar.'listener as listen;
 
 configurable int port = ?;
 configurable string clientId = ?;
@@ -20,8 +20,7 @@ calendar:CalendarConfiguration config = {
     }
 };
 
-calendar:Client calendarClient = check new (config);
-listener listen:Listener googleListener = new (port, calendarClient, calendarId, address, expiration);
+listener listen:Listener googleListener = new (port, config, calendarId, address, expiration);
 
 service /calendar on googleListener {
     remote function onEventUpdate(calendar:Event event) returns error? {

@@ -29,7 +29,7 @@ The Google Calendar Ballerina Connector allows you to access the Google Calendar
 
 |                             |            Versions             |
 |:---------------------------:|:-------------------------------:|
-| Ballerina Language          |     Swan Lake Alpha4            |
+| Ballerina Language          |     Swan Lake Alpha5            |
 | Google Calendar API         |             V3                  |
 | Java Development Kit (JDK)  |             11                  |
 
@@ -42,10 +42,11 @@ The Google Calendar Ballerina Connector allows you to access the Google Calendar
 [OAuth 2.0 playground](https://developers.google.com/oauthplayground) to receive the authorization code and obtain the 
 access token and refresh token). 
 5. Click **Create**. Your client ID and client secret appear. 
-6. Enable Calendar API in API console.
-7. In a separate browser window or tab, visit [OAuth 2.0 playground](https://developers.google.com/oauthplayground), select the required Google Calendar scopes, and then click **Authorize APIs**.
-8. When you receive your authorization code, click **Exchange authorization code for tokens** to obtain the refresh token and access token. 
-
+6. [Enable Calendar API in your app's Cloud Platform project.](https://developers.google.com/workspace/guides/create-project#enable-api)
+7. In a separate browser window or tab, visit [OAuth 2.0 playground](https://developers.google.com/oauthplayground).
+8. Click the gear icon in the upper right corner and check the box labeled **Use your own OAuth credentials** (if it isn't already checked) and enter the OAuth2 client ID and OAuth2 client secret you obtained above.
+9. Select required Google Calendar scopes, and then click **Authorize APIs**.
+10. When you receive your authorization code, click **Exchange authorization code for tokens** to obtain the refresh token and access token. 
 
 ### Add configurations file
 
@@ -94,9 +95,9 @@ This file should have following configurations. Add the tokens obtained in the p
 
 ## Create an quick add event
 ### Step 1: Import the Calendar module
-First, import the `ballerinax/googleapis_calendar` module into the Ballerina project.
+First, import the `ballerinax/googleapis.calendar` module into the Ballerina project.
 ```ballerina
-import ballerinax/googleapis_calendar as calendar;
+import ballerinax/googleapis.calendar;
 ```
 
 ### Step 2: Initialize the Calendar Client giving necessary credentials
@@ -143,12 +144,11 @@ if (response is calendar:Event) {
 
 ## Create an listener for new event creation
 ### Step 1: Import the Calendar module
-First, import the `ballerinax/googleapis_calendar`, `import ballerinax/googleapis_calendar.'listener as listen` and `import ballerina/http` modules into the Ballerina project.
+First, import the `ballerinax/googleapis.calendar`, `import ballerinax/googleapis.calendar.'listener as listen` and `import ballerina/http` modules into the Ballerina project.
 
 ```ballerina
-import ballerina/http;
-import ballerinax/googleapis_calendar as calendar;
-import ballerinax/googleapis_calendar.'listener as listen;
+import ballerinax/googleapis.calendar;
+import ballerinax/googleapis.calendar.'listener as listen;
 ```
 
 ### Step 2: Initialize the Calendar Client giving necessary credentials
@@ -182,17 +182,8 @@ If there is an event created in calendar, log will print the event title
 
 ```ballerina
 service /calendar on googleListener {
-    resource function post events(http:Caller caller, http:Request request)  returns error? {
-        listen:EventInfo payload = check googleListener.getEventType(caller, request);
-        if (payload?.eventType is string && payload?.event is calendar:Event) {
-            if (payload?.eventType == listen:CREATED) {
-                var event = payload?.event;
-                string? summary = event?.summary;        
-                if (summary is string) {
-                    log:printInfo(summary);
-                } 
-            }
-        }      
+    remote function onNewEvent(calendar:Event event) returns error? {
+        log:printInfo("Created new event : ", event);
     }
 }
 ```
@@ -210,536 +201,61 @@ Run this command inside sample directory:
     $ bal run "<ballerina_file>"
     ```
 
-### Get all calendars
-
-This sample shows how to get all calendars that are available in an authorized user's account.  This operation returns stream `Calendar` if successful. Else returns `error`. 
-
-```ballerina
-import ballerina/log;
-import ballerinax/googleapis_calendar as calendar;
-
-configurable string clientId = ?;
-configurable string clientSecret = ?;
-configurable string refreshToken = ?;
-configurable string refreshUrl = ?;
-
-public function main() returns error? {
-
-    calendar:CalendarConfiguration config = {
-        oauth2Config: {
-            clientId: clientId,
-            clientSecret: clientSecret,
-            refreshToken: refreshToken,
-            refreshUrl: refreshUrl
-        }
-    };
-    calendar:Client calendarClient = check new (config);
-
-    stream<calendar:Calendar>|error res = calendarClient->getCalendars();
-    if (res is stream<calendar:Calendar>) {
-        var cal = res.next();
-        string id = check cal?.value?.id;
-        log:printInfo(id);
-    } else {
-        log:printError(res.message());
-    }
-}
-```
-
-### Create a new calendar
-
-This sample shows how to create a new calendar in an authorized user's account. The name of the new calendar is required to do this. This operation will return a `CalenderResource` if successful. Else return an `error`.
-
-```ballerina
-import ballerina/log;
-import ballerinax/googleapis_calendar as calendar;
-
-configurable string clientId = ?;
-configurable string clientSecret = ?;
-configurable string refreshToken = ?;
-configurable string refreshUrl = ?;
-
-public function main() returns error? {
-
-    calendar:CalendarConfiguration config = {
-       oauth2Config: {
-           clientId: clientId,
-           clientSecret: clientSecret,
-           refreshToken: refreshToken,
-           refreshUrl: refreshUrl
-       }
-    };
-    calendar:Client calendarClient = check new (config);
-
-    calendar:CalendarResource|error res = calendarClient->createCalendar("testCalendar");
-    if (res is calendar:CalendarResource) {
-       log:printInfo(res.id);
-    } else {
-       log:printError(res.message());
-    }
-}
-```
-
-### Delete a calendar
-
-This sample shows how to delete a calendar in an authorized user's account. The calendar id is required to do this operation. This operation returns an error `true` if unsuccessful.
-
-```ballerina
-import ballerina/log;
-import ballerinax/googleapis_calendar as calendar;
-
-configurable string clientId = ?;
-configurable string clientSecret = ?;
-configurable string refreshToken = ?;
-configurable string refreshUrl = ?;
-configurable string calendarId = ?;
-
-public function main() returns error? {
-
-    calendar:CalendarConfiguration config = {
-       oauth2Config: {
-           clientId: clientId,
-           clientSecret: clientSecret,
-           refreshToken: refreshToken,
-           refreshUrl: refreshUrl
-       }
-    };
-
-    calendar:Client calendarClient = check new (config);
-
-    error? res = calendarClient->deleteCalendar(calendarId);
-    if (res is error) {
-        log:printError(res.message());
-    } else {
-        log:printInfo("Calendar is deleted");
-    }
-}
-```
-
-### Create a new event
-
-This sample shows how to create an event in an authorized user's calendar. The calendar id and input event are required to do this operation. This operation returns an `Event` if successful. Else returns `error`. 
-
-```ballerina
-import ballerina/log;
-import ballerinax/googleapis_calendar as calendar;
-
-configurable string clientId = ?;
-configurable string clientSecret = ?;
-configurable string refreshToken = ?;
-configurable string refreshUrl = ?;
-configurable string calendarId = ?;
-
-public function main() returns error? {
-
-    calendar:CalendarConfiguration config = {
-       oauth2Config: {
-           clientId: clientId,
-           clientSecret: clientSecret,
-           refreshToken: refreshToken,
-           refreshUrl: refreshUrl
-       }
-    };
-    calendar:Client calendarClient = check new (config);
-
-    calendar:InputEvent event = {
-       'start: {
-           dateTime:  "2021-02-28T09:00:00+0530"
-       },
-       end: {
-           dateTime:  "2021-02-28T09:00:00+0530"
-       },
-       summary: "Sample Event"
-    };
-    calendar:Event|error res = calendarClient->createEvent(calendarId, event);
-    if (res is calendar:Event) {
-       log:printInfo(res.id);
-    } else {
-       log:printError(res.message());
-    }
-}
-```
-
-### Create an quick add event
-
-This sample shows how to create an quick add in an authorized user's calendar. It creates an event based on a simple text string. The calendar id and event title are required to do this operation. This operation returns an `Event` if successful. Else returns `error`. 
-
-```ballerina
-import ballerina/log;
-import ballerinax/googleapis_calendar as calendar;
-
-configurable string clientId = ?;
-configurable string clientSecret = ?;
-configurable string refreshToken = ?;
-configurable string refreshUrl = ?;
-configurable string calendarId = ?;
-
-public function main() returns error? {
-
-    calendar:CalendarConfiguration config = {
-        oauth2Config: {
-            clientId: clientId,
-            clientSecret: clientSecret,
-            refreshToken: refreshToken,
-            refreshUrl: refreshUrl
-        }
-    };
-
-    calendar:Client calendarClient = check new (config);
-
-    calendar:Event|error res = calendarClient->quickAddEvent(calendarId, "Sample Event");
-    if (res is calendar:Event) {
-        log:printInfo(res.id);
-    } else {
-        log:printError(res.message());
-    }
-}
-```
-### Get an event
-
-This sample shows how to get an event that is available in an authorized user's calendar. The calendar and event ids are required to do this operation. This operation returns an `Event` if successful. Else returns `error`. 
-
-```ballerina
-import ballerina/log;
-import ballerinax/googleapis_calendar as calendar;
-
-configurable string clientId = ?;
-configurable string clientSecret = ?;
-configurable string refreshToken = ?;
-configurable string refreshUrl = ?;
-configurable string calendarId = ?;
-configurable string eventId = ?;
-
-public function main() returns error? {
-
-    calendar:CalendarConfiguration config = {
-        oauth2Config: {
-            clientId: clientId,
-            clientSecret: clientSecret,
-            refreshToken: refreshToken,
-            refreshUrl: refreshUrl
-        }
-    };
-    calendar:Client calendarClient = check new (config);
-
-    calendar:Event|error res = calendarClient->getEvent(calendarId, eventId);
-    if (res is calendar:Event) {
-        log:printInfo(res.id);
-    } else {
-        log:printError(res.message());
-    }
-}`
-```
-
-### Get all events
-
-This sample shows how to get all events that are available in an authorized user's calendar. The calendar id is required to do this operation. This operation returns stream `Event` if successful. Else returns `error`. 
-
-```ballerina
-import ballerina/log;
-import ballerinax/googleapis_calendar as calendar;
-
-configurable string clientId = ?;
-configurable string clientSecret = ?;
-configurable string refreshToken = ?;
-configurable string refreshUrl = ?;
-configurable string calendarId = ?;
-
-public function main() returns error? {
-
-    calendar:CalendarConfiguration config = {
-        oauth2Config: {
-            clientId: clientId,
-            clientSecret: clientSecret,
-            refreshToken: refreshToken,
-            refreshUrl: refreshUrl
-        }
-    };
-
-    calendar:Client calendarClient = check new (config);
-
-    stream<calendar:Event>|error res = calendarClient->getEvents(calendarId);
-    if (res is stream<calendar:Event>) {
-        var eve = res.next();
-        string id = check eve?.value?.id;
-        log:printInfo(id);
-    } else {
-        log:printError(res.message());
-    }
-}
-```
-
-### Update an existing event
-
-This sample shows how to update an existing event that is available in an authorized user's calendar. The calendar and event ids are required to do this operation. This operation returns an `Event` if successful. Else returns `error`.
-
-```ballerina
-import ballerina/log;
-import ballerinax/googleapis_calendar as calendar;
-
-configurable string clientId = ?;
-configurable string clientSecret = ?;
-configurable string refreshToken = ?;
-configurable string refreshUrl = ?;
-configurable string calendarId = ?;
-configurable string eventId = ?;
-
-public function main() returns error? {
-
-    calendar:CalendarConfiguration config = {
-        oauth2Config: {
-            clientId: clientId,
-            clientSecret: clientSecret,
-            refreshToken: refreshToken,
-            refreshUrl: refreshUrl
-        }
-    };
-
-    calendar:Client calendarClient = check new (config);
-
-    calendar:InputEvent event = {
-        'start: {
-            dateTime:  "2021-02-28T09:00:00+0530"
-        },
-        end: {
-            dateTime:  "2021-02-28T09:00:00+0530"
-        },
-        summary: "Sample Event"
-    };
-
-    calendar:Event|error res = calendarClient->updateEvent(calendarId, eventId, event);
-    if (res is calendar:Event) {
-        log:printInfo(res.id);
-    } else {
-        log:printError(res.message());
-    }
-}
-```
-
-### Delete an event
-
-This sample shows how to delete an event in an authorized user's calendar. The calendar and event ids are required to do this operation. This operation returns an error `true` if unsuccessful. 
-
-```ballerina
-import ballerina/log;
-import ballerinax/googleapis_calendar as calendar;
-
-configurable string clientId = ?;
-configurable string clientSecret = ?;
-configurable string refreshToken = ?;
-configurable string refreshUrl = ?;
-configurable string calendarId = ?;
-configurable string eventId = ?;
-
-public function main() returns error? {
-
-    calendar:CalendarConfiguration config = {
-       oauth2Config: {
-           clientId: clientId,
-           clientSecret: clientSecret,
-           refreshToken: refreshToken,
-           refreshUrl: refreshUrl
-       }
-    };
-
-    calendar:Client calendarClient = check new (config);
-
-    error? res = calendarClient->deleteEvent(calendarId, eventId);
-    if (res is error) {
-        log:printError(res.message());
-    } else {
-        log:printInfo("Event is deleted");
-    }
-}
-```
-
-### Watch event changes
-
-This sample shows how to watch for changes to events in an authorized user's calendar. It is a subscription to receive push notification from Google on events changes.  The calendar id and callback url are required to do this operation. Channel live time can be provided via an optional parameter. By default it is 604800 seconds. This operation returns  `WatchResponse` if successful. Else returns `error`. 
-
-```ballerina
-import ballerina/log;
-import ballerinax/googleapis_calendar as calendar;
-
-configurable string clientId = ?;
-configurable string clientSecret = ?;
-configurable string refreshToken = ?;
-configurable string refreshUrl = ?;
-configurable string calendarId = ?;
-configurable string address = ?;
-
-public function main() returns error? {
-
-    calendar:CalendarConfiguration config = {
-        oauth2Config: {
-            clientId: clientId,
-            clientSecret: clientSecret,
-            refreshToken: refreshToken,
-            refreshUrl: refreshUrl
-        }
-    };
-
-    calendar:Client calendarClient = check new (config);
-
-    calendar:WatchResponse|error res = calendarClient->watchEvents(calendarId, address);
-    if (res is calendar:WatchResponse) {
-        log:printInfo(res.id);
-    } else {
-        log:printError(res.message());
-    }
-}
-```
-
-### Stop a channel subscription
-
-This sample shows how to stop an existing subscription. The channel id and resource is are required to do this operation. This operation returns an error `true` if unsuccessful.
-
-```ballerina
-import ballerina/log;
-import ballerinax/googleapis_calendar as calendar;
-
-configurable string clientId = ?;
-configurable string clientSecret = ?;
-configurable string refreshToken = ?;
-configurable string refreshUrl = ?;
-configurable string calendarId = ?;
-configurable string testChannelId = ?;
-configurable string testResourceId = ?;
-
-public function main() returns error? {
-
-    calendar:CalendarConfiguration config = {
-        oauth2Config: {
-            clientId: clientId,
-            clientSecret: clientSecret,
-            refreshToken: refreshToken,
-            refreshUrl: refreshUrl
-        }
-    };
-
-    calendar:Client calendarClient = check new (config);
-
-    error? res = calendarClient->stopChannel(testChannelId, testResourceId);
-    if (res is error) {
-        log:printError(res.message());
-    } else {
-        log:printInfo("Channel is terminated");
-    }
-}
-```
+
+- #### [Get all calendars](samples/get_calendars.bal)
+
+    This sample shows how to get all calendars that are available in an authorized user's account. This operation returns stream `Calendar` if successful. Else returns `error`.
+
+- #### [Create a new calendar](samples/create_calendar.bal)
+
+    This sample shows how to create a new calendar in an authorized user's account. The name of the new calendar is required to do this. This operation will return a `CalenderResource` if successful. Else return an `error`.
+
+- #### [Delete a calendar](samples/delete_calendar.bal)
+
+    This sample shows how to delete a calendar in an authorized user's account. The calendar id is required to do this operation. This operation returns an error `true` if unsuccessful.
+
+- #### [Create a new event](samples/create_event.bal)
+
+    This sample shows how to create an event in an authorized user's calendar. The calendar id and input event are required to do this operation. This operation returns an `Event` if successful. Else returns `error`.
+
+- #### [Create a quick add event](samples/quick_add_event.bal)
+
+    This sample shows how to create a quick add event in an authorized user's calendar. It creates an event based on a simple text string. The calendar id and event title are required to do this operation. This operation returns an `Event` if successful. Else returns `error`.
+
+- #### [Get an event](samples/get_event.bal)
+
+    This sample shows how to get an event that is available in an authorized user's calendar. The calendar and event ids are required to do this operation. This operation returns an `Event` if successful. Else returns `error`.
+
+- #### [Get all events](samples/get_events.bal)
+
+    This sample shows how to get all events that are available in an authorized user's calendar. The calendar id is required to do this operation. This operation returns stream `Event` if successful. Else returns `error`.
+
+- #### [Update an existing event](samples/update_event.bal)
+
+    This sample shows how to update an existing event that is available in an authorized user's calendar. The calendar and event ids are required to do this operation. This operation returns an `Event` if successful. Else returns `error`.
+
+- #### [Delete an event](samples/delete_event.bal)
+
+    This sample shows how to delete an event in an authorized user's calendar. The calendar and event ids are required to do this operation. This operation returns an error `true` if unsuccessful.
+
+- #### [Watch event changes](samples/watch_event.bal)
+
+    This sample shows how to watch for changes to events in an authorized user's calendar. It is a subscription to receive push notification from Google on events changes.  The calendar id and callback url are required to do this operation. Channel live time can be provided via an optional parameter. By default it is 604800 seconds. This operation returns  `WatchResponse` if successful. Else returns `error`.
+
+- #### [Stop a channel subscription](samples/stop_channel.bal)
+
+    This sample shows how to stop an existing subscription. The channel id and resource is are required to do this operation. This operation returns an error `true` if unsuccessful.
 
 ## Listener
 
-### Trigger for new event
+- #### [Trigger for new event](samples/trigger_create_event.bal)
 
-This sample shows how to create a trigger on new event. When a new event is occurred, that event details can be captured in this listener.
+    This sample shows how to create a trigger on new event. When a new event is occurred, that event details can be captured in this listener.
 
-```ballerina
-import ballerina/http;
-import ballerina/log;
-import ballerinax/googleapis_calendar as calendar;
-import ballerinax/googleapis_calendar.'listener as listen;
+- #### [Trigger for updated event](samples/trigger_update_event.bal)
 
-configurable int port = ?;
-configurable string clientId = ?;
-configurable string clientSecret = ?;
-configurable string refreshToken = ?;
-configurable string refreshUrl = ?;
-configurable string calendarId = ?;
-configurable string address = ?;
-configurable string expiration = ?;
+    This sample shows how to create a trigger on an event update. When a new event is updated, that event details can be captured in this listener.
 
-calendar:CalendarConfiguration config = {
-    oauth2Config: {
-        clientId: clientId,
-        clientSecret: clientSecret,
-        refreshToken: refreshToken,
-        refreshUrl: refreshUrl   
-    }
-};
+- #### [Trigger for deleted event](samples/trigger_delete_event.bal)
 
-calendar:Client calendarClient = check new (config);
-listener listen:Listener googleListener = new (port, calendarClient, calendarId, address, expiration);
-
-service /calendar on googleListener {
-    remote function onNewEvent(calendar:Event event) returns error? {
-        log:printInfo("Created new event : ", event);
-    }
-}
-```
-
-### Trigger for updated event
-
-This sample shows how to create a trigger on an event update. When a new event is occurred, that event details can be captured in this listener.
-
-```ballerina
-import ballerina/http;
-import ballerina/log;
-import ballerinax/googleapis_calendar as calendar;
-import ballerinax/googleapis_calendar.'listener as listen;
-
-configurable int port = ?;
-configurable string clientId = ?;
-configurable string clientSecret = ?;
-configurable string refreshToken = ?;
-configurable string refreshUrl = ?;
-configurable string calendarId = ?;
-configurable string address = ?;
-configurable string expiration = ?;
-
-calendar:CalendarConfiguration config = {
-    oauth2Config: {
-        clientId: clientId,
-        clientSecret: clientSecret,
-        refreshToken: refreshToken,
-        refreshUrl: refreshUrl   
-    }
-};
-
-calendar:Client calendarClient = check new (config);
-listener listen:Listener googleListener = new (port, calendarClient, calendarId, address, expiration);
-
-service /calendar on googleListener {
-    remote function onEventUpdate(calendar:Event event) returns error? {
-        log:printInfo("Updated an event : ", event);
-    }
-}
-```
-
-### Trigger for deleted event
-
-This sample shows how to create a trigger on delete event. When a new event is occurred, that event details can be captured in this listener.
-
-```ballerina
-import ballerina/http;
-import ballerina/log;
-import ballerinax/googleapis_calendar as calendar;
-import ballerinax/googleapis_calendar.'listener as listen;
-
-configurable int port = ?;
-configurable string clientId = ?;
-configurable string clientSecret = ?;
-configurable string refreshToken = ?;
-configurable string refreshUrl = ?;
-configurable string calendarId = ?;
-configurable string address = ?;
-configurable string expiration = ?;
-
-calendar:CalendarConfiguration config = {
-    oauth2Config: {
-        clientId: clientId,
-        clientSecret: clientSecret,
-        refreshToken: refreshToken,
-        refreshUrl: refreshUrl   
-    }
-};
-
-calendar:Client calendarClient = check new (config);
-listener listen:Listener googleListener = new (port, calendarClient, calendarId, address, expiration);
-
-service /calendar on googleListener {
-    remote function onEventDelete(calendar:Event event) returns error? {
-           log:printInfo("Deleted an event : ", event);
-   }
-}
-```
+    This sample shows how to create a trigger on cancelled event. When a new event is cancelled, that event details can be captured in this listener.

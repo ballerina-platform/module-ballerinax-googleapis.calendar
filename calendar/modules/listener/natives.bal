@@ -1,5 +1,5 @@
 import ballerina/jballerina.java;
-import ballerinax/googleapis_calendar as calendar;
+import ballerinax/googleapis.calendar;
 
 isolated function callOnNewEventMethod(SimpleHttpService httpService, calendar:Event event) returns error?
     = @java:Method {

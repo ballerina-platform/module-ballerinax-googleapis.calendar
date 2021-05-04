@@ -173,6 +173,7 @@ public type Reminder record {
 # + reminders - Information about the event's reminders
 # + source - Source from which the event was created
 # + attachments - File attachments for the event
+# + eventType - Specific type of the event [Default/ OutOfOffice]
 public type Event record {
     string kind;
     string etag;
@@ -212,6 +213,7 @@ public type Event record {
     Reminders reminders?;
     Source 'source?;
     Attachment[] attachments?;
+    string eventType;
 };
 
 # Extended properties of the event.

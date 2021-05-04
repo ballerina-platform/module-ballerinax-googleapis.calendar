@@ -13,7 +13,7 @@ Download the required Ballerina [distribution](https://ballerinalang.org/downloa
 
 |                             |            Versions             |
 |:---------------------------:|:-------------------------------:|
-| Ballerina Language          |     Swan Lake Alpha4            |
+| Ballerina Language          |     Swan Lake Alpha5            |
 | Google Calendar API         |             V3                  |
 | Java Development Kit (JDK)  |             11                  |
 
@@ -26,8 +26,11 @@ Download the required Ballerina [distribution](https://ballerinalang.org/downloa
 [OAuth 2.0 playground](https://developers.google.com/oauthplayground) to receive the authorization code and obtain the 
 access token and refresh token). 
 5. Click **Create**. Your client ID and client secret appear. 
-6. In a separate browser window or tab, visit [OAuth 2.0 playground](https://developers.google.com/oauthplayground), select the required Google Calendar scopes, and then click **Authorize APIs**.
-7. When you receive your authorization code, click **Exchange authorization code for tokens** to obtain the refresh token and access token. 
+6. [Enable Calendar API in your app's Cloud Platform project.](https://developers.google.com/workspace/guides/create-project#enable-api)
+7. In a separate browser window or tab, visit [OAuth 2.0 playground](https://developers.google.com/oauthplayground).
+8. Click the gear icon in the upper right corner and check the box labeled **Use your own OAuth credentials** (if it isn't already checked) and enter the OAuth2 client ID and OAuth2 client secret you obtained above.
+9. Select required Google Calendar scopes, and then click **Authorize APIs**.
+10. When you receive your authorization code, click **Exchange authorization code for tokens** to obtain the refresh token and access token. 
 
 ### Add configurations file
 
@@ -72,198 +75,27 @@ This file should have following configurations. Add the tokens obtained in the p
   address = "<address>"
   ```
 
-
 # Samples
 
 Samples are available at : https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/samples. To run a sample, create a new TOML file with name `Config.toml` in the same directory as the `.bal` file with above-mentioned configurable values.
+- #### [Watch event changes](samples/watch_event.bal) 
 
-### Watch event changes
+  This sample shows how to watch for changes to events in an authorized user's calendar. It is a subscription to receive push notification from Google on events changes.  The calendar id and callback url are required to do this operation. Channel live time can be provided via an optional parameter. By default it is 604800 seconds. This operation returns  `WatchResponse` if successful. Else returns `error`.
 
-This sample shows how to watch for changes to events in an authorized user's calendar. It is a subscription to receive push notification from Google on events changes.  The calendar id and callback url are required to do this operation. Channel live time can be provided via an optional parameter. By default it is 604800 seconds. This operation returns  `WatchResponse` if successful. Else returns `error`. 
+- #### [Stop a channel subscription](samples/stop_channel.bal)
 
-```ballerina
-import ballerina/log;
-import ballerinax/googleapis_calendar as calendar;
-
-configurable string clientId = ?;
-configurable string clientSecret = ?;
-configurable string refreshToken = ?;
-configurable string refreshUrl = ?;
-configurable string calendarId = ?;
-configurable string address = ?;
-
-public function main() returns error? {
-
-    calendar:CalendarConfiguration config = {
-        oauth2Config: {
-            clientId: clientId,
-            clientSecret: clientSecret,
-            refreshToken: refreshToken,
-            refreshUrl: refreshUrl
-        }
-    };
-
-    calendar:Client calendarClient = check new (config);
-
-    calendar:WatchResponse|error res = calendarClient->watchEvents(calendarId, address);
-    if (res is calendar:WatchResponse) {
-        log:printInfo(res.id);
-    } else {
-        log:printError(res.message());
-    }
-}
-```
-
-### Stop a channel subscription
-
-This sample shows how to stop an existing subscription. The channel id and resource is are required to do this operation. This operation returns an error `true` if unsuccessful. 
-
-```ballerina
-import ballerina/log;
-import ballerinax/googleapis_calendar as calendar;
-
-configurable string clientId = ?;
-configurable string clientSecret = ?;
-configurable string refreshToken = ?;
-configurable string refreshUrl = ?;
-configurable string calendarId = ?;
-configurable string testChannelId = ?;
-configurable string testResourceId = ?;
-
-public function main() returns error? {
-
-    calendar:CalendarConfiguration config = {
-        oauth2Config: {
-            clientId: clientId,
-            clientSecret: clientSecret,
-            refreshToken: refreshToken,
-            refreshUrl: refreshUrl
-        }
-    };
-
-    calendar:Client calendarClient = check new (config);
-
-    error? res = calendarClient->stopChannel(testChannelId, testResourceId);
-    if (res is error) {
-        log:printError(res.message());
-    } else {
-        log:printInfo("Channel is terminated");
-    }
-}
-```
+  This sample shows how to stop an existing subscription. The channel id and resource is are required to do this operation. This operation returns an error `true` if unsuccessful.
 
 ## Listener
 
-### Trigger for new event
+- #### [Trigger for new event](samples/trigger_create_event.bal)
 
-This sample shows how to create a trigger on new event. When a new event is occurred, that event details can be captured in this listener.
+  This sample shows how to create a trigger on new event. When a new event is occurred, that event details can be captured in this listener.
 
-```ballerina
-import ballerina/http;
-import ballerina/log;
-import ballerinax/googleapis_calendar as calendar;
-import ballerinax/googleapis_calendar.'listener as listen;
+- #### [Trigger for updated event](samples/trigger_update_event.bal)
 
-configurable int port = ?;
-configurable string clientId = ?;
-configurable string clientSecret = ?;
-configurable string refreshToken = ?;
-configurable string refreshUrl = ?;
-configurable string calendarId = ?;
-configurable string address = ?;
-configurable string expiration = ?;
+  This sample shows how to create a trigger on an event update. When a new event is updated, that event details can be captured in this listener.
 
-calendar:CalendarConfiguration config = {
-    oauth2Config: {
-        clientId: clientId,
-        clientSecret: clientSecret,
-        refreshToken: refreshToken,
-        refreshUrl: refreshUrl   
-    }
-};
+- #### [Trigger for deleted event](samples/trigger_delete_event.bal)
 
-calendar:Client calendarClient = check new (config);
-listener listen:Listener googleListener = new (port, calendarClient, calendarId, address, expiration);
-
-service /calendar on googleListener {
-    remote function onNewEvent(calendar:Event event) returns error? {
-        log:printInfo("Created new event : ", event);
-    }
-}
-```
-
-### Trigger for updated event
-
-This sample shows how to create a trigger on an event update. When a new event is occurred, that event details can be captured in this listener.
-
-```ballerina
-import ballerina/http;
-import ballerina/log;
-import ballerinax/googleapis_calendar as calendar;
-import ballerinax/googleapis_calendar.'listener as listen;
-
-configurable int port = ?;
-configurable string clientId = ?;
-configurable string clientSecret = ?;
-configurable string refreshToken = ?;
-configurable string refreshUrl = ?;
-configurable string calendarId = ?;
-configurable string address = ?;
-configurable string expiration = ?;
-
-calendar:CalendarConfiguration config = {
-    oauth2Config: {
-        clientId: clientId,
-        clientSecret: clientSecret,
-        refreshToken: refreshToken,
-        refreshUrl: refreshUrl   
-    }
-};
-
-calendar:Client calendarClient = check new (config);
-listener listen:Listener googleListener = new (port, calendarClient, calendarId, address, expiration);
-
-service /calendar on googleListener {
-    remote function onEventUpdate(calendar:Event event) returns error? {
-        log:printInfo("Updated an event : ", event);
-    }
-}
-```
-
-### Trigger for deleted event
-
-This sample shows how to create a trigger on delete event. When a new event is occurred, that event details can be captured in this listener.
-
-```ballerina
-import ballerina/http;
-import ballerina/log;
-import ballerinax/googleapis_calendar as calendar;
-import ballerinax/googleapis_calendar.'listener as listen;
-
-configurable int port = ?;
-configurable string clientId = ?;
-configurable string clientSecret = ?;
-configurable string refreshToken = ?;
-configurable string refreshUrl = ?;
-configurable string calendarId = ?;
-configurable string address = ?;
-configurable string expiration = ?;
-
-calendar:CalendarConfiguration config = {
-    oauth2Config: {
-        clientId: clientId,
-        clientSecret: clientSecret,
-        refreshToken: refreshToken,
-        refreshUrl: refreshUrl   
-    }
-};
-
-calendar:Client calendarClient = check new (config);
-listener listen:Listener googleListener = new (port, calendarClient, calendarId, address, expiration);
-
-service /calendar on googleListener {
-    remote function onEventDelete(calendar:Event event) returns error? {
-           log:printInfo("Deleted an event : ", event);
-   }
-}
-```
+  This sample shows how to create a trigger on cancelled event. When a new event is cancelled, that event details can be captured in this listener.
