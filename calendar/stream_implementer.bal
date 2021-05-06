@@ -24,8 +24,7 @@ class EventStream {
     private string? pageToken;
     private final string calendarId;
 
-    isolated function init(http:Client httpClient, string calendarId, string? syncToken, string? pageToken)
-        {
+    isolated function init(http:Client httpClient, string calendarId, string? syncToken, string? pageToken) {
         self.httpClient = httpClient;
         self.syncToken = syncToken;
         self.pageToken = pageToken;
@@ -35,9 +34,9 @@ class EventStream {
 
     public isolated function next() returns @tainted record {| Event value; |}|error? {
         if (self.index < self.currentEntries.length()) {
-            record {| Event value; |} document = {value: self.currentEntries[self.index]};
+            record {| Event value; |} event = {value: self.currentEntries[self.index]};
             self.index += 1;
-            return document;
+            return event;
         }
         if (self.pageToken is string) {
             self.index = 0;

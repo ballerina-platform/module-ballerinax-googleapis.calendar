@@ -115,11 +115,11 @@ function testquickAdd() {
 }
 
 @test:Config {
-   // dependsOn: [testGetEvent, testquickAdd]
+    dependsOn: [testGetEvent, testquickAdd]
 }
 function testGetEvents() {
     log:printInfo("calendarClient -> getEvents()");
-    stream<Event,error> resultStream = calendarClient->getEvents("primary");
+    stream<Event,error> resultStream = calendarClient->getEvents(testCalendarId);
     record {|Event value;|}|error? res = resultStream.next();
     if (res is record {|Event value;|}) {
         test:assertNotEquals(res.value["id"], "", msg = "Found 0 records");

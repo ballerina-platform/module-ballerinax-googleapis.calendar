@@ -23,10 +23,8 @@ import ballerina/uuid;
 @display {label: "Google Calendar Client", iconPath: "GoogleCalendarLogo.png"}
 public client class Client {
     public http:Client calendarClient;
-    CalendarConfiguration calendarConfiguration;
 
     public isolated function init(CalendarConfiguration calendarConfig) returns error? {
-        self.calendarConfiguration = calendarConfig;
         http:ClientSecureSocket? socketConfig = calendarConfig?.secureSocketConfig;
         self.calendarClient = check new (BASE_URL, {
             auth: calendarConfig.oauth2Config,
@@ -157,8 +155,8 @@ public client class Client {
     # + return - An Event object on success, else an error
     @display {label: "Get an event"}
     remote isolated function getEvent(@display {label: "Calendar id"} string calendarId,
-                                         @display {label: "Event id"} string eventId)
-                                         returns @tainted @display {label: "Event"} Event|error {
+                                        @display {label: "Event id"} string eventId)
+                                        returns @tainted @display {label: "Event"} Event|error {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, eventId]);
         var httpResponse = self.calendarClient->get(path);
         json resp = check checkAndSetErrors(httpResponse);

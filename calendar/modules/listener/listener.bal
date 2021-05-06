@@ -16,14 +16,13 @@
 
 import ballerina/http;
 import ballerina/log;
-import ballerinax/googleapis_calendar as calendar;
+import ballerinax/googleapis.calendar;
 
 # Listener for Google Calendar connector
 # 
 # + expirationTime - Expiration time in unix timestamp
 @display {label: "Google Calendar Listener"}
 public class Listener {
-
     private http:Listener httpListener;
     private calendar:Client calendarClient;
     private string calendarId;
@@ -35,17 +34,17 @@ public class Listener {
     public decimal expirationTime = 0;
     private HttpService httpService;
 
-    public isolated function init(int port, calendar:Client calendarClient, string calendarId, string address,
+    public isolated function init(int port, calendar:CalendarConfiguration config, string calendarId, string address,
                                     string? expiration = ()) returns error? {
         self.httpListener = check new (port);
-        self.calendarClient = calendarClient;
+        self.calendarClient = check new (config);
         self.calendarId = calendarId;
         self.address = address;
         self.expiration = expiration;
     }
 
     public isolated function attach(SimpleHttpService s, string[]|string? name = ()) returns @tainted error? {
-        self.httpService = new HttpService(s,  self.calendarClient,  self.calendarId, self.channelId, self.resourceId);
+        self.httpService = new HttpService(s, self.calendarClient, self.calendarId, self.channelId, self.resourceId);
         check self.registerWatchChannel();
         check self.httpListener.attach(self.httpService, name);
         Job job = new (self);
@@ -70,14 +69,14 @@ public class Listener {
         return self.httpListener.immediateStop();
     }
 
-    public isolated function registerWatchChannel() returns error? {
+    public isolated function registerWatchChannel() returns @tainted error? {
         calendar:WatchResponse res = check self.calendarClient->watchEvents(self.calendarId, self.address,
             self.expiration);
         self.channelId = res.id;
         self.resourceId = res.resourceId;
         self.httpService.channelId = self.channelId;
         self.httpService.resourceId = self.resourceId;
-        log:printInfo("Subscribed to channel id : " + self.channelId + " resourcs id :  " + self.resourceId);
+        log:printDebug("Subscribed to channel id : " + self.channelId + " resourcs id :  " + self.resourceId);
         self.expirationTime = check decimal:fromString(res.expiration);
     }
 }
