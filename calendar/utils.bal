@@ -171,8 +171,7 @@ isolated function checkAndSetErrors(http:Response|http:PayloadType|error httpRes
         } else {
             json|error jsonResponse = httpResponse.getJsonPayload();
             if (jsonResponse is json) {
-                json err = check jsonResponse.'error.message;
-                return error(HTTP_ERROR_MSG + err.toString());
+                return error(HTTP_ERROR_MSG + jsonResponse.toString());
             } else {
                 return error(ERR_EXTRACTING_ERROR_MSG, jsonResponse);
             }

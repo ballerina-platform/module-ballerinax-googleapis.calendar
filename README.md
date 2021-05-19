@@ -16,7 +16,7 @@ Connects to Google Calendar using Ballerina.
 
 ## Connector Overview
 
-The Google Calendar Ballerina Connector allows you to access the Google Calendar API Version V3 through Ballerina. The connector can be used to implement some of the most common use cases of Google Calendar. The connector provides the capability to programmatically manage events and calendar, CRUD operations on event and calendar operations through the connector endpoints and listener for the events push notification from the calendar.
+The Google Calendar Ballerina Connector allows users to access the Google Calendar API Version V3 through Ballerina. The connector can be used to access common use cases of Google Calendar. The connector provides the capability to programmatically manage events and calendar, CRUD operations on event and calendar operations through the connector endpoints and listener for the events occurred in the calendar. The connector supports service account authorization that can provide delegated domain-wide access to GSuite domain. So that GSuite admin can do operations for the domain users.
 
 ![image](docs/images/calendar_connector.png)
 
@@ -45,11 +45,20 @@ access token and refresh token).
 9. Select required Google Calendar scopes, and then click **Authorize APIs**.
 10. When you receive your authorization code, click **Exchange authorization code for tokens** to obtain the refresh token and access token. 
 
+#### Service account
+
+1. User needs p12 format private key to access connector by using service account. Refer the following link to create p12 key.
+https://developers.google.com/identity/protocols/oauth2/service-account#creatinganaccount
+
+
+2. Refer following link to delegate domain-wide authority to the service account.
+https://developers.google.com/identity/protocols/oauth2/service-account#delegatingauthority
 
 ### Add configurations file
 
-* Instantiate the connector by giving authentication details in the HTTP client config. The HTTP client config has built-in support for Bearer Token Authentication and OAuth 2.0. Google Calendar uses OAuth 2.0 to authenticate and authorize requests. It uses the Direct Token Grant Type. The Google Calendar connector can be minimally instantiated in the HTTP client config using the OAuth 2.0 access token.
-    * Access Token 
+* Instantiate the connector by giving authentication details in the HTTP client config. The HTTP client config has support for bearer token config, OAuth 2.0 refresh token grant config and jwt issuer config. 
+
+    * Bearer Token - The Google Calendar connector can be minimally instantiated in the HTTP client config using the OAuth 2.0 access token as bearer token. As access token has defined time limit, client operations can be accessed for a certain time period.  
     ``` 
     calendar:CalendarConfiguration config = {
         oauth2Config: {
@@ -58,7 +67,7 @@ access token and refresh token).
     }
     ```
 
-    The Google Calendar connector can also be instantiated in the HTTP client config without the access token using the client ID, client secret, and refresh token.
+    * OAuth2 Refresh Token - The Google Calendar connector can also be instantiated in the HTTP client config with the refresh token using the client ID, client secret, and refresh token. In this authorization client can function until refresh token stop working.
     * Client ID
     * Client Secret
     * Refresh Token
@@ -73,6 +82,32 @@ access token and refresh token).
         }
     }
     ```
+
+    * Service account - This authorization method is used to authorize Google application. Here operation are called to Google server on behalf on Google application.
+     ```
+    calendar:CalendarConfiguration config = {
+        oauth2Config: {
+            issuer: <issuer>,
+            audience: <aud>,
+            customClaims: {"scope": <scope>},
+            signatureConfig: {
+                config: {
+                    keyStore: {
+                        path: <path>,
+                        password: <password>
+                    },
+                    keyAlias: <keyAlias>,
+                    keyPassword: <keyPassword>
+                }
+            }
+        }
+    }
+    ```
+    * issuer - The email address of the service account.
+    * audience - A descriptor of the intended target of the assertion. When making an access token request this value is always https://oauth2.googleapis.com/token.
+    * scope - A space-delimited list of the permissions that the application requests.
+    * path, password, keyAlias, keyPassword - The values of key file configurations.
+    
 * Callback address is additionally required in order to use Google Calendar listener. This refers the path of the listener resource function. The time-to-live in seconds for the notification channel is provided by optional parameter expiration time. By default it is 604800 seconds.
     * Callback Address
     * Expiration Time
@@ -86,9 +121,8 @@ clientSecret = "<client_secret>"
 refreshToken = "<refresh_token>"
 refreshUrl = "<refresh_URL>"
 calendarId = "<calendar_id>"
-address = "<address>"
+address = "<call_back url + "/calendar/events">"
 ```
-
 
 # Quickstart(s)
 
@@ -115,7 +149,6 @@ calendar:Client calendarClient = check new (config);
 ```
 Note: Must specify the **Refresh token** (obtained by exchanging the authorization code), **Refresh URL**, the **Client ID** and the **Client secret** obtained in the app creation, when configuring the Calendar connector client.
 
-
 ### Step 3: Set up all the data required to create the quick event
 The `quickAddEvent` remote function creates an event. The `calendarId` represents the calendar where the event has to be created and `title` refers the name of the event.
 
@@ -140,7 +173,62 @@ if (response is calendar:Event) {
 }
 ```
 
-## Create an listener for new event creation
+## Follow following steps to create an quick event by using service account authorization
+### Step 1: Import the Calendar module
+First, import the `ballerinax/googleapis.calendar` module into the Ballerina project.
+```ballerina
+import ballerinax/googleapis.calendar;
+```
+
+### Step 2: Initialize the Calendar Client giving necessary credentials
+You can now enter the credentials in the Calendar client config.
+```ballerina
+calendar:CalendarConfiguration config = {
+    oauth2Config: {
+        issuer: <issuer>,
+        audience: <audience>,
+        customClaims: {"scope": <scope>},
+        signatureConfig: {
+            config: {
+                keyStore: {
+                    path: <path>,
+                    password: <password>
+                },
+                keyAlias: <keyAlias>,
+                keyPassword: <keyPassword>
+            }}
+    }
+};
+
+calendar:Client calendarClient = check new (config);
+```
+
+### Step 3: Set up all the data required to create the quick event
+The `quickAddEvent` remote function creates an event. The `calendarId` represents the calendar where the event has to be created, `title` refers the name of the event and userAccount represents email address of the user for which the application is requesting delegated access.
+
+```ballerina
+string calendarId = <calendarId>;
+string title = "Sample Event";
+string userAccount = <userEmail>;
+```
+
+### Step 4: Create the quick add event
+The response from `quickAddEvent` is either an Event record or an `error` (if creating the event was unsuccessful).
+
+```ballerina
+//Create new quick add event.
+calendar:Event|error response = calendarClient->quickAddEvent(calendarId, title, userAccount = userAccount);
+
+if (response is calendar:Event) {
+    // If successful, log event id
+    log:printInfo(response.id);
+} else {
+    // If unsuccessful
+    log:printError("Error: " + response.toString());
+}
+```
+
+## Create a listener for new event creation
 ### Step 1: Import the Calendar module
 First, import the `ballerinax/googleapis.calendar`, `import ballerinax/googleapis.calendar.'listener as listen` and `import ballerina/http` modules into the Ballerina project.
 
@@ -168,7 +256,7 @@ Define all the data required to create
 ```ballerina
 int port = 4567;
 string calendarId = "primary";
-string address = "callback_url;
+string address = "<call_back url + "/calendar/events">";
 
 listener listen:Listener googleListener = new (port, config, calendarId, address);
 ```
@@ -197,61 +285,61 @@ Run this command inside sample directory:
     $ bal run "<ballerina_file>"
     ```
 
-- #### [Get all calendars](samples/get_calendars.bal)
+- #### [Get all calendars](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/get_calendars.bal)
   
     This sample shows how to get all calendars that are available in an authorized user's account. This operation returns stream `Calendar` if successful. Else returns `error`.
 
-- #### [Create a new calendar](samples/create_calendar.bal)
+- #### [Create a new calendar](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/create_calendar.bal)
 
     This sample shows how to create a new calendar in an authorized user's account. The name of the new calendar is required to do this. This operation will return a `CalenderResource` if successful. Else return an `error`.
 
-- #### [Delete a calendar](samples/delete_calendar.bal)
+- #### [Delete a calendar](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/delete_calendar.bal)
 
     This sample shows how to delete a calendar in an authorized user's account. The calendar id is required to do this operation. This operation returns an error `true` if unsuccessful.
 
-- #### [Create a new event](samples/create_event.bal)
+- #### [Create a new event](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/create_event.bal)
 
     This sample shows how to create an event in an authorized user's calendar. The calendar id and input event are required to do this operation. This operation returns an `Event` if successful. Else returns `error`.
 
-- #### [Create a quick add event](samples/quick_add_event.bal)
+- #### [Create a quick add event](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/quick_add_event.bal)
 
     This sample shows how to create a quick add event in an authorized user's calendar. It creates an event based on a simple text string. The calendar id and event title are required to do this operation. This operation returns an `Event` if successful. Else returns `error`. 
 
-- #### [Get an event](samples/get_event.bal)
+- #### [Get an event](samples/https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/get_event.bal)
 
     This sample shows how to get an event that is available in an authorized user's calendar. The calendar and event ids are required to do this operation. This operation returns an `Event` if successful. Else returns `error`.
 
-- #### [Get all events](samples/get_events.bal)
+- #### [Get all events](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/get_events.bal)
 
     This sample shows how to get all events that are available in an authorized user's calendar. The calendar id is required to do this operation. This operation returns stream `Event` if successful. Else returns `error`.
 
-- #### [Update an existing event](samples/update_event.bal)
+- #### [Update an existing event](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/update_event.bal)
 
     This sample shows how to update an existing event that is available in an authorized user's calendar. The calendar and event ids are required to do this operation. This operation returns an `Event` if successful. Else returns `error`.
 
-- #### [Delete an event](samples/delete_event.bal)
+- #### [Delete an event](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/delete_event.bal)
 
     This sample shows how to delete an event in an authorized user's calendar. The calendar and event ids are required to do this operation. This operation returns an error `true` if unsuccessful. 
 
-- #### [Watch event changes](samples/watch_event.bal)
+- #### [Watch event changes](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/watch_event.bal)
 
     This sample shows how to watch for changes to events in an authorized user's calendar. It is a subscription to receive push notification from Google on events changes.  The calendar id and callback url are required to do this operation. Channel live time can be provided via an optional parameter. By default it is 604800 seconds. This operation returns  `WatchResponse` if successful. Else returns `error`.
 
-- #### [Stop a channel subscription](samples/stop_channel.bal)
+- #### [Stop a channel subscription](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/stop_channel.bal)
 
     This sample shows how to stop an existing subscription. The channel id and resource is are required to do this operation. This operation returns an error `true` if unsuccessful.
 
 ## Listener
 
-- #### [Trigger for new event](samples/trigger_create_event.bal)
+- #### [Trigger for new event](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/trigger_create_event.bal)
 
     This sample shows how to create a trigger on new event. When a new event is occurred, that event details can be captured in this listener.
 
-- #### [Trigger for updated event](samples/trigger_update_event.bal)
+- #### [Trigger for updated event](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/trigger_update_event.bal)
 
     This sample shows how to create a trigger on an event update. When a new event is updated, that event details can be captured in this listener.
 
-- #### [Trigger for deleted event](samples/trigger_delete_event.bal)
+- #### [Trigger for deleted event](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/trigger_delete_event.bal)
 
     This sample shows how to create a trigger on cancelled event. When a new event is cancelled, that event details can be captured in this listener.
 
