@@ -21,15 +21,18 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-#Ballerina configuartion file
+# Ballerina configuartion file
 ballerina.conf
 Config.toml
 
-#Target folder of ballerina project
+# Target folder of ballerina project
 */target
 
-#json files created inside resources folder
-**/resources
+# Json files created inside resources folder. Refer exception below.
+**/resources/*.json
+
+# Allow only json files with '_data.json' created inside resources folder
+!**/resources/*_data.json
 
 # IDEA file
 .idea
