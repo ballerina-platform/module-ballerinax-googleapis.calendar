@@ -56,8 +56,8 @@ public client class Client {
             summary: title
         };
         req.setJsonPayload(payload);
-        var response = self.calendarClient->post(path, req);
-        json result = check checkAndSetErrors(response);
+        http:Response httpResponse = check self.calendarClient->post(path, req);
+        json result = check checkAndSetErrors(httpResponse);
         return toCalendar(result);
     }
 
@@ -68,7 +68,7 @@ public client class Client {
     @display {label: "Delete calendar"}
     remote isolated function deleteCalendar(@display {label: "Calendar id"} string calendarId) returns @tainted error? {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId]);
-        var httpResponse = self.calendarClient->delete(path);
+        http:Response httpResponse = check self.calendarClient->delete(path);
         _ = check checkAndSetErrors(httpResponse);
     }
 
@@ -87,8 +87,8 @@ public client class Client {
         http:Request req = new;
         string path = prepareUrlWithEventOptional(calendarId, optional);
         req.setJsonPayload(payload);
-        var response = self.calendarClient->post(path, req);
-        json result = check checkAndSetErrors(response);
+        http:Response httpResponse = check self.calendarClient->post(path, req);
+        json result = check checkAndSetErrors(httpResponse);
         return toEvent(result);
     }
            
@@ -106,8 +106,8 @@ public client class Client {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, QUICK_ADD]);
         path = sendUpdates is string ? prepareQueryUrl([path], [TEXT, SEND_UPDATES], [text, sendUpdates])
             : prepareQueryUrl([path], [TEXT], [text]);
-        var response = self.calendarClient->post(path, ());
-        json result = check checkAndSetErrors(response);
+        http:Response httpResponse = check self.calendarClient->post(path, ());
+        json result = check checkAndSetErrors(httpResponse);
         return toEvent(result);
     }
 
@@ -128,8 +128,8 @@ public client class Client {
         http:Request req = new;
         string path = prepareUrlWithEventOptional(calendarId, optional, eventId);
         req.setJsonPayload(payload);
-        var response = self.calendarClient->put(path, req);
-        json result = check checkAndSetErrors(response);
+        http:Response httpResponse = check self.calendarClient->put(path, req);
+        json result = check checkAndSetErrors(httpResponse);
         return toEvent(result);      
     }
 
@@ -158,7 +158,7 @@ public client class Client {
                                         @display {label: "Event id"} string eventId)
                                         returns @tainted @display {label: "Event"} Event|error {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, eventId]);
-        var httpResponse = self.calendarClient->get(path);
+        http:Response httpResponse = check self.calendarClient->get(path);
         json resp = check checkAndSetErrors(httpResponse);
         return toEvent(resp);
     }
@@ -172,7 +172,7 @@ public client class Client {
     remote isolated function deleteEvent(@display {label: "Calendar id"} string calendarId,
                                             @display {label: "Event id"} string eventId) returns @tainted  error? {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, eventId]);
-        var httpResponse = self.calendarClient->delete(path);
+        http:Response httpResponse = check self.calendarClient->delete(path);
         _ = check checkAndSetErrors(httpResponse);
     }
 
@@ -210,8 +210,8 @@ public client class Client {
         http:Request req = new;
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, WATCH]);
         req.setJsonPayload(payload);
-        var response = self.calendarClient->post(path, req);
-        json result = check checkAndSetErrors(response);
+        http:Response httpResponse = check self.calendarClient->post(path, req);
+        json result = check checkAndSetErrors(httpResponse);
         return toWatchResponse(result);
     }
 
@@ -234,8 +234,8 @@ public client class Client {
         string path = prepareUrl([CALENDAR_PATH, CHANNELS, STOP]);
         http:Request req = new;
         req.setJsonPayload(payload);
-        var response = self.calendarClient->post(path, req);
-        _ = check checkAndSetErrors(response);
+        http:Response httpResponse = check self.calendarClient->post(path, req);
+        _ = check checkAndSetErrors(httpResponse);
     }
 
     # Get events response.
@@ -253,7 +253,7 @@ public client class Client {
                                                 pageToken = ()) returns @tainted @display {label: "Event response"}
                                                 EventResponse|error {
         string path = prepareUrlWithEventsOptional(calendarId, count, pageToken, syncToken);
-        var httpResponse = self.calendarClient->get(path);
+        http:Response httpResponse = check self.calendarClient->get(path);
         json resp = check checkAndSetErrors(httpResponse);
         return toEventResponse(resp);
     }
