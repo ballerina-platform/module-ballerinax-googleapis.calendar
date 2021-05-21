@@ -213,7 +213,7 @@ public type Event record {
     Reminders reminders?;
     Source 'source?;
     Attachment[] attachments?;
-    string eventType;
+    string eventType?;
 };
 
 # Extended properties of the event.
