@@ -14,13 +14,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-# Represents event type
-public enum EventType {
-    CREATED,
-    UPDATED,
-    DELETED
-}
-
 # Header constants
 const string GOOGLE_CHANNEL_ID = "X-Goog-Channel-ID";
 const string GOOGLE_RESOURCE_ID = "X-Goog-Resource-ID";

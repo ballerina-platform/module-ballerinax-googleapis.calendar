@@ -39,8 +39,9 @@ public client class Client {
     @display {label: "Get calendars"}
     remote isolated function getCalendars(@display {label: "Optional query parameters"} CalendarListOptional? optional
                                             = ()) returns @tainted @display {label: "Stream of Calendars"}
-                                            stream<Calendar,error> {
-        return new stream<Calendar,error>(new CalendarStream(self.calendarClient, optional));
+                                            stream<Calendar,error>|error {
+        CalendarStream calendarStream = check new CalendarStream(self.calendarClient, optional);
+        return new stream<Calendar,error>(calendarStream);
     }
 
     # Create a calendar.
@@ -136,16 +137,12 @@ public client class Client {
     # Get all events.
     # 
     # + calendarId - Calendar id
-    # + syncToken - Token for getting incremental sync
-    # + pageToken - Token for retrieving next page
     # + return - Event stream on success, else an error
     @display {label: "Get events"}
-    remote isolated function getEvents(@display {label: "Calendar id"} string calendarId,
-                                        @display {label: "Token for incremental sync (optional)"} string? syncToken
-                                        = (), @display {label: "Token for retrieving next page (optional)"} string?
-                                        pageToken = ()) returns @tainted @display {label: "Stream of Event"}
-                                        stream<Event,error> {
-        return new stream<Event,error>(new EventStream(self.calendarClient, calendarId, syncToken, pageToken));
+    remote isolated function getEvents(@display {label: "Calendar id"} string calendarId) returns @tainted @display 
+                                        {label: "Stream of Event"} stream<Event,error>|error {
+        EventStream eventStream = check new EventStream(self.calendarClient, calendarId);
+        return new stream<Event,error>(eventStream);
     }
 
     # Get an event.

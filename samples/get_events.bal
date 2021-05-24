@@ -20,7 +20,7 @@ public function main() returns error? {
 
     calendar:Client calendarClient = check new (config);
 
-    stream<calendar:Event,error> resultStream  = calendarClient->getEvents(calendarId);
+    stream<calendar:Event,error> resultStream  = check calendarClient->getEvents(calendarId);
     record {|calendar:Event value;|}|error? res = resultStream.next();
     if (res is record {|calendar:Event value;|}) {
         log:printInfo(res.value["id"]);

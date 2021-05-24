@@ -511,12 +511,10 @@ public type Notification record {
 # + minAccessRole - The minimum access role for the user in the returned entries
 # + showDeleted - Whether to include deleted calendar list entries in the result
 # + showHidden - Whether to show hidden entries
-# + syncToken - Token used to access the next page of this result
 public type CalendarListOptional record {
     string minAccessRole?;
     boolean showDeleted?;
     boolean showHidden?;
-    string syncToken?;
 };
 
 # Define calendar list response.
