@@ -160,27 +160,23 @@ isolated function prepareUrlWithEventsOptional(string calendarId, int? count, st
 # 
 # + httpResponse - HTTP respone or HTTP payload or error
 # + return - JSON result on success else an error
-isolated function checkAndSetErrors(http:Response|http:PayloadType|error httpResponse) returns @tainted json|error {
-    if (httpResponse is http:Response) {
-        if (httpResponse.statusCode == http:STATUS_OK || httpResponse.statusCode == http:STATUS_CREATED) {
-            json|error jsonResponse = httpResponse.getJsonPayload();
-            if (jsonResponse is json) {
-                return jsonResponse;
-            } else {
-                return error(JSON_ACCESSING_ERROR_MSG, jsonResponse);
-            }
-        } else if (httpResponse.statusCode == http:STATUS_NO_CONTENT) {
-            return {};
+isolated function checkAndSetErrors(http:Response httpResponse) returns @tainted json|error {
+    if (httpResponse.statusCode == http:STATUS_OK || httpResponse.statusCode == http:STATUS_CREATED) {
+        json|error jsonResponse = httpResponse.getJsonPayload();
+        if (jsonResponse is json) {
+            return jsonResponse;
         } else {
-            json|error jsonResponse = httpResponse.getJsonPayload();
-            if (jsonResponse is json) {
-                json err = check jsonResponse.'error.message;
-                return error(HTTP_ERROR_MSG + err.toString());
-            } else {
-                return error(ERR_EXTRACTING_ERROR_MSG, jsonResponse);
-            }
+            return error(JSON_ACCESSING_ERROR_MSG, jsonResponse);
         }
+    } else if (httpResponse.statusCode == http:STATUS_NO_CONTENT) {
+        return {};
     } else {
-        return error(HTTP_ERROR_MSG + (<error>httpResponse).message());
+        json|error jsonResponse = httpResponse.getJsonPayload();
+        if (jsonResponse is json) {
+            json err = check jsonResponse.'error.message;
+            return error(HTTP_ERROR_MSG + err.toString());
+        } else {
+            return error(ERR_EXTRACTING_ERROR_MSG, jsonResponse);
+        }
     }
 }

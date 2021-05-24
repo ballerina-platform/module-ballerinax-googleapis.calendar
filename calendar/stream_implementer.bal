@@ -50,7 +50,7 @@ class EventStream {
     isolated function fetchEvents() returns @tainted Event[]|error {
         string path = <@untainted>prepareUrlWithEventsOptional(self.calendarId, (), self.syncToken, self.
             pageToken);
-        var httpResponse = check self.httpClient->get(path);
+        http:Response httpResponse = check self.httpClient->get(path);
         json resp = check checkAndSetErrors(httpResponse);
         EventResponse|error res = resp.cloneWithType(EventResponse);
         if (res is EventResponse) {
@@ -94,7 +94,7 @@ class CalendarStream {
 
     isolated function fetchCalendars() returns @tainted Calendar[]|error {
         string path = <@untainted>prepareUrlWithCalendarOptional(self.pageToken, self.optional);
-        var httpResponse = check self.httpClient->get(path);
+        http:Response httpResponse = check self.httpClient->get(path);
         json resp = check checkAndSetErrors(httpResponse);
         CalendarResponse|error res = resp.cloneWithType(CalendarResponse);
         if (res is CalendarResponse) {
