@@ -18,7 +18,7 @@ public function main() returns error? {
     };
     calendar:Client calendarClient = check new (config);
 
-    stream<calendar:Calendar,error> resultStream = calendarClient->getCalendars();
+    stream<calendar:Calendar,error> resultStream = check calendarClient->getCalendars();
     record {|calendar:Calendar value;|}|error? res = resultStream.next();
     if (res is record {|calendar:Calendar value;|}) {
         log:printInfo(res.value["id"]);
