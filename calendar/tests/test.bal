@@ -47,15 +47,14 @@ string testCalendarId = "";
 }
 function testGetCalendars() {
     log:printInfo("calendarClient -> getCalendars()");
-    stream<Calendar,error> resultStream = calendarClient->getCalendars();
-    record {|Calendar value;|}|error? res = resultStream.next();
-    if (res is record {|Calendar value;|}) {
-        test:assertNotEquals(res.value["id"], "", msg = "Found 0 records");
+    stream<Calendar,error>|error resultStream = calendarClient->getCalendars();
+    if (resultStream is stream<Calendar,error>) {
+        record {|Calendar value;|}|error res = resultStream.next();
+        test:assertTrue(res is record {|Calendar value;|}, msg = "Found 0 records");
     } else {
-        if(res is error){
-            test:assertFail(res.message());
-        }
+        test:assertFail(resultStream.message());
     }
+   
 }
 
 CreateEventOptional optional = {
@@ -119,14 +118,12 @@ function testquickAdd() {
 }
 function testGetEvents() {
     log:printInfo("calendarClient -> getEvents()");
-    stream<Event,error> resultStream = calendarClient->getEvents(testCalendarId);
-    record {|Event value;|}|error? res = resultStream.next();
-    if (res is record {|Event value;|}) {
-        test:assertNotEquals(res.value["id"], "", msg = "Found 0 records");
-    } else {
-        if(res is error){
-            test:assertFail(res.message());
-        }
+    stream<Event,error>|error resultStream = calendarClient->getEvents(testCalendarId);
+        if (resultStream is stream<Event,error>) {
+            record {|Event value;|}|error res = resultStream.next();
+            test:assertTrue(res is record {|Event value;|}, msg = "Found 0 records");
+        } else {
+        test:assertFail(resultStream.message());
     }
 }
 

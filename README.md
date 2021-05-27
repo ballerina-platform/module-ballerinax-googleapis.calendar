@@ -113,8 +113,7 @@ calendar:CalendarConfiguration config = {
 
 calendar:Client calendarClient = check new (config);
 ```
-Note: Must specify the **Refresh token**, obtained with exchanging the authorization code, the **Client ID** and the 
-**Client Secret** obtained in the App creation, when configuring the Calendar connector client.
+Note: Must specify the **Refresh token** (obtained by exchanging the authorization code), **Refresh URL**, the **Client ID** and the **Client secret** obtained in the app creation, when configuring the Calendar connector client.
 
 
 ### Step 3: Set up all the data required to create the quick event

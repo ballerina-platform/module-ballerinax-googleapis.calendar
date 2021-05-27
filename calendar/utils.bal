@@ -119,9 +119,6 @@ isolated function prepareUrlWithCalendarOptional(string? pageToken = (), Calenda
         if (optional?.showHidden is boolean) {
             optionalMap[SHOW_HIDDEN] = optional?.showHidden.toString();
         }
-        if (optional?.syncToken is string) {
-            optionalMap[SYNC_TOKEN] = optional?.syncToken.toString();
-        }
         foreach var val in optionalMap {
             value.push(val);
         }

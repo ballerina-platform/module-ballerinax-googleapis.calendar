@@ -20,16 +20,13 @@ class EventStream {
     private Event[] currentEntries = [];
     private int index = 0;
     private final http:Client httpClient;
-    private final string? syncToken;
-    private string? pageToken;
+    private string? pageToken = ();
     private final string calendarId;
 
-    isolated function init(http:Client httpClient, string calendarId, string? syncToken, string? pageToken) {
+    isolated function init(http:Client httpClient, string calendarId) returns error? {
         self.httpClient = httpClient;
-        self.syncToken = syncToken;
-        self.pageToken = pageToken;
         self.calendarId = calendarId;
-        self.currentEntries = checkpanic self.fetchEvents();
+        self.currentEntries = check self.fetchEvents();
     }
 
     public isolated function next() returns @tainted record {| Event value; |}|error? {
@@ -48,7 +45,7 @@ class EventStream {
     }
 
     isolated function fetchEvents() returns @tainted Event[]|error {
-        string path = <@untainted>prepareUrlWithEventsOptional(self.calendarId, (), self.syncToken, self.
+        string path = <@untainted>prepareUrlWithEventsOptional(self.calendarId, (), (), self.
             pageToken);
         http:Response httpResponse = check self.httpClient->get(path);
         json resp = check checkAndSetErrors(httpResponse);
@@ -67,13 +64,12 @@ class CalendarStream {
     int index = 0;
     private final http:Client httpClient;
     private CalendarListOptional? optional;
-    private string? pageToken;
+    private string? pageToken = ();
 
-    isolated function init(http:Client httpClient, CalendarListOptional? optional = ()) {
+    isolated function init(http:Client httpClient, CalendarListOptional? optional = ()) returns error? {
         self.httpClient = httpClient;
         self.optional = optional;
-        self.pageToken = EMPTY_STRING;
-        self.currentEntries = checkpanic self.fetchCalendars();
+        self.currentEntries = check self.fetchCalendars();
     }
 
     public isolated function next() returns @tainted record {| Calendar value; |}|error? {
