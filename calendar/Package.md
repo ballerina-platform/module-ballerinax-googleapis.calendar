@@ -16,7 +16,7 @@ Connects to Google Calendar using Ballerina.
 
 ## Connector Overview
 
-The Google Calendar Ballerina Connector allows you to access the Google Calendar API Version V3 through Ballerina. The connector can be used to implement some of the most common use cases of Google Calendar. The connector provides the capability to programmatically manage events and calendar, CRUD operations on event and calendar operations through the connector endpoints and listener for the events created in the calendar.
+The Google Calendar Ballerina Connector allows users to access the Google Calendar API Version V3 through Ballerina. The connector can be used to access common use cases of Google Calendar. The connector provides the capability to programmatically manage events and calendar, CRUD operations on event and calendar operations through the connector endpoints and listener for the events occurred in the calendar. The connector supports service account authorization that can provide delegated domain-wide access to GSuite domain. So that GSuite admin can do operations for the domain users.
 
 # Prerequisites
 
@@ -48,10 +48,21 @@ access token and refresh token).
 9. Select required Google Calendar scopes, and then click **Authorize APIs**.
 10. When you receive your authorization code, click **Exchange authorization code for tokens** to obtain the refresh token and access token. 
 
+#### Service account
+
+1. User needs p12 format private key to access connector by using service account. Refer the following link to create p12 key.
+https://developers.google.com/identity/protocols/oauth2/service-account#creatinganaccount
+
+
+2. Refer following link to delegate domain-wide authority to the service account.
+https://developers.google.com/identity/protocols/oauth2/service-account#delegatingauthority
+
+
 ### Add configurations file
 
-* Instantiate the connector by giving authentication details in the HTTP client config. The HTTP client config has built-in support for Bearer Token Authentication and OAuth 2.0. Google Calendar uses OAuth 2.0 to authenticate and authorize requests. It uses the Direct Token Grant Type. The Google Calendar connector can be minimally instantiated in the HTTP client config using the OAuth 2.0 access token.
-    * Access Token 
+* Instantiate the connector by giving authentication details in the HTTP client config. The HTTP client config has support for bearer token config, OAuth 2.0 refresh token grant config and jwt issuer config. 
+
+    * Bearer Token - The Google Calendar connector can be minimally instantiated in the HTTP client config using the OAuth 2.0 access token as bearer token. As access token has defined time limit, client operations can be accessed for a certain time period.  
     ``` 
     calendar:CalendarConfiguration config = {
         oauth2Config: {
@@ -60,7 +71,7 @@ access token and refresh token).
     }
     ```
 
-    The Google Calendar connector can also be instantiated in the HTTP client config without the access token using the client ID, client secret, and refresh token.
+    * OAuth2 Refresh Token - The Google Calendar connector can also be instantiated in the HTTP client config with the refresh token using the client ID, client secret, and refresh token. In this authorization client can function until refresh token stop working.
     * Client ID
     * Client Secret
     * Refresh Token
@@ -75,6 +86,33 @@ access token and refresh token).
         }
     }
     ```
+
+    * Service account - This authorization method is used to authorize Google application. Here operation are called to Google server on behalf on Google application.
+     ```
+    calendar:CalendarConfiguration config = {
+        oauth2Config: {
+            issuer: <issuer>,
+            audience: <aud>,
+            customClaims: {"scope": <scope>},
+            signatureConfig: {
+                config: {
+                    keyStore: {
+                        path: <path>,
+                        password: <password>
+                    },
+                    keyAlias: <keyAlias>,
+                    keyPassword: <keyPassword>
+                }
+            }
+        }
+    }
+    ```
+    * issuer - The email address of the service account.
+    * audience - A descriptor of the intended target of the assertion. When making an access token request this value is always https://oauth2.googleapis.com/token.
+    * scope - A space-delimited list of the permissions that the application requests.
+    * path, password, keyAlias, keyPassword - The values of key file configurations.
+
+
 * Callback address is additionally required in order to use Google Calendar listener. It is the path of the listener resource function. The time-to-live in seconds for the notification channel is provided in optional parameter expiration time. By default it is 604800 seconds.
   * Callback address
   * Expiration time
@@ -87,9 +125,8 @@ This file should have following configurations. Add the tokens obtained in the p
   clientSecret = "<client_secret>"
   refreshToken = "<refresh_token>"
   refreshUrl = "<refresh_URL>"
-  address = "<address>"
+  address = "<call_back url + "/calendar/events">"
   ```
-
 
 # Quickstart(s)
 
@@ -141,6 +178,61 @@ if (response is calendar:Event) {
 }
 ```
 
+## Follow following steps to create an quick event by using service account authorization
+### Step 1: Import the Calendar module
+First, import the `ballerinax/googleapis.calendar` module into the Ballerina project.
+```ballerina
+import ballerinax/googleapis.calendar;
+```
+
+### Step 2: Initialize the Calendar Client giving necessary credentials
+You can now enter the credentials in the Calendar client config.
+```ballerina
+calendar:CalendarConfiguration config = {
+    oauth2Config: {
+        issuer: <issuer>,
+        audience: <audience>,
+        customClaims: {"scope": <scope>},
+        signatureConfig: {
+            config: {
+                keyStore: {
+                    path: <path>,
+                    password: <password>
+                },
+                keyAlias: <keyAlias>,
+                keyPassword: <keyPassword>
+            }}
+    }
+};
+
+calendar:Client calendarClient = check new (config);
+```
+
+### Step 3: Set up all the data required to create the quick event
+The `quickAddEvent` remote function creates an event. The `calendarId` represents the calendar where the event has to be created, `title` refers the name of the event and userAccount represents email address of the user for which the application is requesting delegated access.
+
+```ballerina
+string calendarId = <calendarId>;
+string title = "Sample Event";
+string userAccount = <userEmail>;
+```
+
+### Step 4: Create the quick add event
+The response from `quickAddEvent` is either an Event record or an `error` (if creating the event was unsuccessful).
+
+```ballerina
+//Create new quick add event.
+calendar:Event|error response = calendarClient->quickAddEvent(calendarId, title, userAccount = userAccount);
+
+if (response is calendar:Event) {
+    // If successful, log event id
+    log:printInfo(response.id);
+} else {
+    // If unsuccessful
+    log:printError("Error: " + response.toString());
+}
+```
+
 ## Create an listener for new event creation
 ### Step 1: Import the Calendar module
 First, import the `ballerinax/googleapis.calendar`, `import ballerinax/googleapis.calendar.'listener as listen` and `import ballerina/http` modules into the Ballerina project.
@@ -161,8 +253,6 @@ calendar:CalendarConfiguration config = {
         refreshUrl: <REFRESH_URL>,   
     }
 };
-
-calendar:Client calendarClient = check new (config);
 ```
 
 ### Step 3: Initialize the Calendar Listener
@@ -171,9 +261,9 @@ Define all the data required to create
 ```ballerina
 int port = 4567;
 string calendarId = "primary";
-string address = "callback_url;
+string address = "<call_back url + "/calendar/events">";
 
-listener listen:Listener googleListener = new (port, calendarClient, calendarId, address);
+listener listen:Listener googleListener = new (port, config, calendarId, address);
 ```
 
 ### Step 4: Create the listener service
@@ -199,7 +289,6 @@ Run this command inside sample directory:
     ```shell
     $ bal run "<ballerina_file>"
     ```
-
 
 - #### [Get all calendars](samples/get_calendars.bal)
 
