@@ -71,7 +71,7 @@ public type InputEvent record {
 # + maxAttendees - The maximum number of attendees to include in the response
 # + sendUpdates - Whether to send notifications about the creation of the new event
 # + supportsAttachments - Whether API client performing operation supports event attachment
-public type CreateEventOptional record {
+public type EventsToAccess record {
     int? conferenceDataVersion = ();
     int? maxAttendees = ();
     string? sendUpdates = ();
@@ -511,7 +511,7 @@ public type Notification record {
 # + minAccessRole - The minimum access role for the user in the returned entries
 # + showDeleted - Whether to include deleted calendar list entries in the result
 # + showHidden - Whether to show hidden entries
-public type CalendarListOptional record {
+public type CalendarsToAccess record {
     string minAccessRole?;
     boolean showDeleted?;
     boolean showHidden?;

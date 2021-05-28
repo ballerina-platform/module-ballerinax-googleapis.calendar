@@ -69,13 +69,13 @@ isolated function prepareQueryUrl(string[] paths, string[] queryParamNames, stri
 # + optional - Record that contains optional parameters
 # + eventId - Event id
 # + return - The prepared URL with encoded query
-isolated function prepareUrlWithEventOptional(string calendarId, CreateEventOptional? optional = (),  string? eventId 
+isolated function prepareUrlWithEventOptional(string calendarId, EventsToAccess? optional = (),  string? eventId 
                                                 = ()) returns string {
     string[] value = [];
     map<string> optionalMap = {};
     string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS]);
     path = eventId is string ? prepareUrl([path, eventId]) : path;
-    if (optional is CreateEventOptional) {
+    if (optional is EventsToAccess) {
         if (optional.conferenceDataVersion is int) {
             optionalMap[CONFERENCE_DATA_VERSION] = optional.conferenceDataVersion.toString();
         }
@@ -101,12 +101,12 @@ isolated function prepareUrlWithEventOptional(string calendarId, CreateEventOpti
 # + pageToken - Token for retrieving next page
 # + optional - Record that contains optional parameters
 # + return - The prepared URL with encoded query
-isolated function prepareUrlWithCalendarOptional(string? pageToken = (), CalendarListOptional? optional = ()) returns
+isolated function prepareUrlWithCalendarOptional(string? pageToken = (), CalendarsToAccess? optional = ()) returns
     string {
     string[] value = [];
     map<string> optionalMap = {};
     string path = prepareUrl([CALENDAR_PATH, USERS, ME, CALENDAR_LIST]);  
-    if (optional is CalendarListOptional) {
+    if (optional is CalendarsToAccess) {
         if (optional?.minAccessRole is string) {
             optionalMap[MIN_ACCESS_ROLE] = optional?.minAccessRole.toString();
         }

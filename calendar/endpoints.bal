@@ -48,10 +48,12 @@ public client class Client {
     # + userAccount - The email address of the user for requesting delegated access in service account
     # + return - Stream of Calendars on success else an error
     @display {label: "Get calendars"}
-    remote isolated function getCalendars(@display {label: "Optional query parameters"} CalendarListOptional? optional
-                                            = (),@display {label: "User account"} string? userAccount = ()) returns
-                                            @tainted @display {label: "Stream of Calendars"} stream<Calendar,error>|error {
-        CalendarStream calendarStream = check new CalendarStream(self.calendarClient, self.clientHandler, optional, userAccount);
+    remote isolated function getCalendars(@display {label: "Calendars to access"} CalendarsToAccess? optional = (),
+                                            @display {label: "User account"} string? userAccount = ()) returns
+                                            @tainted @display {label: "Stream of Calendars"} stream<Calendar,error>
+                                            |error {
+        CalendarStream calendarStream = check new CalendarStream(self.calendarClient, self.clientHandler, optional,
+            userAccount);
         return new stream<Calendar,error>(calendarStream);
     }
 
@@ -101,7 +103,7 @@ public client class Client {
     @display {label: "Create event"}
     remote isolated function createEvent(@display {label: "Calendar id"} string calendarId,
                                             @display {label: "Event details"} InputEvent event,
-                                            @display {label: "Optional query parameters"} CreateEventOptional? optional
+                                            @display {label: "Events to access"} EventsToAccess? optional
                                             = (), @display {label: "User account"} string? userAccount = ()) returns
                                             @tainted @display {label: "Event"} Event|error {
         json payload = check event.cloneWithType(json);
@@ -148,8 +150,8 @@ public client class Client {
     remote isolated function updateEvent(@display {label: "Calendar id"} string calendarId,
                                             @display {label: "Event id"} string eventId,
                                             @display {label: "Event details"} InputEvent event,
-                                            @display {label: "Optional query parameters"} CreateEventOptional? optional
-                                            = (), @display {label: "User account"} string? userAccount = ())
+                                            @display {label: "Events to access"} EventsToAccess? optional= (),
+                                            @display {label: "User account"} string? userAccount = ())
                                             returns @tainted @display {label: "Event"} Event|error {
         json payload = check event.cloneWithType(json);
         http:Request req = new;
@@ -170,7 +172,8 @@ public client class Client {
     remote isolated function getEvents(@display {label: "Calendar id"} string calendarId,
                                         @display {label: "User account"} string? userAccount = ())
                                         returns @tainted @display {label: "Stream of Event"} stream<Event,error>|error {
-        EventStream eventStream = check new EventStream(self.calendarClient, calendarId, self.clientHandler, userAccount);
+        EventStream eventStream = check new EventStream(self.calendarClient, calendarId, self.clientHandler,
+            userAccount);
         return new stream<Event,error>(eventStream);    
     }
 
@@ -201,7 +204,7 @@ public client class Client {
     @display {label: "Delete event"}
     remote isolated function deleteEvent(@display {label: "Calendar id"} string calendarId,
                                             @display {label: "Event id"} string eventId,
-                                            @display {label: "User account"} string? userAccount = ())
+                                            string? userAccount = ())
                                             returns @tainted  error? {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, eventId]);
         map<string> headerMap = check setHeaders(self.clientHandler, userAccount);
@@ -218,7 +221,7 @@ public client class Client {
     @display {label: "Create notification subscription"}
     remote isolated function watchEvents(@display {label: "Calendar id"} string calendarId,
                                             @display {label: "Callback URL"} string address,
-                                            @display {label: "Life time of channel (optional)"} string? expiration = ())
+                                            @display {label: "Life time of channel"} string? expiration = ())
                                             returns @tainted @display {label: "Subscription result"} WatchResponse|error
                                             {
         json payload;
@@ -258,7 +261,7 @@ public client class Client {
     @display {label: "Stop channel from subscription"}
     remote isolated function stopChannel(@display {label: "Channel id"} string id,
                                             @display {label: "Resource id"} string resourceId,
-                                            @display {label: "An arbitrary string to not being spoofed (optional)"}
+                                            @display {label: "An arbitrary string to not being spoofed"}
                                             string? token = ()) returns @tainted error? {
         json payload = {
             id: id,
@@ -283,11 +286,11 @@ public client class Client {
     # + return - EventResponse object on success, else an error
     @display {label: "Get events response"}
     remote isolated function getEventsResponse(@display {label: "Calendar id"} string calendarId, @display {label:
-                                                "Number of events required (optional)"} int? count = (), @display
-                                                {label: "Token for incremental sync (optional)"} string? syncToken = (),
-                                                @display {label: "Token for retrieving next page (optional)"} string?
-                                                pageToken = (), string? userAccount = ()) returns @tainted @display {label: "Event response"}
-                                                EventResponse|error {
+                                                "Number of events required"} int? count = (), @display
+                                                {label: "Token for incremental sync"} string? syncToken = (),
+                                                @display {label: "Token for retrieving next page"} string? pageToken 
+                                                = (), @display {label: "User account"} string? userAccount = ()) returns
+                                                @tainted @display {label: "Event response"} EventResponse|error {
         string path = prepareUrlWithEventsOptional(calendarId, count, pageToken, syncToken);
         map<string> headerMap = check setHeaders(self.clientHandler, userAccount);
         var httpResponse = self.calendarClient->get(path, headerMap);
