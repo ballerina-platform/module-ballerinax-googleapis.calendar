@@ -57,7 +57,7 @@ function testGetCalendars() {
    
 }
 
-CreateEventOptional optional = {
+EventsToAccess optional = {
     conferenceDataVersion: 1,
     sendUpdates: "all",
     supportsAttachments: false

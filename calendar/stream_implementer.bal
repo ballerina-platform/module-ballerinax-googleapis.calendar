@@ -68,13 +68,13 @@ class CalendarStream {
     private Calendar[] currentEntries = [];
     int index = 0;
     private final http:Client httpClient;
-    private CalendarListOptional? optional;
+    private CalendarsToAccess? optional;
     private string? pageToken = ();
     private ClientOAuth2ExtensionGrantHandler clientHandler;
     private final string? userAccount;
 
     isolated function init(http:Client httpClient, ClientOAuth2ExtensionGrantHandler clientHandler,
-                            CalendarListOptional? optional = (), string? userAccount = ()) returns error? {
+                            CalendarsToAccess? optional = (), string? userAccount = ()) returns error? {
         self.httpClient = httpClient;
         self.optional = optional;
         self.clientHandler = clientHandler;
