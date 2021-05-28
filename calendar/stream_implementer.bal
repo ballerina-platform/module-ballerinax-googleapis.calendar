@@ -22,10 +22,15 @@ class EventStream {
     private final http:Client httpClient;
     private string? pageToken = ();
     private final string calendarId;
+    private final ClientOAuth2ExtensionGrantHandler clientHandler;
+    private final string? userAccount;
 
-    isolated function init(http:Client httpClient, string calendarId) returns error? {
+    isolated function init(http:Client httpClient, string calendarId, ClientOAuth2ExtensionGrantHandler clientHandler,
+                            string? userAccount = ()) returns error? {
         self.httpClient = httpClient;
         self.calendarId = calendarId;
+        self.clientHandler = clientHandler;
+        self.userAccount = userAccount;
         self.currentEntries = check self.fetchEvents();
     }
 
@@ -45,9 +50,9 @@ class EventStream {
     }
 
     isolated function fetchEvents() returns @tainted Event[]|error {
-        string path = <@untainted>prepareUrlWithEventsOptional(self.calendarId, (), (), self.
-            pageToken);
-        http:Response httpResponse = check self.httpClient->get(path);
+        string path = <@untainted>prepareUrlWithEventsOptional(self.calendarId, (), (), self.pageToken);
+        map<string> headerMap = check setHeaders(self.clientHandler, self.userAccount);
+        http:Response httpResponse = check self.httpClient->get(path, headerMap);
         json resp = check checkAndSetErrors(httpResponse);
         EventResponse|error res = resp.cloneWithType(EventResponse);
         if (res is EventResponse) {
@@ -63,12 +68,17 @@ class CalendarStream {
     private Calendar[] currentEntries = [];
     int index = 0;
     private final http:Client httpClient;
-    private CalendarListOptional? optional;
+    private CalendarsToAccess? optional;
     private string? pageToken = ();
+    private ClientOAuth2ExtensionGrantHandler clientHandler;
+    private final string? userAccount;
 
-    isolated function init(http:Client httpClient, CalendarListOptional? optional = ()) returns error? {
+    isolated function init(http:Client httpClient, ClientOAuth2ExtensionGrantHandler clientHandler,
+                            CalendarsToAccess? optional = (), string? userAccount = ()) returns error? {
         self.httpClient = httpClient;
         self.optional = optional;
+        self.clientHandler = clientHandler;
+        self.userAccount = userAccount;
         self.currentEntries = check self.fetchCalendars();
     }
 
@@ -90,7 +100,8 @@ class CalendarStream {
 
     isolated function fetchCalendars() returns @tainted Calendar[]|error {
         string path = <@untainted>prepareUrlWithCalendarOptional(self.pageToken, self.optional);
-        http:Response httpResponse = check self.httpClient->get(path);
+        map<string> headerMap = check setHeaders(self.clientHandler, self.userAccount);
+        http:Response httpResponse = check self.httpClient->get(path, headerMap);
         json resp = check checkAndSetErrors(httpResponse);
         CalendarResponse|error res = resp.cloneWithType(CalendarResponse);
         if (res is CalendarResponse) {

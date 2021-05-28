@@ -34,8 +34,10 @@ access token and refresh token).
 
 ### Add configurations file
 
-* Instantiate the connector by giving authentication details in the HTTP client config. The HTTP client config has built-in support for Bearer Token Authentication and OAuth 2.0. Google Calendar uses OAuth 2.0 to authenticate and authorize requests. It uses the Direct Token Grant Type. The Google Calendar connector can be minimally instantiated in the HTTP client config using the OAuth 2.0 access token.
-    * Access Token 
+* Instantiate the connector by giving authentication details in the HTTP client config. The HTTP client config has support for bearer token config and OAuth 2.0 refresh token grant config to access listener. 
+
+    * Bearer Token 
+    The Google Calendar connector can be minimally instantiated in the HTTP client config using the OAuth 2.0 access token as bearer token. As access token has defined time limit, client operations can be accessed for a certain time period.  
     ``` 
     calendar:CalendarConfiguration config = {
         oauth2Config: {
@@ -44,7 +46,8 @@ access token and refresh token).
     }
     ```
 
-    The Google Calendar connector can also be instantiated in the HTTP client config without the access token using the client ID, client secret, and refresh token.
+    * OAuth2 Refresh Token
+    The Google Calendar connector can also be instantiated in the HTTP client config with the refresh token using the client ID, client secret, and refresh token. In this authorization client can function until refresh token stop working.
     * Client ID
     * Client Secret
     * Refresh Token
@@ -59,6 +62,7 @@ access token and refresh token).
         }
     }
     ```
+
 * Callback address is additionally required in order to use Google Calendar listener. It is the path of the listener resource function. The time-to-live in seconds for the notification channel is provided in optional parameter expiration time. By default it is 604800 seconds.
   * Callback address
   * Expiration time
@@ -72,30 +76,67 @@ This file should have following configurations. Add the tokens obtained in the p
   clientSecret = "<client_secret>"
   refreshToken = "<refresh_token>"
   refreshUrl = "<refresh_URL>"
-  address = "<address>"
+  address = "<call_back url + "/calendar/events">"
   ```
+
+# Quickstart
+
+## Create a listener for new event creation
+### Step 1: Import the Calendar module
+First, import the `ballerinax/googleapis.calendar`, `import ballerinax/googleapis.calendar.'listener as listen` and `import ballerina/http` modules into the Ballerina project.
+
+```ballerina
+import ballerinax/googleapis.calendar;
+import ballerinax/googleapis.calendar.'listener as listen;
+```
+
+### Step 2: Initialize the Calendar Client giving necessary credentials
+You can now enter the credentials in the Calendar client config.
+```ballerina
+calendar:CalendarConfiguration config = {
+    oauth2Config: {
+        clientId: <CLIENT_ID>,
+        clientSecret: <CLIENT_SECRET>
+        refreshToken: <REFRESH_TOKEN>,
+        refreshUrl: <REFRESH_URL>,   
+    }
+};
+```
+
+### Step 3: Initialize the Calendar Listener
+Define all the data required to create
+
+```ballerina
+int port = 4567;
+string calendarId = "primary";
+string address = "<call_back url + "/calendar/events">";
+
+listener listen:Listener googleListener = new (port, config, calendarId, address);
+```
+
+### Step 4: Create the listener service
+If there is an event created in calendar, log will print the event title
+
+```ballerina
+service /calendar on googleListener {
+    remote function onNewEvent(calendar:Event event) returns error? {
+        log:printInfo("Created new event : ", event);
+    }
+}
+```
 
 # Samples
 
 Samples are available at : https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/samples. To run a sample, create a new TOML file with name `Config.toml` in the same directory as the `.bal` file with above-mentioned configurable values.
-- #### [Watch event changes](samples/watch_event.bal) 
 
-  This sample shows how to watch for changes to events in an authorized user's calendar. It is a subscription to receive push notification from Google on events changes.  The calendar id and callback url are required to do this operation. Channel live time can be provided via an optional parameter. By default it is 604800 seconds. This operation returns  `WatchResponse` if successful. Else returns `error`.
-
-- #### [Stop a channel subscription](samples/stop_channel.bal)
-
-  This sample shows how to stop an existing subscription. The channel id and resource is are required to do this operation. This operation returns an error `true` if unsuccessful.
-
-## Listener
-
-- #### [Trigger for new event](samples/trigger_create_event.bal)
+- #### [Trigger for new event](../../../samples/trigger_create_event.bal)
 
   This sample shows how to create a trigger on new event. When a new event is occurred, that event details can be captured in this listener.
 
-- #### [Trigger for updated event](samples/trigger_update_event.bal)
+- #### [Trigger for updated event](../../../samples/trigger_update_event.bal)
 
   This sample shows how to create a trigger on an event update. When a new event is updated, that event details can be captured in this listener.
 
-- #### [Trigger for deleted event](samples/trigger_delete_event.bal)
+- #### [Trigger for deleted event](../../../samples/trigger_delete_event.bal)
 
   This sample shows how to create a trigger on cancelled event. When a new event is cancelled, that event details can be captured in this listener.

@@ -64,7 +64,7 @@ string Event = rootPath + "Event"+fileExtension;
 string WatchResponse = rootPath + "WatchResponse"+fileExtension;
 string EventResponse = rootPath + "EventResponse"+fileExtension;
 string InputEvent = rootPath + "InputEvent"+fileExtension;
-string CreateEventOptional = rootPath + "CreateEventOptional"+fileExtension;
+string EventsToAccess = rootPath + "EventsToAccess"+fileExtension;
 
 public function main() returns error? {
     _ = check generateCalendarResourceData();
@@ -72,7 +72,7 @@ public function main() returns error? {
     _ = check generateWatchResponseData();
     _ = check generateEventResponseData();
     _ = check generateInputEventData();
-    _ = check generateCreateEventOptionalData();
+    _ = check generateEventsToAccessData();
 }
 
 function generateCalendarResourceData() returns error? {
@@ -162,22 +162,22 @@ isolated function setEvent(string data) returns calendar:InputEvent {
     return event;  
 }
 
-function generateCreateEventOptionalData() returns error? {
-    calendar:CreateEventOptional optional1 = {
+function generateEventsToAccessData() returns error? {
+    calendar:EventsToAccess optional1 = {
         conferenceDataVersion: 1,
         sendUpdates: "all",
         supportsAttachments: false,
         maxAttendees : 123
     };
 
-    calendar:CreateEventOptional optional2 = {
+    calendar:EventsToAccess optional2 = {
         conferenceDataVersion: 2,
         sendUpdates: "all",
         supportsAttachments: false,
         maxAttendees : 423
     };
 
-    calendar:CreateEventOptional optional3 = {
+    calendar:EventsToAccess optional3 = {
         conferenceDataVersion: 3,
         sendUpdates: "all",
         supportsAttachments: false,
@@ -185,7 +185,7 @@ function generateCreateEventOptionalData() returns error? {
     };
     string array = SQUARE_BRACKET_LEFT + optional1.toJsonString() + COMMA + optional2.toJsonString() 
                     + COMMA + optional3.toJsonString() + SQUARE_BRACKET_RIGHT;
-    string preparedJson = "{"+"\"ballerinax/googleapis.calendar:"+connecterVersion+":CreateEventOptional\""+":"+array+"}";
-    check io:fileWriteJson(CreateEventOptional, check preparedJson.cloneWithType(json));
+    string preparedJson = "{"+"\"ballerinax/googleapis.calendar:"+connecterVersion+":EventsToAccess\""+":"+array+"}";
+    check io:fileWriteJson(EventsToAccess, check preparedJson.cloneWithType(json));
 }
 
