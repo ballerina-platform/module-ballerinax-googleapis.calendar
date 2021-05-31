@@ -31,7 +31,6 @@
 # + attendees - The attendees of the event
 # + extendedProperties - Properties of the event that appears on this calendar
 # + conferenceData - The conference-related information
-# + gadget - Gadget of the event
 # + anyoneCanAddSelf - Whether anyone can invite themselves to the event
 # + guestsCanInviteOthers - Whether attendees other than the organizer can invite others to the event
 # + guestsCanModify - Whether attendees other than the organizer can modify the event
@@ -40,28 +39,49 @@
 # + source - Source from which the event was created
 # + attachments - Attachments of the events
 public type InputEvent record {
+    @display {label: "Event Title"}
     string summary?;
+    @display {label: "Event Description"}
     string description?;
+    @display {label: "Event Location"}
     string location?;
+    @display {label: "Event Color Id"}
     string colorId?;
+    @display {label: "Event Id"}
     string id?;
+    @display {label: "Event Start Time"}
     Time 'start;
+    @display {label: "Event End Time"}
     Time end;
+    @display {label: "Recurrence Config"}
     string[] recurrence?;
+    @display {label: "Start Time in Recurrent Event"}
     Time originalStartTime?;
+    @display {label: "Time Blocks Config"}   
     string transparency?;
+    @display {label: "Event Visibility"}
     string visibility?;
+    @display {label: "Sequence Number"}
     int sequence?;
+    @display {label: "Attendees List"}
     Attendee[] attendees?;
+    @display {label: "Extended Config"}
     ExtendedProperties extendedProperties?;
-    ConferenceData conferenceData?;
-    Gadget gadget?;
+    @display {label: "Conference Config"}
+    ConferenceInputData conferenceData?;
+    @display {label: "Can Anyone Invite Themselves?"}
     boolean anyoneCanAddSelf?;
+    @display {label: "Can Guests Invite Others?"}
     boolean guestsCanInviteOthers?;
+    @display {label: "Can Guests Modify Event?"}
     boolean guestsCanModify?;
+    @display {label: "Can Guests See Attendees?"}
     boolean guestsCanSeeOtherGuests?;
+    @display {label: "Reminder Config"}
     Reminders reminders?;
+    @display {label: "Event Source"}
     Source 'source?;
+    @display {label: "List of Attachments"}
     Attachment[] attachments?;
 };
 
@@ -72,9 +92,13 @@ public type InputEvent record {
 # + sendUpdates - Whether to send notifications about the creation of the new event
 # + supportsAttachments - Whether API client performing operation supports event attachment
 public type EventsToAccess record {
+    @display {label: "Conference Data Version"}
     int? conferenceDataVersion = ();
+    @display {label: "Number of Attendees"}
     int? maxAttendees = ();
+    @display {label: "Notification Config"}
     string? sendUpdates = ();
+    @display {label: "Attachment Config"}
     boolean? supportsAttachments = ();
 };
 
@@ -129,7 +153,9 @@ public type EventResponse record {
 # + method - The method used by the reminder
 # + minutes - Number of minutes before the start of the event when the reminder should trigger.
 public type Reminder record {
+    @display {label: "Reminder Method"}
     string method;
+    @display {label: "Reminder Before (Mins)"}
     int minutes;
 };
 
@@ -234,36 +260,45 @@ public type Shared record {|
 
 # Define conference-related information.
 #
-# + createRequest - A request to generate a new conference and attach it to the event
 # + entryPoints - Information about individual conference entry points
 # + conferenceSolution - The conference solution
 # + conferenceId - The ID of the conference
 # + signature - The signature of the conference data
 # + notes - Additional notes to display to the user
 public type ConferenceData record {
-    CreateRequest createRequest?;
-    EntryPoint[] entryPoints;
-    ConferenceSolution conferenceSolution;
+    EntryPoint[] entryPoints?;
+    ConferenceSolution conferenceSolution?;
     string conferenceId?;
     string signature;
     string notes?;
 };
 
+# Define conference-related information.
+#
+# + createRequest - A request to generate a new conference and attach it to the event
+public type ConferenceInputData record {
+    @display {label: "Request to Generate Conference"}
+    CreateRequest createRequest?;
+};
 # A request to generate a new conference and attach it to the event.
 #
 # + requestId - The client-generated unique ID for this request
 # + conferenceSolutionKey - The conference solution
 # + status - The status of the conference create request
 public type CreateRequest record {
+    @display {label: "Request Id"}
     string requestId;
+    @display {label: "Conference Solution Type"}
     ConferenceSolutionKey conferenceSolutionKey;
-    Status status;
+    @display {label: "Request Status"}
+    Status status?;
 };
 
 # Define conference solution key.
 #
 # + type - The conference solution type
 public type ConferenceSolutionKey record {
+    @display {label: "Conference Type"}
     string 'type;
 };
 
@@ -271,6 +306,7 @@ public type ConferenceSolutionKey record {
 #
 # + statusCode - The current status of the conference create request
 public type Status record {
+    @display {label: "Request Status Code"}
     string statusCode;
 };
 
@@ -329,15 +365,19 @@ public type Key record {
 # + additionalGuests - Number of additional guests
 public type Attendee record {
     string id?;
+    @display {label: "Email Address"}
     string email;
     string displayName?;
     boolean organizer?;
     boolean self?;
     boolean 'resource?;
+    @display {label: "Is Optional"}
     boolean optional?;
+    @display {label: "Status"}
     string responseStatus?;
+    @display {label: "Comment"}
     string comment?;
-    string additionalGuests?;
+    int additionalGuests?;
 };
 
 # Define user record.
@@ -356,11 +396,14 @@ public type User record {
 # Define time record.
 #
 # + date - The date, in the format "yyyy-mm-dd"
-# + dateTime - The time, as a combined date-time value
+# + dateTime - A combined date-time value formatted according to RFC3339
 # + timeZone - The time zone in which the time is specified
 public type Time record {
+    @display {label: "Date"}
     string date?;
+    @display {label: "Date And Time"}
     string dateTime?;
+    @display {label: "Time Zone"}
     string timeZone?;
 };
 
@@ -395,7 +438,9 @@ public type Preferences record {|
 # + useDefault - Whether the default reminders of the calendar apply to the event
 # + overrides - List the reminders specific to the event
 public type Reminders record {
+    @display {label: "Use Default Reminder?"}
     boolean useDefault;
+    @display {label: "Reminders List"}
     Reminder[] overrides?;
 };
 
@@ -404,7 +449,9 @@ public type Reminders record {
 # + url - URL of the source pointing to a resource
 # + title - Title of the source
 public type Source record {
+    @display {label: "Source Url"}
     string url;
+    @display {label: "Source Name"}
     string title;
 };
 
@@ -416,6 +463,7 @@ public type Source record {
 # + iconLink - URL link to the attachment's icon
 # + fileId - ID of the attached file
 public type Attachment record {
+    @display {label: "File Url"}
     string fileUrl;
     string title?;
     string mimeType?;
@@ -512,8 +560,11 @@ public type Notification record {
 # + showDeleted - Whether to include deleted calendar list entries in the result
 # + showHidden - Whether to show hidden entries
 public type CalendarsToAccess record {
+    @display {label: "Access Role of User"}
     string minAccessRole?;
+    @display {label: "Show Deleted Calendars"}
     boolean showDeleted?;
+    @display {label: "Show Hidden Calendars"}
     boolean showHidden?;
 };
 
