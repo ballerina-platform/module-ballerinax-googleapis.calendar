@@ -21,7 +21,7 @@ import ballerina/jwt;
 # Client for Google Calendar connector.
 # 
 # + calendarClient - HTTP client endpoint
-@display {label: "Google Calendar Client", iconPath: "GoogleCalendarLogo.png"}
+@display {label: "Google Calendar", iconPath: "logo.png"}
 public client class Client {
     public http:Client calendarClient;
     private ClientOAuth2ExtensionGrantHandler clientHandler;
@@ -47,9 +47,9 @@ public client class Client {
     # + optional - Record that contains optionals
     # + userAccount - The email address of the user for requesting delegated access in service account
     # + return - Stream of Calendars on success else an error
-    @display {label: "Get calendars"}
-    remote isolated function getCalendars(@display {label: "Calendars to access"} CalendarsToAccess? optional = (),
-                                            @display {label: "User account"} string? userAccount = ()) returns
+    @display {label: "Get Calendars"}
+    remote isolated function getCalendars(@display {label: "Calendars to Access"} CalendarsToAccess? optional = (),
+                                            @display {label: "User Account"} string? userAccount = ()) returns
                                             @tainted @display {label: "Stream of Calendars"} stream<Calendar,error>
                                             |error {
         CalendarStream calendarStream = check new CalendarStream(self.calendarClient, self.clientHandler, optional,
@@ -61,10 +61,10 @@ public client class Client {
     # 
     # + title - Calendar name
     # + userAccount - The email address of the user for requesting delegated access in service account
-    # + return - Created Event on success else an error
-    @display {label: "Create calendar"}
-    remote isolated function createCalendar(@display {label: "Calendar name"} string title, 
-                                            @display {label: "User account"} string? userAccount = ())
+    # + return - Created calendar on success else an error
+    @display {label: "Create Calendar"}
+    remote isolated function createCalendar(@display {label: "Calendar Name"} string title,
+                                            @display {label: "User Account"} string? userAccount = ())
                                             returns @tainted @display{label: "Calendar"} CalendarResource|error {
         http:Request req = new;
         string path = prepareUrl([CALENDAR_PATH, CALENDAR]);
@@ -83,9 +83,9 @@ public client class Client {
     # + calendarId - Calendar id
     # + userAccount - The email address of the user for requesting delegated access in service account
     # + return - Error on failure
-    @display {label: "Delete calendar"}
-    remote isolated function deleteCalendar(@display {label: "Calendar id"} string calendarId,
-                                            @display {label: "User account"} string? userAccount = ())
+    @display {label: "Delete Calendar"}
+    remote isolated function deleteCalendar(@display {label: "Calendar Id"} string calendarId,
+                                            @display {label: "User Account"} string? userAccount = ())
                                             returns @tainted error? {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId]);
         map<string> headerMap = check setHeaders(self.clientHandler, userAccount);
@@ -100,11 +100,11 @@ public client class Client {
     # + optional - Record that contains optional query parameters
     # + userAccount - The email address of the user for requesting delegated access in service account
     # + return - Created Event on success else an error
-    @display {label: "Create event"}
-    remote isolated function createEvent(@display {label: "Calendar id"} string calendarId,
-                                            @display {label: "Event details"} InputEvent event,
-                                            @display {label: "Events to access"} EventsToAccess? optional = (),
-                                            @display {label: "User account"} string? userAccount = ())
+    @display {label: "Create Event"}
+    remote isolated function createEvent(@display {label: "Calendar Id"} string calendarId,
+                                            @display {label: "Event Details"} InputEvent event,
+                                            @display {label: "Events to Access"} EventsToAccess? optional = (),
+                                            @display {label: "User Account"} string? userAccount = ())
                                             returns @tainted @display {label: "Event"} Event|error {
         json payload = check event.cloneWithType(json);
         http:Request req = new;
@@ -116,18 +116,18 @@ public client class Client {
         return toEvent(result);
     }
            
-    # Create an event based on a simple text string.
+    # Create an event at the moment with simple text .
     # 
     # + calendarId - Calendar id
     # + text - Event description
     # + sendUpdates - Configuration for notifing the creation
     # + userAccount - The email address of the user for requesting delegated access in service account
     # + return - Created event id on success else an error
-    @display {label: "Create quick add event"}
-    remote isolated function quickAddEvent(@display {label: "Calendar id"} string calendarId,
-                                            @display {label: "Event description"} string text,
-                                            @display {label: "Send updates of creation"} string? sendUpdates = (),
-                                            @display {label: "User account"} string? userAccount = ())
+    @display {label: "Create Quick Event"}
+    remote isolated function quickAddEvent(@display {label: "Calendar Id"} string calendarId,
+                                            @display {label: "Event Description"} string text,
+                                            @display {label: "Send Creation Updates"} string? sendUpdates = (),
+                                            @display {label: "User Account"} string? userAccount = ())
                                             returns @tainted @display {label: "Event"} Event|error {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, QUICK_ADD]);
         path = sendUpdates is string ? prepareQueryUrl([path], [TEXT, SEND_UPDATES], [text, sendUpdates])
@@ -141,17 +141,17 @@ public client class Client {
     # Update an existing event.
     # 
     # + calendarId - calendar id
-    # + eventId - event Id
+    # + eventId - event id
     # + event - Record that contains updated information
     # + optional - Record that contains optional query parameters
     # + userAccount - The email address of the user for requesting delegated access in service account
     # + return - Updated event on success else an error
-    @display {label: "Update existing event"}
-    remote isolated function updateEvent(@display {label: "Calendar id"} string calendarId,
-                                            @display {label: "Event id"} string eventId,
-                                            @display {label: "Event details"} InputEvent event,
-                                            @display {label: "Events to access"} EventsToAccess? optional= (),
-                                            @display {label: "User account"} string? userAccount = ())
+    @display {label: "Update Event"}
+    remote isolated function updateEvent(@display {label: "Calendar Id"} string calendarId,
+                                            @display {label: "Event Id"} string eventId,
+                                            @display {label: "Event Details"} InputEvent event,
+                                            @display {label: "Events to Access"} EventsToAccess? optional= (),
+                                            @display {label: "User Account"} string? userAccount = ())
                                             returns @tainted @display {label: "Event"} Event|error {
         json payload = check event.cloneWithType(json);
         http:Request req = new;
@@ -168,10 +168,10 @@ public client class Client {
     # + calendarId - Calendar id
     # + userAccount - The email address of the user for requesting delegated access in service account
     # + return - Event stream on success, else an error
-    @display {label: "Get events"}
-    remote isolated function getEvents(@display {label: "Calendar id"} string calendarId,
-                                        @display {label: "User account"} string? userAccount = ())
-                                        returns @tainted @display {label: "Stream of Event"} stream<Event,error>|error {
+    @display {label: "Get Events"}
+    remote isolated function getEvents(@display {label: "Calendar Id"} string calendarId,
+                                        @display {label: "User Account"} string? userAccount = ())
+                                        returns @tainted @display {label: "Stream of Events"} stream<Event,error>|error {
         EventStream eventStream = check new EventStream(self.calendarClient, calendarId, self.clientHandler,
             userAccount);
         return new stream<Event,error>(eventStream);    
@@ -183,10 +183,10 @@ public client class Client {
     # + eventId - Event id
     # + userAccount - The email address of the user for requesting delegated access in service account
     # + return - An Event object on success, else an error
-    @display {label: "Get an event"}
-    remote isolated function getEvent(@display {label: "Calendar id"} string calendarId,
-                                        @display {label: "Event id"} string eventId,
-                                        @display {label: "User account"} string? userAccount = ())
+    @display {label: "Get Event"}
+    remote isolated function getEvent(@display {label: "Calendar Id"} string calendarId,
+                                        @display {label: "Event Id"} string eventId,
+                                        @display {label: "User Account"} string? userAccount = ())
                                         returns @tainted @display {label: "Event"} Event|error {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, eventId]);
         map<string> headerMap = check setHeaders(self.clientHandler, userAccount);
@@ -201,10 +201,10 @@ public client class Client {
     # + eventId - Event id
     # + userAccount - The email address of the user for requesting delegated access in service account
     # + return - Error on failure
-    @display {label: "Delete event"}
-    remote isolated function deleteEvent(@display {label: "Calendar id"} string calendarId,
-                                            @display {label: "Event id"} string eventId,
-                                            @display {label: "User account"} string? userAccount = ())
+    @display {label: "Delete Event"}
+    remote isolated function deleteEvent(@display {label: "Calendar Id"} string calendarId,
+                                            @display {label: "Event Id"} string eventId,
+                                            @display {label: "User Account"} string? userAccount = ())
                                             returns @tainted error? {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, eventId]);
         map<string> headerMap = check setHeaders(self.clientHandler, userAccount);
@@ -218,11 +218,11 @@ public client class Client {
     # + address - The address where notifications are delivered for this channel
     # + expiration - The time-to-live in seconds for the notification channel
     # + return - WatchResponse object on success else an error
-    @display {label: "Create notification subscription"}
-    remote isolated function watchEvents(@display {label: "Calendar id"} string calendarId,
-                                            @display {label: "Callback URL"} string address,
-                                            @display {label: "Life time of channel"} string? expiration = ()) returns 
-                                            @tainted @display {label: "Subscription result"} WatchResponse|error {
+    @display {label: "Create Subscription"}
+    remote isolated function watchEvents(@display {label: "Calendar Id"} string calendarId,
+                                            @display {label: "Callback Url"} string address,
+                                            @display {label: "Life Time of Channel"} string? expiration = ()) returns
+                                            @tainted @display {label: "Subscription Information"} WatchResponse|error {
         json payload;
         if (expiration is string) {
             payload = {
@@ -257,11 +257,11 @@ public client class Client {
     # + resourceId - Id of resource being watched
     # + token - An arbitrary string delivered to the target address with each notification (optional)
     # + return - Error on failure
-    @display {label: "Stop channel from subscription"}
-    remote isolated function stopChannel(@display {label: "Channel id"} string id,
-                                            @display {label: "Resource id"} string resourceId,
-                                            @display {label: "An arbitrary string to not being spoofed"}
-                                            string? token = ()) returns @tainted error? {
+    @display {label: "Stop Subscription"}
+    remote isolated function stopChannel(@display {label: "Channel Id"} string id,
+                                            @display {label: "Resource Id"} string resourceId,
+                                            @display {label: "An Arbitrary String"} string? token = ())
+                                            returns @tainted error? {
         json payload = {
             id: id,
             resourceId: resourceId,
@@ -283,13 +283,13 @@ public client class Client {
     # + syncToken - Token for getting incremental sync
     # + userAccount - The email address of the user for requesting delegated access in service account
     # + return - EventResponse object on success, else an error
-    @display {label: "Get events response"}
-    remote isolated function getEventsResponse(@display {label: "Calendar id"} string calendarId, @display {label:
-                                                "Number of events required"} int? count = (), @display
-                                                {label: "Token for incremental sync"} string? syncToken = (),
-                                                @display {label: "Token for retrieving next page"} string? pageToken
-                                                = (), @display {label: "User account"} string? userAccount = ()) returns
-                                                @tainted @display {label: "Event response"} EventResponse|error {
+    @display {label: "Get Events By Page"}
+    remote isolated function getEventsResponse(@display {label: "Calendar Id"} string calendarId,
+                                                @display {label: "Number of Events Required"} int? count = (),
+                                                @display {label: "Token for Incremental Sync"} string? syncToken = (),
+                                                @display {label: "Token for Next Page"} string? pageToken = (),
+                                                @display {label: "User Account"} string? userAccount = ()) returns
+                                                @tainted @display {label: "Events Response"} EventResponse|error {
         string path = prepareUrlWithEventsOptional(calendarId, count, pageToken, syncToken);
         map<string> headerMap = check setHeaders(self.clientHandler, userAccount);
         http:Response httpResponse = check self.calendarClient->get(path, headerMap);
@@ -302,7 +302,10 @@ public client class Client {
 #
 # + oauth2Config - OAuth2 configuration
 # + secureSocketConfig- Secure socket configuration
+@display {label: "Connection Config"}
 public type CalendarConfiguration record {
+    @display {label: "Auth Config"}
     http:BearerTokenConfig|http:OAuth2RefreshTokenGrantConfig|http:JwtIssuerConfig oauth2Config;
+    @display {label: "SSL Config"}
     http:ClientSecureSocket secureSocketConfig?;
 };
