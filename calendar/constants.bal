@@ -21,10 +21,7 @@ const string CALENDAR = "calendars";
 const string CALENDAR_LIST = "calendarList";
 const string USERS = "users";
 const string ME = "me";
-const string CHANNELS = "channels";
-const string STOP = "stop";
 const string EVENTS = "events";
-const string WATCH = "watch";
 const string QUICK_ADD = "quickAdd";
 
 // Symbols
@@ -66,4 +63,3 @@ const string PAYLOAD = " payload: ";
 
 // String constants
 const string TIME_FORMAT =  "yyyy-MM-dd'T'HH:mm:ssZ";
-const string WEBHOOK = "webhook";

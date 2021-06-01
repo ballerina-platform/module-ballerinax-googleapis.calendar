@@ -58,20 +58,6 @@ isolated function toCalendar(json payload) returns CalendarResource|error {
     }
 }
 
-# Convert json to WatchResponse.
-# 
-# + payload - Json response
-# + return - A WatchResponse object on success else an error
-isolated function toWatchResponse(json payload) returns WatchResponse|error {
-    WatchResponse|error res = payload.cloneWithType(WatchResponse);
-    if (res is WatchResponse) {
-        return res;
-    } else {
-        log:printError(ERR_WATCH_RESPONSE + PAYLOAD + payload.toJsonString(), 'error = res);
-        return error(ERR_WATCH_RESPONSE, res);
-    }
-}
-
 # Convert json to EventResponse.
 # 
 # + payload - Json response

@@ -15,7 +15,6 @@
 // under the License.
 
 import ballerina/http;
-import ballerina/uuid;
 import ballerina/jwt;
 
 # Client for Google Calendar connector.
@@ -209,69 +208,6 @@ public client class Client {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, eventId]);
         map<string> headerMap = check setHeaders(self.clientHandler, userAccount);
         http:Response httpResponse = check self.calendarClient->delete(path, headers = headerMap);
-        _ = check checkAndSetErrors(httpResponse);
-    }
-
-    # Create subscription to get notification.
-    # 
-    # + calendarId - Calendar id
-    # + address - The address where notifications are delivered for this channel
-    # + expiration - The time-to-live in seconds for the notification channel
-    # + return - WatchResponse object on success else an error
-    @display {label: "Create Subscription"}
-    remote isolated function watchEvents(@display {label: "Calendar Id"} string calendarId,
-                                            @display {label: "Callback Url"} string address,
-                                            @display {label: "Life Time of Channel"} string? expiration = ()) returns
-                                            @tainted @display {label: "Subscription Information"} WatchResponse|error {
-        json payload;
-        if (expiration is string) {
-            payload = {
-                id: uuid:createType1AsString(),
-                token: uuid:createType1AsString(),
-                'type: WEBHOOK,
-                address: address,
-                params: {
-                    ttl: expiration
-                }
-            };
-        } else {
-            payload = {
-                id: uuid:createType1AsString(),
-                token: uuid:createType1AsString(),
-                'type: WEBHOOK,
-                address: address
-            };
-        }
-        http:Request req = new;
-        string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, WATCH]);
-        req.setJsonPayload(payload);
-        map<string> headerMap = check setHeaders(self.clientHandler);
-        http:Response httpResponse = check self.calendarClient->post(path, req, headers = headerMap);
-        json result = check checkAndSetErrors(httpResponse);
-        return toWatchResponse(result);
-    }
-
-    # Stop channel from subscription
-    # 
-    # + id - Channel id
-    # + resourceId - Id of resource being watched
-    # + token - An arbitrary string delivered to the target address with each notification (optional)
-    # + return - Error on failure
-    @display {label: "Stop Subscription"}
-    remote isolated function stopChannel(@display {label: "Channel Id"} string id,
-                                            @display {label: "Resource Id"} string resourceId,
-                                            @display {label: "An Arbitrary String"} string? token = ())
-                                            returns @tainted error? {
-        json payload = {
-            id: id,
-            resourceId: resourceId,
-            token: token
-        };
-        string path = prepareUrl([CALENDAR_PATH, CHANNELS, STOP]);
-        http:Request req = new;
-        req.setJsonPayload(payload);
-        map<string> headerMap = check setHeaders(self.clientHandler);
-        http:Response httpResponse = check self.calendarClient->post(path, req, headers = headerMap);
         _ = check checkAndSetErrors(httpResponse);
     }
 
