@@ -14,13 +14,33 @@
 // specific language governing permissions and limitations
 // under the License.
 
-# Header constants
+// Header constants
 const string GOOGLE_CHANNEL_ID = "X-Goog-Channel-ID";
 const string GOOGLE_RESOURCE_ID = "X-Goog-Resource-ID";
 const string GOOGLE_RESOURCE_STATE = "X-Goog-Resource-State";
 const string SYNC = "sync";
 
-# Error messages
-const string EVENT_MAPPING_ERROR = "Error occurred while mapping to Event record type";
-const string EVENT_STREAM_MAPPING_ERROR = "Error occurred while mapping to Event stream";
+// Path Constants
+const string BASE_URL = "https://www.googleapis.com";
+const string CALENDAR_PATH = "/calendar/v3";
+const string CALENDAR = "calendars";
+const string CHANNELS = "channels";
+const string STOP = "stop";
+const string EVENTS = "events";
+const string WATCH = "watch";
+const string WEBHOOK = "webhook";
+
+// Symbols
+const string QUESTION_MARK = "?";
+const string EQUAL_SIGN = "=";
+const string EMPTY_STRING = "";
+const string AMPERSAND = "&";
+const string FORWARD_SLASH = "/";
+const string PAYLOAD = " payload: ";
+
+// Error constants
+const string HTTP_ERROR_MSG = "Error occurred while getting the HTTP response : ";
+const string ERR_EXTRACTING_ERROR_MSG = "Error occured while extracting errors from payload.";
+const string JSON_ACCESSING_ERROR_MSG = "Error occurred while accessing the JSON payload of the response.";
+const string ERR_WATCH_RESPONSE = "Error occurred while constructing WatchResponse record.";
 const string INVALID_ID_ERROR = "Invalid channel id/ resource id";

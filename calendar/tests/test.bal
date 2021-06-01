@@ -37,8 +37,6 @@ CalendarConfiguration config = {
 Client calendarClient = check new (config); 
 
 string testEventId = "";
-string testChannelId = "";
-string testResourceId = "";
 string testQuickAddEventId = "";
 string testCalendarId = "";
 
@@ -161,32 +159,6 @@ function testDeleteEvent() {
     log:printInfo("calendarClient -> deleteEvent()");
     error? res = calendarClient->deleteEvent(testCalendarId, testEventId);
     error? resp = calendarClient->deleteEvent(testCalendarId, testQuickAddEventId);
-    if (res is error) {
-        test:assertFail(res.message());
-    }
-}
-
-@test:Config{
-    dependsOn: [testCreateCalendar]
-}
-function testWatchEvents() {
-    log:printInfo("calendarClient -> watchEvents()");
-    WatchResponse|error res = calendarClient->watchEvents(testCalendarId, address);
-    if (res is WatchResponse) {
-        test:assertNotEquals(res.id, "", msg = "Expects channel id");
-        testChannelId = <@untainted> res.id;
-        testResourceId = <@untainted> res.resourceId;
-    } else {
-        test:assertFail(res.message());
-    }
-}
-
-@test:Config{
-    dependsOn: [testWatchEvents]
-}
-function testStopChannel() {
-    log:printInfo("calendarClient -> stopChannel()");
-    error? res = calendarClient->stopChannel(testChannelId, testResourceId);
     if (res is error) {
         test:assertFail(res.message());
     }
