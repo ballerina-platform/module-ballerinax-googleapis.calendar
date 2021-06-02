@@ -33,11 +33,13 @@ public class Listener {
     private string? syncToken = ();
     public decimal expirationTime = 0;
     private HttpService httpService;
+    private calendar:CalendarConfiguration config;
 
     public isolated function init(int port, calendar:CalendarConfiguration config, string calendarId, string address,
                                     string? expiration = ()) returns error? {
         self.httpListener = check new (port);
         self.calendarClient = check new (config);
+        self.config = config;
         self.calendarId = calendarId;
         self.address = address;
         self.expiration = expiration;
@@ -60,7 +62,7 @@ public class Listener {
     }
 
     public isolated function gracefulStop() returns @tainted error? {
-        check self.calendarClient->stopChannel(self.channelId, self.resourceId);
+        check stopChannel(self.config, self.channelId, self.resourceId);
         log:printInfo("Subscription stopped");
         return self.httpListener.gracefulStop();
     }
@@ -70,8 +72,7 @@ public class Listener {
     }
 
     public isolated function registerWatchChannel() returns @tainted error? {
-        calendar:WatchResponse res = check self.calendarClient->watchEvents(self.calendarId, self.address,
-            self.expiration);
+        WatchResponse res = check watchEvents(self.config, self.calendarId, self.address, self.expiration);
         self.channelId = res.id;
         self.resourceId = res.resourceId;
         self.httpService.channelId = self.channelId;
