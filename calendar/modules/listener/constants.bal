@@ -43,4 +43,14 @@ const string HTTP_ERROR_MSG = "Error occurred while getting the HTTP response : 
 const string ERR_EXTRACTING_ERROR_MSG = "Error occured while extracting errors from payload.";
 const string JSON_ACCESSING_ERROR_MSG = "Error occurred while accessing the JSON payload of the response.";
 const string ERR_WATCH_RESPONSE = "Error occurred while constructing WatchResponse record.";
+const string ERR_CHANNEL_REGISTRATION = "Unable to register new channel.";
+const string ERR_SCHEDULE = "Unable to schedule subscription renewal.";
 const string INVALID_ID_ERROR = "Invalid channel id/ resource id";
+
+// Warn constants
+const string WARN_CHANNEL_REGISTRATION = "Could not register watch channel";
+const string WARN_SCHEDULE = "Could not schedule subscription renewal";
+
+// Info constants
+const string INFO_RETRY_CHANNEL_REGISTRATION = "Retrying to register new channel. Attempt - ";
+const string INFO_RETRY_SCHEDULE = "Retrying to schedule subscription renewal. Attempt - ";
