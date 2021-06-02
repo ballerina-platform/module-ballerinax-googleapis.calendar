@@ -14,12 +14,19 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/jballerina.java;
-
-isolated function init() {
-    setModule();
-}
-
-isolated function setModule() = @java:Method {
-    'class: "org.ballerinalang.googleapis.calendar.ModuleUtils"
-} external;
+# Define watch response.
+#
+# + kind - Identifies this as a notification channel used to watch for changes to a resource
+# + id - A UUID or similar unique string that identifies this channel
+# + resourceId - An opaque ID that identifies the resource being watched on this channel
+# + resourceUri - A version-specific identifier for the watched resource
+# + token - An arbitrary string delivered to the target address
+# + expiration - Date and time of notification channel expiration
+public type WatchResponse record {
+    string kind;
+    string id;
+    string resourceId;
+    string resourceUri;
+    string token?;
+    string expiration;
+};
