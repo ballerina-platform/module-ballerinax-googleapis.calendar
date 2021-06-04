@@ -582,3 +582,53 @@ public type CalendarResponse record {
     string nextPageToken?;
     Calendar[] items;
 };
+
+# Define get events optional parameters.
+# 
+# + iCalUID - Event unique identifier
+# + maxAttendees - The maximum number of attendees to include in the response
+# + orderBy - The order of the events returned in the result
+# + privateExtendedProperty - Extended private properties constraint specified as propertyName=value
+# + q - Free text search terms to find events that match these terms in any field, except for extended properties
+# + sharedExtendedProperty - Extended shared properties constraint specified as propertyName=value
+# + showDeleted - Whether to include deleted events (with status equals "cancelled") in the result
+# + showHiddenInvitations - Whether to include hidden invitations in the result
+# + singleEvents - Whether to expand recurring events into instances and only return single one-off events
+# + timeMax - Upper bound (exclusive) for an event's start time to filter by. Must be an RFC3339 timestamp
+# + timeMin - Lower bound (exclusive) for an event's end time to filter by. Must be an RFC3339 timestamp
+# + timeZone - Time zone used in the response
+# + updatedMin - Lower bound for an event's last modification time (as a RFC3339 timestamp) to filter by
+public type EventFilterCriteria record {
+    @display {label: "iCalUID"}
+    string iCalUID?;
+    @display {label: "Maximum Attendess"}
+    int maxAttendees?;
+    @display {label: "Order by"}
+    OrderBy orderBy?;
+    @display {label: "Private Extended Property"}
+    string privateExtendedProperty?;
+    @display {label: "Search Term"}
+    string q?;
+    @display {label: "Shared Extended Property"}
+    string sharedExtendedProperty?;
+    @display {label: "Show Deleted?"}
+    boolean showDeleted?;
+    @display {label: "Show Hidden Invitations?"}
+    boolean showHiddenInvitations?;
+    @display {label: "Single Events?"}
+    boolean singleEvents?;
+    @display {label: "Start Time Max"}
+    string timeMax?;
+    @display {label: "Start Time Min"}
+    string timeMin?;
+    @display {label: "Time Zone"}
+    string timeZone?;
+    @display {label: "Updated Time Min"}
+    string updatedMin?;
+};
+
+# Events order by.
+public enum OrderBy {
+    START_TIME = "startTime",
+    UPDATED = "updated"
+}
