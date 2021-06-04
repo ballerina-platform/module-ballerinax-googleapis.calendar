@@ -285,39 +285,39 @@ Run this command inside sample directory:
     $ bal run "<ballerina_file>"
     ```
 
-- #### [Get all calendars](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/get_calendars.bal)
+- #### [Get calendars](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/get_calendars.bal)
   
     This sample shows how to get all calendars that are available in an authorized user's account. This operation returns stream `Calendar` if successful. Else returns `error`.
 
-- #### [Create a new calendar](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/create_calendar.bal)
+- #### [Create calendar](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/create_calendar.bal)
 
     This sample shows how to create a new calendar in an authorized user's account. The name of the new calendar is required to do this. This operation will return a `CalenderResource` if successful. Else return an `error`.
 
-- #### [Delete a calendar](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/delete_calendar.bal)
+- #### [Delete calendar](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/delete_calendar.bal)
 
     This sample shows how to delete a calendar in an authorized user's account. The calendar id is required to do this operation. This operation returns an error `true` if unsuccessful.
 
-- #### [Create a new event](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/create_event.bal)
+- #### [Create event](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/create_event.bal)
 
     This sample shows how to create an event in an authorized user's calendar. The calendar id and input event are required to do this operation. This operation returns an `Event` if successful. Else returns `error`.
 
-- #### [Create a quick add event](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/quick_add_event.bal)
+- #### [Create quick add event](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/quick_add_event.bal)
 
     This sample shows how to create a quick add event in an authorized user's calendar. It creates an event based on a simple text string. The calendar id and event title are required to do this operation. This operation returns an `Event` if successful. Else returns `error`. 
 
-- #### [Get an event](samples/https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/get_event.bal)
+- #### [Get event](samples/https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/get_event.bal)
 
     This sample shows how to get an event that is available in an authorized user's calendar. The calendar and event ids are required to do this operation. This operation returns an `Event` if successful. Else returns `error`.
 
-- #### [Get all events](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/get_events.bal)
+- #### [Get events](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/get_events.bal)
 
-    This sample shows how to get all events that are available in an authorized user's calendar. The calendar id is required to do this operation. This operation returns stream `Event` if successful. Else returns `error`.
+    This sample shows how to get events that are available in an authorized user's calendar. The calendar id is required to do this operation. Additionally, user can filter the events using optional parameter `EventFilterCriteria`. The filter helps user to get the events between a time period, events with a certain word, events updated after a time and etc. This operation returns stream `Event` if successful. Else returns `error`.
 
-- #### [Update an existing event](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/update_event.bal)
+- #### [Update event](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/update_event.bal)
 
     This sample shows how to update an existing event that is available in an authorized user's calendar. The calendar and event ids are required to do this operation. This operation returns an `Event` if successful. Else returns `error`.
 
-- #### [Delete an event](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/delete_event.bal)
+- #### [Delete event](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/delete_event.bal)
 
     This sample shows how to delete an event in an authorized user's calendar. The calendar and event ids are required to do this operation. This operation returns an error `true` if unsuccessful. 
 
@@ -325,7 +325,7 @@ Run this command inside sample directory:
 
     This sample shows how to watch for changes to events in an authorized user's calendar. It is a subscription to receive push notification from Google on events changes.  The calendar id and callback url are required to do this operation. Channel live time can be provided via an optional parameter. By default it is 604800 seconds. This operation returns  `WatchResponse` if successful. Else returns `error`.
 
-- #### [Stop a channel subscription](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/stop_channel.bal)
+- #### [Stop channel](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/blob/main/samples/stop_channel.bal)
 
     This sample shows how to stop an existing subscription. The channel id and resource is are required to do this operation. This operation returns an error `true` if unsuccessful.
 

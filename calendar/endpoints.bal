@@ -166,12 +166,14 @@ public client class Client {
     # 
     # + calendarId - Calendar id
     # + userAccount - The email address of the user for requesting delegated access in service account
+    # + optional - Record that contains optional parameters
     # + return - Event stream on success, else an error
     @display {label: "Get Events"}
     remote isolated function getEvents(@display {label: "Calendar Id"} string calendarId,
+                                        @display {label: "Filtering Criteria"} EventFilterCriteria? optional = (),
                                         @display {label: "User Account"} string? userAccount = ())
                                         returns @tainted @display {label: "Stream of Events"} stream<Event,error>|error {
-        EventStream eventStream = check new EventStream(self.calendarClient, calendarId, self.clientHandler,
+        EventStream eventStream = check new EventStream(self.calendarClient, calendarId, self.clientHandler, optional,
             userAccount);
         return new stream<Event,error>(eventStream);    
     }
@@ -217,16 +219,18 @@ public client class Client {
     # + count - Number of events required in one page (optional)
     # + pageToken - Token for retrieving next page
     # + syncToken - Token for getting incremental sync
+    # + optional - Record that contains optional parameters
     # + userAccount - The email address of the user for requesting delegated access in service account
     # + return - EventResponse object on success, else an error
     @display {label: "Get Events By Page"}
-    remote isolated function getEventsResponse(@display {label: "Calendar Id"} string calendarId,
+    remote isolated function getEventsResponse(@display {label: "Calendar Id"} string calendarId, 
                                                 @display {label: "Number of Events Required"} int? count = (),
-                                                @display {label: "Token for Incremental Sync"} string? syncToken = (),
                                                 @display {label: "Token for Next Page"} string? pageToken = (),
-                                                @display {label: "User Account"} string? userAccount = ()) returns
+                                                @display {label: "Token for Incremental Sync"} string? syncToken = (),
+                                                @display {label: "Filtering Criteria"} EventFilterCriteria? optional 
+                                                = (), @display {label: "User Account"} string? userAccount = ()) returns
                                                 @tainted @display {label: "Events Response"} EventResponse|error {
-        string path = prepareUrlWithEventsOptional(calendarId, count, pageToken, syncToken);
+        string path = prepareUrlWithEventsOptional(calendarId, count, pageToken, syncToken, optional);
         map<string> headerMap = check setHeaders(self.clientHandler, userAccount);
         http:Response httpResponse = check self.calendarClient->get(path, headerMap);
         json resp = check checkAndSetErrors(httpResponse);

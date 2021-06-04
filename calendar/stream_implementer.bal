@@ -23,13 +23,15 @@ class EventStream {
     private string? pageToken = ();
     private final string calendarId;
     private final ClientOAuth2ExtensionGrantHandler clientHandler;
+    private final EventFilterCriteria? optional;
     private final string? userAccount;
 
-    isolated function init(http:Client httpClient, string calendarId, ClientOAuth2ExtensionGrantHandler clientHandler,
-                            string? userAccount = ()) returns error? {
+    isolated function init(http:Client httpClient, string calendarId,  ClientOAuth2ExtensionGrantHandler clientHandler,
+                            EventFilterCriteria? optional, string? userAccount) returns error? {
         self.httpClient = httpClient;
         self.calendarId = calendarId;
         self.clientHandler = clientHandler;
+        self.optional = optional;
         self.userAccount = userAccount;
         self.currentEntries = check self.fetchEvents();
     }
@@ -50,7 +52,7 @@ class EventStream {
     }
 
     isolated function fetchEvents() returns @tainted Event[]|error {
-        string path = <@untainted>prepareUrlWithEventsOptional(self.calendarId, (), (), self.pageToken);
+        string path = <@untainted>prepareUrlWithEventsOptional(self.calendarId, (), (), self.pageToken, self.optional);
         map<string> headerMap = check setHeaders(self.clientHandler, self.userAccount);
         http:Response httpResponse = check self.httpClient->get(path, headerMap);
         json resp = check checkAndSetErrors(httpResponse);

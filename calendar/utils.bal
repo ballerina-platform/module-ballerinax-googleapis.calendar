@@ -129,13 +129,14 @@ isolated function prepareUrlWithCalendarOptional(string? pageToken = (), Calenda
 
 # Prepare URL with optional parameters.
 # 
-# + calendarId - Record that contains optional parameters
+# + calendarId - calendar Id
 # + count -  Number of events required in one page
 # + pageToken - Token for retrieving next page
 # + syncToken - Token for getting incremental sync
+# + optional - Record that contains optional parameters
 # + return - The prepared URL with encoded query
-isolated function prepareUrlWithEventsOptional(string calendarId, int? count, string? pageToken, string? syncToken)
-    returns string {
+isolated function prepareUrlWithEventsOptional(string calendarId, int? count, string? pageToken, string? syncToken,
+    EventFilterCriteria? optional = ()) returns string {
     string[] value = [];
     map<string> optionals = {};    
     if (count is int) {
@@ -146,6 +147,47 @@ isolated function prepareUrlWithEventsOptional(string calendarId, int? count, st
     }
     if (syncToken is string) {
         optionals[SYNC_TOKEN] = syncToken;
+    }
+    if (optional is EventFilterCriteria) {
+        if (optional?.iCalUID is string) {
+            optionals[I_CAL_UID] = optional?.iCalUID.toString();
+        }
+        if (optional?.maxAttendees is int) {
+            optionals[MAX_ATTENDEES] = optional?.maxAttendees.toString();
+        }
+        if (optional?.orderBy is string) {
+            optionals[ORDER_BY] = optional?.orderBy.toString();
+        }
+        if (optional?.privateExtendedProperty is string) {
+            optionals[PRIVARE_EXTENDED_PROPERTY] = optional?.privateExtendedProperty.toString();
+        } 
+        if (optional?.q is string) {
+            optionals[Q] = optional?.q.toString();
+        }
+        if (optional?.sharedExtendedProperty is string) {
+            optionals[SHARED_EXTENDED_PROPERTY] = optional?.sharedExtendedProperty.toString();
+        }
+        if (optional?.showDeleted is boolean) {
+            optionals[SHOW_DELETED] = optional?.showDeleted.toString();
+        }
+        if (optional?.showHiddenInvitations is boolean) {
+            optionals[SHOW_HIDDEN_INVITATIONS] = optional?.showHiddenInvitations.toString();
+        }
+        if (optional?.singleEvents is boolean) {
+            optionals[SINGLE_EVENTS] = optional?.singleEvents.toString();
+        }
+        if (optional?.timeMax is string) {
+            optionals[TIME_MAX] = optional?.timeMax.toString();
+        }
+        if (optional?.timeMin is string) {
+            optionals[TIME_MIN] = optional?.timeMin.toString();
+        }
+        if (optional?.timeZone is string) {
+            optionals[TIME_ZONE] = optional?.timeZone.toString();
+        }
+        if (optional?.updatedMin is string) {
+            optionals[UPDATED_MIN] = optional?.updatedMin.toString();
+        }
     }
     foreach var val in optionals {
         value.push(val);
