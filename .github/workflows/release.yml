@@ -23,7 +23,7 @@ jobs:
               run: |
                   ./gradlew build
             - name: Ballerina Build
-              uses: ballerina-platform/ballerina-action/@master
+              uses: ballerina-platform/ballerina-action/@slalpha5
               with:
                   args: build -c
               env:
@@ -35,7 +35,7 @@ jobs:
                   REFRESH_URL: ${{ secrets.REFRESH_URL }}
                   ADDRESS: ${{ secrets.ADDRESS }}
             - name: Ballerina Push
-              uses: ballerina-platform/ballerina-action/@master
+              uses: ballerina-platform/ballerina-action/@slalpha5
               with:
                   args: push
               env:
