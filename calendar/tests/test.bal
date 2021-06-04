@@ -117,10 +117,10 @@ function testquickAdd() {
 function testGetEvents() {
     log:printInfo("calendarClient -> getEvents()");
     stream<Event,error>|error resultStream = calendarClient->getEvents(testCalendarId);
-        if (resultStream is stream<Event,error>) {
-            record {|Event value;|}|error res = resultStream.next();
-            test:assertTrue(res is record {|Event value;|}, msg = "Found 0 records");
-        } else {
+    if (resultStream is stream<Event,error>) {
+        record {|Event value;|}|error res = resultStream.next();
+        test:assertTrue(res is record {|Event value;|}, msg = "Found 0 records");
+    } else {
         test:assertFail(resultStream.message());
     }
 }

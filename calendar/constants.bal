@@ -46,6 +46,17 @@ const string SUPPORTS_ATTACHMENTS = "supportsAttachments";
 const string MIN_ACCESS_ROLE =  "minAccessRole";
 const string SHOW_DELETED = "showDeleted";
 const string SHOW_HIDDEN = "showHidden";
+const string I_CAL_UID = "iCalUID";
+const string ORDER_BY = "orderBy";
+const string PRIVARE_EXTENDED_PROPERTY = "privateExtendedProperty";
+const string Q = "q";
+const string SHARED_EXTENDED_PROPERTY = "sharedExtendedProperty";
+const string SHOW_HIDDEN_INVITATIONS = "showHiddenInvitations";
+const string SINGLE_EVENTS = "singleEvents";
+const string TIME_MAX = "timeMax";
+const string TIME_MIN = "timeMin";
+const string TIME_ZONE = "timeZone";
+const string UPDATED_MIN = "updatedMin";
 
 // Error constants
 const string HTTP_ERROR_MSG = "Error occurred while getting the HTTP response : ";
