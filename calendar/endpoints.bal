@@ -121,7 +121,7 @@ public client class Client {
     # + text - Event description
     # + sendUpdates - Configuration for notifing the creation
     # + userAccount - The email address of the user for requesting delegated access in service account
-    # + return - Created event id on success else an error
+    # + return - Created event on success else an error
     @display {label: "Create Quick Event"}
     remote isolated function quickAddEvent(@display {label: "Calendar ID"} string calendarId,
                                             @display {label: "Event Description"} string text,
@@ -140,7 +140,7 @@ public client class Client {
     # Update an existing event.
     # 
     # + calendarId - Calendar ID
-    # + eventId - event id
+    # + eventId - Event ID
     # + event - Record that contains updated information
     # + optional - Record that contains optional query parameters
     # + userAccount - The email address of the user for requesting delegated access in service account
