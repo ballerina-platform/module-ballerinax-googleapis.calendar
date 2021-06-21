@@ -79,11 +79,11 @@ public client class Client {
 
     # Delete a calendar.
     # 
-    # + calendarId - Calendar id
+    # + calendarId - Calendar ID
     # + userAccount - The email address of the user for requesting delegated access in service account
     # + return - Error on failure
     @display {label: "Delete Calendar"}
-    remote isolated function deleteCalendar(@display {label: "Calendar Id"} string calendarId,
+    remote isolated function deleteCalendar(@display {label: "Calendar ID"} string calendarId,
                                             @display {label: "User Account"} string? userAccount = ())
                                             returns @tainted error? {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId]);
@@ -94,13 +94,13 @@ public client class Client {
 
     # Create an event.
     # 
-    # + calendarId - Calendar id
+    # + calendarId - Calendar ID
     # + event - Record that contains event information.
     # + optional - Record that contains optional query parameters
     # + userAccount - The email address of the user for requesting delegated access in service account
     # + return - Created Event on success else an error
     @display {label: "Create Event"}
-    remote isolated function createEvent(@display {label: "Calendar Id"} string calendarId,
+    remote isolated function createEvent(@display {label: "Calendar ID"} string calendarId,
                                             @display {label: "Event Details"} InputEvent event,
                                             @display {label: "Events to Access"} EventsToAccess? optional = (),
                                             @display {label: "User Account"} string? userAccount = ())
@@ -117,13 +117,13 @@ public client class Client {
            
     # Create an event at the moment with simple text .
     # 
-    # + calendarId - Calendar id
+    # + calendarId - Calendar ID
     # + text - Event description
     # + sendUpdates - Configuration for notifing the creation
     # + userAccount - The email address of the user for requesting delegated access in service account
-    # + return - Created event id on success else an error
+    # + return - Created event on success else an error
     @display {label: "Create Quick Event"}
-    remote isolated function quickAddEvent(@display {label: "Calendar Id"} string calendarId,
+    remote isolated function quickAddEvent(@display {label: "Calendar ID"} string calendarId,
                                             @display {label: "Event Description"} string text,
                                             @display {label: "Send Creation Updates"} string? sendUpdates = (),
                                             @display {label: "User Account"} string? userAccount = ())
@@ -139,15 +139,15 @@ public client class Client {
 
     # Update an existing event.
     # 
-    # + calendarId - calendar id
-    # + eventId - event id
+    # + calendarId - Calendar ID
+    # + eventId - Event ID
     # + event - Record that contains updated information
     # + optional - Record that contains optional query parameters
     # + userAccount - The email address of the user for requesting delegated access in service account
     # + return - Updated event on success else an error
     @display {label: "Update Event"}
-    remote isolated function updateEvent(@display {label: "Calendar Id"} string calendarId,
-                                            @display {label: "Event Id"} string eventId,
+    remote isolated function updateEvent(@display {label: "Calendar ID"} string calendarId,
+                                            @display {label: "Event ID"} string eventId,
                                             @display {label: "Event Details"} InputEvent event,
                                             @display {label: "Events to Access"} EventsToAccess? optional= (),
                                             @display {label: "User Account"} string? userAccount = ())
@@ -164,12 +164,12 @@ public client class Client {
 
     # Get all events.
     # 
-    # + calendarId - Calendar id
+    # + calendarId - Calendar ID
     # + userAccount - The email address of the user for requesting delegated access in service account
     # + filter - Record that contains filtering criteria
     # + return - Event stream on success, else an error
     @display {label: "Get Events"}
-    remote isolated function getEvents(@display {label: "Calendar Id"} string calendarId,
+    remote isolated function getEvents(@display {label: "Calendar ID"} string calendarId,
                                         @display {label: "Filtering Criteria"} EventFilterCriteria? filter = (),
                                         @display {label: "User Account"} string? userAccount = ())
                                         returns @tainted @display {label: "Stream of Events"} stream<Event,error>|error {
@@ -180,13 +180,13 @@ public client class Client {
 
     # Get an event.
     # 
-    # + calendarId - Calendar id
-    # + eventId - Event id
+    # + calendarId - Calendar ID
+    # + eventId - Event ID
     # + userAccount - The email address of the user for requesting delegated access in service account
     # + return - An Event object on success, else an error
     @display {label: "Get Event"}
-    remote isolated function getEvent(@display {label: "Calendar Id"} string calendarId,
-                                        @display {label: "Event Id"} string eventId,
+    remote isolated function getEvent(@display {label: "Calendar ID"} string calendarId,
+                                        @display {label: "Event ID"} string eventId,
                                         @display {label: "User Account"} string? userAccount = ())
                                         returns @tainted @display {label: "Event"} Event|error {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, eventId]);
@@ -198,13 +198,13 @@ public client class Client {
 
     # Delete an event.
     # 
-    # + calendarId - Calendar id
-    # + eventId - Event id
+    # + calendarId - Calendar ID
+    # + eventId - Event ID
     # + userAccount - The email address of the user for requesting delegated access in service account
     # + return - Error on failure
     @display {label: "Delete Event"}
-    remote isolated function deleteEvent(@display {label: "Calendar Id"} string calendarId,
-                                            @display {label: "Event Id"} string eventId,
+    remote isolated function deleteEvent(@display {label: "Calendar ID"} string calendarId,
+                                            @display {label: "Event ID"} string eventId,
                                             @display {label: "User Account"} string? userAccount = ())
                                             returns @tainted error? {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, eventId]);
@@ -215,7 +215,7 @@ public client class Client {
 
     # Get events response.
     # 
-    # + calendarId - Calendar id
+    # + calendarId - Calendar ID
     # + count - Number of events required in one page
     # + pageToken - Token for retrieving next page
     # + syncToken - Token for getting incremental sync
@@ -223,7 +223,7 @@ public client class Client {
     # + userAccount - The email address of the user for requesting delegated access in service account
     # + return - EventResponse object on success, else an error
     @display {label: "Get Events By Page"}
-    remote isolated function getEventsResponse(@display {label: "Calendar Id"} string calendarId, 
+    remote isolated function getEventsResponse(@display {label: "Calendar ID"} string calendarId, 
                                                 @display {label: "Number of Events Required"} int? count = (),
                                                 @display {label: "Token for Next Page"} string? pageToken = (),
                                                 @display {label: "Token for Incremental Sync"} string? syncToken = (),
