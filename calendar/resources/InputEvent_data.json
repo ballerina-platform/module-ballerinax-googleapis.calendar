@@ -1,1 +1,70 @@
-{"ballerinax/googleapis.calendar:0.1.3:InputEvent":[{"summary":"Summary1", "description":"Sample description", "location":"Colombo-LK", "colorId":"1", "id":"12", "start":{"dateTime":"2021-05-14T17:53:07.830048Z"}, "end":{"dateTime":"2021-05-14T18:53:07.830048Z"}, "recurrence":["RRULE:FREQ=WEEKLY;UNTIL=20110701T170000Z"], "originalStartTime":{"dateTime":"2021-05-14T17:53:07.830048Z"}, "transparency":"opaque", "visibility":"default", "sequence":1},{"summary":"Summary2", "description":"Sample description", "location":"Colombo-LK", "colorId":"1", "id":"12", "start":{"dateTime":"2021-05-14T17:53:07.842272Z"}, "end":{"dateTime":"2021-05-14T18:53:07.842272Z"}, "recurrence":["RRULE:FREQ=WEEKLY;UNTIL=20110701T170000Z"], "originalStartTime":{"dateTime":"2021-05-14T17:53:07.842272Z"}, "transparency":"opaque", "visibility":"default", "sequence":1},{"summary":"Summary3", "description":"Sample description", "location":"Colombo-LK", "colorId":"1", "id":"12", "start":{"dateTime":"2021-05-14T17:53:07.842949Z"}, "end":{"dateTime":"2021-05-14T18:53:07.842949Z"}, "recurrence":["RRULE:FREQ=WEEKLY;UNTIL=20110701T170000Z"], "originalStartTime":{"dateTime":"2021-05-14T17:53:07.842949Z"}, "transparency":"opaque", "visibility":"default", "sequence":1}]}
+{
+    "ballerinax/googleapis.calendar:0.1.6-SNAPSHOT:InputEvent": [
+        {
+            "summary": "Summary1",
+            "description": "Sample description",
+            "location": "Colombo-LK",
+            "colorId": "1",
+            "id": "12",
+            "start": {
+                "dateTime": "2021-05-14T17:53:07.830048Z"
+            },
+            "end": {
+                "dateTime": "2021-05-14T18:53:07.830048Z"
+            },
+            "recurrence": [
+                "RRULE:FREQ=WEEKLY;UNTIL=20110701T170000Z"
+            ],
+            "originalStartTime": {
+                "dateTime": "2021-05-14T17:53:07.830048Z"
+            },
+            "transparency": "opaque",
+            "visibility": "default",
+            "sequence": 1
+        },
+        {
+            "summary": "Summary2",
+            "description": "Sample description",
+            "location": "Colombo-LK",
+            "colorId": "1",
+            "id": "12",
+            "start": {
+                "dateTime": "2021-05-14T17:53:07.842272Z"
+            },
+            "end": {
+                "dateTime": "2021-05-14T18:53:07.842272Z"
+            },
+            "recurrence": [
+                "RRULE:FREQ=WEEKLY;UNTIL=20110701T170000Z"
+            ],
+            "originalStartTime": {
+                "dateTime": "2021-05-14T17:53:07.842272Z"
+            },
+            "transparency": "opaque",
+            "visibility": "default",
+            "sequence": 1
+        },
+        {
+            "summary": "Summary3",
+            "description": "Sample description",
+            "location": "Colombo-LK",
+            "colorId": "1",
+            "id": "12",
+            "start": {
+                "dateTime": "2021-05-14T17:53:07.842949Z"
+            },
+            "end": {
+                "dateTime": "2021-05-14T18:53:07.842949Z"
+            },
+            "recurrence": [
+                "RRULE:FREQ=WEEKLY;UNTIL=20110701T170000Z"
+            ],
+            "originalStartTime": {
+                "dateTime": "2021-05-14T17:53:07.842949Z"
+            },
+            "transparency": "opaque",
+            "visibility": "default",
+            "sequence": 1
+        }
+    ]
+}
