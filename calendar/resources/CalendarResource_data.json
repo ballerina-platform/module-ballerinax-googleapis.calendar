@@ -1,11 +1,13 @@
 {
-    "ballerinax/googleapis.calendar:0.1.3:CalendarResource": [
+    "ballerinax/googleapis.calendar:0.1.6-SNAPSHOT:CalendarResource": [
         {
             "kind": "calendar#calendar",
             "etag": "\"Y4KkcV6Cyg8J5vF9reAuo9s954Y\"",
             "id": "319d173rg5asq31snl30q0djg0@group.calendar.google.com",
             "summary": "MyPersonalCalendar",
             "timeZone": "UTC",
+            "location": "location1",
+            "description": "description1",
             "conferenceProperties": {
                 "allowedConferenceSolutionTypes": [
                     "hangoutsMeet"
@@ -18,6 +20,8 @@
             "id": "98kr90pnl0s2ut21lg9ja3j5to@group.calendar.google.com",
             "summary": "MyOfficeCalendar",
             "timeZone": "UTC",
+            "location": "location2",
+            "description": "description2",
             "conferenceProperties": {
                 "allowedConferenceSolutionTypes": [
                     "hangoutsMeet"
@@ -30,6 +34,8 @@
             "id": "apcb3c0ppa7m9ijj9vrkgq7t10@group.calendar.google.com",
             "summary": "MyToDoListCalendar",
             "timeZone": "UTC",
+            "location": "location3",
+            "description": "description3",
             "conferenceProperties": {
                 "allowedConferenceSolutionTypes": [
                     "hangoutsMeet"
