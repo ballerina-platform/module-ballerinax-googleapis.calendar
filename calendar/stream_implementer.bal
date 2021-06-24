@@ -52,7 +52,8 @@ class EventStream {
     }
 
     isolated function fetchEvents() returns @tainted Event[]|error {
-        string path = <@untainted>prepareUrlWithEventsOptional(self.calendarId, (), (), self.pageToken, self.optional);
+        string path = <@untainted>prepareUrlWithEventsOptionalParams(self.calendarId, pageToken = self.pageToken, 
+        optional = self.optional);
         map<string> headerMap = check setHeaders(self.clientHandler, self.userAccount);
         var httpResponse = check self.httpClient->get(path, headerMap);
         json resp = check checkAndSetErrors(httpResponse);
