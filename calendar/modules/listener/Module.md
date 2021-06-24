@@ -9,6 +9,15 @@ The Google Calendar Ballerina Connector listener allows you to get notification 
 *   Ballerina is required.
 Download the required Ballerina [distribution](https://ballerinalang.org/downloads/) version
 
+* Domain used in the callback URL needs to be registered in google console as a verified domain.
+https://console.cloud.google.com/apis/credentials/domainverification
+(If you are running locally, provide your ngrok url as to the domain verification)
+Then you will be able to download a HTML file (e.g : google2c627a893434d90e.html). 
+Copy the content of that HTML file & provide that as a config (`domainVerificationFileContent`) to Listener initialization.
+
+* In case if you failed to verify or setup, Please refer the documentation for domain verification process 
+https://docs.google.com/document/d/119jTQ1kpgg0hpNl1kycfgnGUIsm0LVGxAvhrd5T4YIA/edit?usp=sharing
+
 ## Compatibility
 
 |                             |            Versions             |
@@ -63,7 +72,7 @@ access token and refresh token).
     }
     ```
 
-* Callback address is additionally required in order to use Google Calendar listener. It is the path of the listener resource function. The time-to-live in seconds for the notification channel is provided in optional parameter expiration time. By default it is 604800 seconds.
+* Callback address and domain verification file content are additionally required in order to use Google Calendar listener. It is the path of the listener resource function. The time-to-live in seconds for the notification channel is provided in optional parameter expiration time. By default it is 604800 seconds.
   * Callback address
   * Expiration time
 
@@ -76,14 +85,16 @@ This file should have following configurations. Add the tokens obtained in the p
   clientSecret = "<client_secret>"
   refreshToken = "<refresh_token>"
   refreshUrl = "<refresh_URL>"
-  address = "<call_back url + "/calendar/events">"
+  calendarId = "<calendar_id>"
+  callbackUrl = "<call_back url>"
+  domainVerificationFileContent = "<domain_verification_file_content>"
   ```
 
 # Quickstart
 
 ## Create a listener for new event creation
 ### Step 1: Import the Calendar module
-First, import the `ballerinax/googleapis.calendar`, `import ballerinax/googleapis.calendar.'listener as listen` and `import ballerina/http` modules into the Ballerina project.
+First, import the `ballerinax/googleapis.calendar` and `import ballerinax/googleapis.calendar.'listener as listen` modules into a Ballerina project.
 
 ```ballerina
 import ballerinax/googleapis.calendar;
@@ -93,41 +104,34 @@ import ballerinax/googleapis.calendar.'listener as listen;
 ### Step 2: Initialize the Calendar Client giving necessary credentials
 You can now enter the credentials in the Calendar client config.
 ```ballerina
-calendar:CalendarConfiguration config = {
-    oauth2Config: {
+listen:ListenerConfiguration listenerConfig = {
+    port: "<PORT>",
+    clientConfiguration: {oauth2Config: {
         clientId: <CLIENT_ID>,
-        clientSecret: <CLIENT_SECRET>
+        clientSecret: <CLIENT_SECRET>,
         refreshToken: <REFRESH_TOKEN>,
-        refreshUrl: <REFRESH_URL>,   
-    }
+        refreshUrl: <REFRESH_URL>
+    }},
+    calendarId: "primary",
+    callbackUrl: "<CALLBACK_URL>",
+    domainVerificationFileContent: "<DOMAIN_VERIFICATION_FILE_CONTENT>"
 };
 ```
 
-### Step 3: Initialize the Calendar Listener
-Define all the data required to create
+### Step 3: Create the listener service
+If there is an event created in calendar, log will print the event.
 
 ```ballerina
-int port = 4567;
-string calendarId = "primary";
-string address = "<call_back url + "/calendar/events">";
-
-listener listen:Listener googleListener = new (port, config, calendarId, address);
-```
-
-### Step 4: Create the listener service
-If there is an event created in calendar, log will print the event title
-
-```ballerina
-service /calendar on googleListener {
+service / on googleListener {
     remote function onNewEvent(calendar:Event event) returns error? {
-        log:printInfo("Created new event : ", event);
+        log:printInfo("Created new event : " + event.toString());
     }
 }
 ```
 
 # Samples
 
-Samples are available at : https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/samples. To run a sample, create a new TOML file with name `Config.toml` in the same directory as the `.bal` file with above-mentioned configurable values.
+Samples are available at : https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/samples.
 
 - #### [Trigger for new event](../../../samples/trigger_create_event.bal)
 

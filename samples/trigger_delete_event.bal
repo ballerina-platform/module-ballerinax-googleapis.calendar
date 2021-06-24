@@ -10,20 +10,25 @@ configurable string refreshUrl = ?;
 configurable string calendarId = ?;
 configurable string address = ?;
 configurable string expiration = ?;
+configurable string domainVerificationFileContent = ?;
 
-calendar:CalendarConfiguration config = {
-    oauth2Config: {
-        clientId: clientId,
-        clientSecret: clientSecret,
-        refreshToken: refreshToken,
-        refreshUrl: refreshUrl   
-    }
+listen:ListenerConfiguration listenerConfig = {
+    port: port,
+    clientConfiguration: {oauth2Config: {
+            clientId: clientId,
+            clientSecret: clientSecret,
+            refreshToken: refreshToken,
+            refreshUrl: refreshUrl
+        }},
+    calendarId: calendarId,
+    callbackUrl: callbackUrl,
+    domainVerificationFileContent: domainVerificationFileContent
 };
 
-listener listen:Listener googleListener = new (port, config, calendarId, address, expiration);
+listener listen:Listener googleListener = new (listenerConfig);
 
-service /calendar on googleListener {
+service / on googleListener {
     remote function onEventDelete(calendar:Event event) returns error? {
-           log:printInfo("Deleted an event : ", event);
+           log:printInfo("Deleted an event : " + event.toString());
     }
 }

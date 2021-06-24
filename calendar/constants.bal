@@ -16,6 +16,7 @@
 
 // Path Constants
 const string BASE_URL = "https://www.googleapis.com";
+const string REFRESH_URL = "https://www.googleapis.com/oauth2/v3/token";
 const string CALENDAR_PATH = "/calendar/v3";
 const string CALENDAR = "calendars";
 const string CALENDAR_LIST = "calendarList";
