@@ -230,7 +230,7 @@ public client class Client {
                                                 @display {label: "Filtering Criteria"} EventFilterCriteria? filter 
                                                 = (), @display {label: "User Account"} string? userAccount = ()) returns
                                                 @tainted @display {label: "Events Response"} EventResponse|error {
-        string path = prepareUrlWithEventsOptional(calendarId, count, pageToken, syncToken, filter);
+        string path = prepareUrlWithEventsOptionalParams(calendarId, count, pageToken, syncToken, filter);
         map<string> headerMap = check setHeaders(self.clientHandler, userAccount);
         http:Response httpResponse = check self.calendarClient->get(path, headerMap);
         json resp = check checkAndSetErrors(httpResponse);

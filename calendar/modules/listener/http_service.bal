@@ -13,7 +13,6 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-
 import ballerina/http;
 import ballerina/log;
 import ballerinax/googleapis.calendar;
@@ -28,10 +27,10 @@ service class HttpService {
     private string calendarId;
     public string channelId;
     public string resourceId;
-    private string? syncToken = ();
+    private string? currentSyncToken = ();
 
     public isolated function init(SimpleHttpService|HttpService httpService, calendar:Client calendarClient, 
-        string calendarId, string channelId, string resourceId) {
+                                  string calendarId, string channelId, string resourceId) {
         self.httpService = httpService;
         self.calendarClient = calendarClient;
         self.calendarId = calendarId;
@@ -59,51 +58,79 @@ service class HttpService {
     }
 
     isolated resource function post events(http:Caller caller, http:Request request) returns @tainted error? {
-        if (check request.getHeader(GOOGLE_CHANNEL_ID) == self.channelId && check request.getHeader(GOOGLE_RESOURCE_ID)
-            == self.resourceId) {
+        if (check self.isValidRequest(request)) {
             http:Response res = new;
             res.statusCode = http:STATUS_OK;
-            if (check request.getHeader(GOOGLE_RESOURCE_STATE) == SYNC) {
-                self.syncToken = check self.getNextPageToken(self.calendarClient, self.calendarId);
+            if (check self.isValidSyncRequest(request)) {
+                self.currentSyncToken = check self.getInitialSyncToken(self.calendarClient, self.calendarId);
                 check caller->respond(res);
             } else {
-                calendar:EventResponse resp = check self.calendarClient->getEventsResponse(self.calendarId, syncToken
-                  = self.syncToken);
+                [string, calendar:Event] [syncToken, event] = check self.processEvent();
+                check self.dispatchEvent(event);
+                self.currentSyncToken = syncToken;
                 check caller->respond(res);
-                self.syncToken = resp?.nextSyncToken;
-                calendar:Event[] events = resp?.items;
-                calendar:Event event = events[0];
-                string? created = event?.created;
-                string? updated = event?.updated;
-                calendar:Time? 'start = event?.'start;
-                calendar:Time? end = event?.end;
-                if (created is string && updated is string && 'start is calendar:Time && end is calendar:Time) {
-                    if (created.substring(0, 19) == updated.substring(0, 19)) {
-                       if (self.isOnNewEventAvailable) {
-                           check callOnNewEventMethod(self.httpService, event);
-                       }
-                    } else  {
-                        if (self.isOnEventUpdateAvailable) {
-                            check callOnEventUpdateMethod(self.httpService, event);
-                        }
-                    }
-                } else {
-                    if (self.isOnEventDeleteAvailable) {
-                        check callOnEventDeleteMethod(self.httpService, event);
-                    }
-                }
             }
+        } else {
+            return error(INVALID_ID_ERROR);
         }
-        return error (INVALID_ID_ERROR);
     }
 
-    isolated function getNextPageToken(calendar:Client httpClient, string calendarId, string? pageToken = ()) returns
-        @tainted string?|error {
+    isolated function isValidRequest(http:Request request) returns boolean|error {
+        return ((check request.getHeader(GOOGLE_CHANNEL_ID)) == self.channelId && (check request.getHeader(
+        GOOGLE_RESOURCE_ID)) == self.resourceId);
+    }
+
+    isolated function getInitialSyncToken(calendar:Client httpClient, string calendarId, string? pageToken = ()) 
+    returns @tainted string?|error {
         calendar:EventResponse resp = check httpClient->getEventsResponse(calendarId, pageToken = pageToken);
         string? nextPageToken = resp?.nextPageToken;
+        string? syncToken = ();
         if (nextPageToken is string) {
-            var token = check self.getNextPageToken(httpClient, calendarId, nextPageToken);
+            syncToken = check self.getInitialSyncToken(httpClient, calendarId, nextPageToken);
+        }
+        if (syncToken is string) {
+            return syncToken;
         }
         return resp?.nextSyncToken;
+    }
+
+    isolated function isValidSyncRequest(http:Request request) returns boolean|error {
+        return ((check request.getHeader(GOOGLE_RESOURCE_STATE)) == SYNC);
+    }
+
+    isolated function processEvent() returns [string, calendar:Event]|error {
+        calendar:EventResponse resp = check self.calendarClient->getEventsResponse(self.calendarId, syncToken = self.
+        currentSyncToken);
+        string syncToken = resp?.nextSyncToken ?: "";
+        calendar:Event event = resp?.items[0];
+        return [syncToken, event];
+    }
+
+    isolated function dispatchEvent(calendar:Event event) returns error? {
+        if (self.isCreateOrUpdateEvent(event)) {
+            if (self.isNewEvent(event)) {
+                if (self.isOnNewEventAvailable) {
+                    check callOnNewEventMethod(self.httpService, event);
+                }
+            } else if (self.isOnEventUpdateAvailable) {
+                check callOnEventUpdateMethod(self.httpService, event);
+            }
+        } else if (self.isOnEventDeleteAvailable) {
+            check callOnEventDeleteMethod(self.httpService, event);
+        }
+    }
+
+    isolated function isCreateOrUpdateEvent(calendar:Event event) returns boolean {
+        string? createdTime = event?.created;
+        string? updatedTime = event?.updated;
+        calendar:Time? 'start = event?.'start;
+        calendar:Time? end = event?.end;
+        return (createdTime is string && updatedTime is string && 'start is calendar:Time && end is calendar:Time);
+    }
+
+    isolated function isNewEvent(calendar:Event event) returns boolean {
+        string createdTime = event?.created.toString();
+        string updatedTime = event?.updated.toString();
+        return (createdTime.substring(0, 19) == updatedTime.substring(0, 19));
     }
 }
