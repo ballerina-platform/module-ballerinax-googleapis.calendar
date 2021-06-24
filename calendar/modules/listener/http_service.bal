@@ -28,14 +28,15 @@ service class HttpService {
     public string channelId;
     public string resourceId;
     private string? currentSyncToken = ();
+    private string domainVerificationFileContent;
 
-    public isolated function init(SimpleHttpService|HttpService httpService, calendar:Client calendarClient, 
-                                  string calendarId, string channelId, string resourceId) {
+    public isolated function init(SimpleHttpService|HttpService httpService, ListenerConfiguration configuration, string channelId, string resourceId) returns error? {
         self.httpService = httpService;
-        self.calendarClient = calendarClient;
-        self.calendarId = calendarId;
+        self.calendarClient = check new (configuration.clientConfiguration);
+        self.calendarId = configuration.calendarId;
         self.channelId = channelId;
         self.resourceId = resourceId;
+        self.domainVerificationFileContent = configuration.domainVerificationFileContent;
 
         string[] methodNames = getServiceMethodNames(httpService);
 
@@ -73,6 +74,18 @@ service class HttpService {
         } else {
             return error(INVALID_ID_ERROR);
         }
+    }
+
+    resource isolated function get [string name](http:Caller caller) returns @tainted error? {
+        http:Response response = new();
+        if(self.domainVerificationFileContent.length() < 100 && 
+            self.domainVerificationFileContent.startsWith(GOOGLE_SITE_VERIFICATION_PREFIX)){
+            response.setHeader(CONTENT_TYPE, TEXT_HTML);
+            response.setTextPayload(self.domainVerificationFileContent);
+        } else {
+            return error(INVALID_DOMAIN_INPUT);
+        }
+        check caller->respond(response);
     }
 
     isolated function isValidRequest(http:Request request) returns boolean|error {

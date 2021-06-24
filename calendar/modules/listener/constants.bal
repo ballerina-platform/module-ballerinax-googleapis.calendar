@@ -19,9 +19,13 @@ const string GOOGLE_CHANNEL_ID = "X-Goog-Channel-ID";
 const string GOOGLE_RESOURCE_ID = "X-Goog-Resource-ID";
 const string GOOGLE_RESOURCE_STATE = "X-Goog-Resource-State";
 const string SYNC = "sync";
+const string CONTENT_TYPE = "Content-Type";
+const string TEXT_HTML = "text/html; charset=UTF-8";
+const string GOOGLE_SITE_VERIFICATION_PREFIX = "google-site-verification";
 
 // Path Constants
 const string BASE_URL = "https://www.googleapis.com";
+const string REFRESH_URL = "https://www.googleapis.com/oauth2/v3/token";
 const string CALENDAR_PATH = "/calendar/v3";
 const string CALENDAR = "calendars";
 const string CHANNELS = "channels";
@@ -46,6 +50,7 @@ const string ERR_WATCH_RESPONSE = "Error occurred while constructing WatchRespon
 const string ERR_CHANNEL_REGISTRATION = "Unable to register new channel.";
 const string ERR_SCHEDULE = "Unable to schedule subscription renewal.";
 const string INVALID_ID_ERROR = "Invalid channel id/ resource id";
+const string INVALID_DOMAIN_INPUT = "Invalid input for domain verification";
 
 // Warn constants
 const string WARN_CHANNEL_REGISTRATION = "Could not register watch channel";
@@ -54,3 +59,7 @@ const string WARN_SCHEDULE = "Could not schedule subscription renewal";
 // Info constants
 const string INFO_RETRY_CHANNEL_REGISTRATION = "Retrying to register new channel. Attempt - ";
 const string INFO_RETRY_SCHEDULE = "Retrying to schedule subscription renewal. Attempt - ";
+const string CHANNEL_REGISTRATION_ON_PROGRESS = "Google domain verification on progress...";
+const string REQUEST_DOMAIN_VERIFICATION = "Please register the callback URL " +
+"by visiting https://console.cloud.google.com/apis/credentials/domainverification";
+const string DOMAIN_VERIFICATION_ON_PROGRESS = "Domain verification on process";

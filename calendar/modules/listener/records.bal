@@ -13,6 +13,50 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
+import ballerinax/googleapis.calendar;
+
+# Listener Configuration. 
+#
+# + port - Port for the listener.  
+# + calendarId - Calendar ID
+# + clientConfiguration - Calendar client connecter configuration
+# + callbackUrl - Callback URL registered
+# + domainVerificationFileContent - File content of HTML file used in domain verification
+# + channelRenewalConfig - Channel renewal configuration
+# + expiration - Channel Renewal Interval
+@display {label: "Listener Config"}
+public type ListenerConfiguration record {
+    @display {label: "Port"}
+    int port;
+    calendar:CalendarConfiguration clientConfiguration;
+    @display {label: "Calendar ID"}
+    string calendarId;
+    @display {label: "Callback URL"}
+    string callbackUrl;
+    @display {label: "Domain Verification File Content"}
+    string domainVerificationFileContent;
+    ChannelRenewalConfiguration channelRenewalConfig?;
+    @display {label: "Channel Renewal Interval"}
+    string expiration?;
+};
+
+# Channel Renewal Configuration
+#
+# + retryCount - Maximum number of retries allowed to renew listener channel. (default : 20)
+# + retryInterval - Time between retries to renew listener channel in seconds. (default: 30)  
+# + domainVerificationDelay - Initial wait time for domain verification check in seconds. (default: 300s)  
+# + leadTime - Time prior to expiration that renewal should happen happen. (default: 180s) 
+@display {label: "Channel Renewal Config"}
+public type ChannelRenewalConfiguration record {
+    @display {label: "Retry Count"}
+    int retryCount?;
+    @display {label: "Retry Interval"}
+    int retryInterval?;
+    @display {label: "Domain Verification Delay"}
+    int domainVerificationDelay?;
+    @display{label: "Lead Time"}
+    int leadTime?;
+};
 
 # Define watch response.
 #
