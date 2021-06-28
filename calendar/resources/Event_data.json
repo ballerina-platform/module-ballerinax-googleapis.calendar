@@ -9,91 +9,193 @@
             "created": "2021-05-14T16:53:00.000Z",
             "updated": "2021-05-14T16:53:00.749Z",
             "summary": "Hello",
+            "description": "Description1",
+            "location":"Colombo-LK",
+            "colorId": "1",
             "creator": {
-                "email": "sliit.sk95@gmail.com"
+                "email": "sliit.sk95@gmail.com",
+                "id": "fsqk8l3b7vb8i16jh8pb0h5i6g",
+                "displayName": "John",
+                "self": "true"
             },
             "organizer": {
                 "email": "319d173rg5asq31snl30q0djg0@group.calendar.google.com",
                 "displayName": "MyPersonalCalendar",
-                "self": true
+                "self": true,
+                "id": "fsqk8l3b7vb8i16jh8pb0h5i6g"
             },
             "start": {
                 "dateTime": "2021-05-14T16:53:00Z",
-                "timeZone": "UTC"
+                "timeZone": "UTC",
+                "date": "2021-05-14"
             },
             "end": {
                 "dateTime": "2021-05-14T17:53:00Z",
-                "timeZone": "UTC"
+                "timeZone": "UTC",
+                "date": "2021-05-14"
             },
+            "endTimeUnspecified": false,
+            "recurrence": ["RRULE"],
+            "recurringEventId": "fsqk8l3b7vb8i16jh8pb0h5i6g",
+            "originalStartTime": {
+                "dateTime": "2021-05-14T16:53:00Z",
+                "timeZone": "UTC",
+                "date": "2021-05-14"
+            },
+            "transparency": "opaque",
+            "visibility": "default",
             "iCalUID": "fsqk8l3b7vb8i16jh8pb0h5i6g@google.com",
             "sequence": 0,
+            "attendees": ["ballerinax/googleapis.calendar:0.1.6-SNAPSHOT:Atendee"],
+            "extendedProperties": "ballerinax/googleapis.calendar:0.1.6-SNAPSHOT:ExtendedProperties",
+            "attendeesOmitted": false,
+            "hangoutLink": "hangout link",
+            "conferenceData": "ballerinax/googleapis.calendar:0.1.6-SNAPSHOT:ConferenceData",
+            "gadget": "ballerinax/googleapis.calendar:0.1.6-SNAPSHOT:Gadget",
+            "anyoneCanAddSelf": false,
+            "guestsCanInviteOthers": false,
+            "guestsCanModify": false,
+            "guestsCanSeeOtherGuests": false,
+            "privateCopy": false,
+            "locked": false,
             "reminders": {
-                "useDefault": true
+                "useDefault": true,
+                "overrides": ["ballerinax/googleapis.calendar:0.1.6-SNAPSHOT:Reminder"]
             },
+            "source": "ballerinax/googleapis.calendar:0.1.6-SNAPSHOT:Source",
+            "attachments": ["ballerinax/googleapis.calendar:0.1.6-SNAPSHOT:Attachment"],
             "eventType": "default"
         },
         {
             "kind": "calendar#event",
-            "etag": "\"3242022363362000\"",
-            "id": "epg8ptt0s1rq7ni8j1b5dhl70g",
+            "etag": "\"3242022361498000\"",
+            "id": "fsqk8l3b7vb8i16jh8pb0h5i6g",
             "status": "confirmed",
-            "htmlLink": "https://www.google.com/calendar/event?eid=ZXBnOHB0dDBzMXJxN25pOGoxYjVkaGw3MGcgOThrcjkwcG5sMHMydXQyMWxnOWphM2o1dG9AZw",
-            "created": "2021-05-14T16:53:01.000Z",
-            "updated": "2021-05-14T16:53:01.681Z",
+            "htmlLink": "https://www.google.com/calendar/event?eid=ZnNxazhsM2I3dmI4aTE2amg4cGIwaDVpNmcgMzE5ZDE3M3JnNWFzcTMxc25sMzBxMGRqZzBAZw",
+            "created": "2021-05-14T16:53:00.000Z",
+            "updated": "2021-05-14T16:53:00.749Z",
             "summary": "Adios",
+            "description": "Description2",
+            "location":"Colombo-LK",
+            "colorId": "1",
             "creator": {
-                "email": "sliit.sk95@gmail.com"
+                "email": "sliit.sk95@gmail.com",
+                "id": "fsqk8l3b7vb8i16jh8pb0h5i6g",
+                "displayName": "Peter",
+                "self": "false"
             },
             "organizer": {
-                "email": "98kr90pnl0s2ut21lg9ja3j5to@group.calendar.google.com",
-                "displayName": "MyOfficeCalendar",
-                "self": true
+                "email": "319d173rg5asq31snl30q0djg0@group.calendar.google.com",
+                "displayName": "MyPersonalCalendar",
+                "self": true,
+                "id": "fsqk8l3b7vb8i16jh8pb0h5i6g"
             },
             "start": {
-                "dateTime": "2021-05-14T16:53:01Z",
-                "timeZone": "UTC"
+                "dateTime": "2021-05-14T16:53:00Z",
+                "timeZone": "UTC",
+                "date": "2021-05-14"
             },
             "end": {
-                "dateTime": "2021-05-14T17:53:01Z",
-                "timeZone": "UTC"
+                "dateTime": "2021-05-14T17:53:00Z",
+                "timeZone": "UTC",
+                "date": "2021-05-14"
             },
-            "iCalUID": "epg8ptt0s1rq7ni8j1b5dhl70g@google.com",
+            "endTimeUnspecified": false,
+            "recurrence": ["RRULE"],
+            "recurringEventId": "fsqk8l3b7vb8i16jh8pb0h5i6g",
+            "originalStartTime": {
+                "dateTime": "2021-05-14T16:53:00Z",
+                "timeZone": "UTC",
+                "date": "2021-05-14"
+            },
+            "transparency": "opaque",
+            "visibility": "public",
+            "iCalUID": "fsqk8l3b7vb8i16jh8pb0h5i6g@google.com",
             "sequence": 0,
+            "attendees": ["ballerinax/googleapis.calendar:0.1.6-SNAPSHOT:Atendee"],
+            "extendedProperties": "ballerinax/googleapis.calendar:0.1.6-SNAPSHOT:ExtendedProperties",
+            "attendeesOmitted": false,
+            "hangoutLink": "hangout link",
+            "conferenceData": "ballerinax/googleapis.calendar:0.1.6-SNAPSHOT:ConferenceData",
+            "gadget": "ballerinax/googleapis.calendar:0.1.6-SNAPSHOT:Gadget",
+            "anyoneCanAddSelf": false,
+            "guestsCanInviteOthers": false,
+            "guestsCanModify": false,
+            "guestsCanSeeOtherGuests": false,
+            "privateCopy": false,
+            "locked": false,
             "reminders": {
-                "useDefault": true
+                "useDefault": true,
+                "overrides": ["ballerinax/googleapis.calendar:0.1.6-SNAPSHOT:Reminder"]
             },
+            "source": "ballerinax/googleapis.calendar:0.1.6-SNAPSHOT:Source",
+            "attachments": ["ballerinax/googleapis.calendar:0.1.6-SNAPSHOT:Attachment"],
             "eventType": "default"
         },
         {
             "kind": "calendar#event",
-            "etag": "\"3242022364956000\"",
-            "id": "0j8edi7b8sior2606t42esm3e0",
+            "etag": "\"3242022361498000\"",
+            "id": "fsqk8l3b7vb8i16jh8pb0h5i6g",
             "status": "confirmed",
-            "htmlLink": "https://www.google.com/calendar/event?eid=MGo4ZWRpN2I4c2lvcjI2MDZ0NDJlc20zZTAgYXBjYjNjMHBwYTdtOWlqajl2cmtncTd0MTBAZw",
-            "created": "2021-05-14T16:53:02.000Z",
-            "updated": "2021-05-14T16:53:02.478Z",
-            "summary": "Holaa",
+            "htmlLink": "https://www.google.com/calendar/event?eid=ZnNxazhsM2I3dmI4aTE2amg4cGIwaDVpNmcgMzE5ZDE3M3JnNWFzcTMxc25sMzBxMGRqZzBAZw",
+            "created": "2021-05-14T16:53:00.000Z",
+            "updated": "2021-05-14T16:53:00.749Z",
+            "summary": "Hello",
+            "description": "Description3",
+            "location":"Colombo-LK",
+            "colorId": "1",
             "creator": {
-                "email": "sliit.sk95@gmail.com"
+                "email": "sliit.sk95@gmail.com",
+                "id": "fsqk8l3b7vb8i16jh8pb0h5i6g",
+                "displayName": "David",
+                "self": "true"
             },
             "organizer": {
-                "email": "apcb3c0ppa7m9ijj9vrkgq7t10@group.calendar.google.com",
-                "displayName": "MyToDoListCalendar",
-                "self": true
+                "email": "319d173rg5asq31snl30q0djg0@group.calendar.google.com",
+                "displayName": "MyPersonalCalendar",
+                "self": true,
+                "id": "fsqk8l3b7vb8i16jh8pb0h5i6g"
             },
             "start": {
-                "dateTime": "2021-05-14T16:53:02Z",
-                "timeZone": "UTC"
+                "dateTime": "2021-05-14T16:53:00Z",
+                "timeZone": "UTC",
+                "date": "2021-05-14"
             },
             "end": {
-                "dateTime": "2021-05-14T17:53:02Z",
-                "timeZone": "UTC"
+                "dateTime": "2021-05-14T17:53:00Z",
+                "timeZone": "UTC",
+                "date": "2021-05-14"
             },
-            "iCalUID": "0j8edi7b8sior2606t42esm3e0@google.com",
+            "endTimeUnspecified": false,
+            "recurrence": ["RRULE"],
+            "recurringEventId": "fsqk8l3b7vb8i16jh8pb0h5i6g",
+            "originalStartTime": {
+                "dateTime": "2021-05-14T16:53:00Z",
+                "timeZone": "UTC",
+                "date": "2021-05-14"
+            },
+            "transparency": "opaque",
+            "visibility": "private",
+            "iCalUID": "fsqk8l3b7vb8i16jh8pb0h5i6g@google.com",
             "sequence": 0,
+            "attendees": ["ballerinax/googleapis.calendar:0.1.6-SNAPSHOT:Atendee"],
+            "extendedProperties": "ballerinax/googleapis.calendar:0.1.6-SNAPSHOT:ExtendedProperties",
+            "attendeesOmitted": false,
+            "hangoutLink": "hangout link",
+            "conferenceData": "ballerinax/googleapis.calendar:0.1.6-SNAPSHOT:ConferenceData",
+            "gadget": "ballerinax/googleapis.calendar:0.1.6-SNAPSHOT:Gadget",
+            "anyoneCanAddSelf": false,
+            "guestsCanInviteOthers": false,
+            "guestsCanModify": false,
+            "guestsCanSeeOtherGuests": false,
+            "privateCopy": false,
+            "locked": false,
             "reminders": {
-                "useDefault": true
+                "useDefault": true,
+                "overrides": ["ballerinax/googleapis.calendar:0.1.6-SNAPSHOT:Reminder"]
             },
+            "source": "ballerinax/googleapis.calendar:0.1.6-SNAPSHOT:Source",
+            "attachments": ["ballerinax/googleapis.calendar:0.1.6-SNAPSHOT:Attachment"],
             "eventType": "default"
         }
     ]
