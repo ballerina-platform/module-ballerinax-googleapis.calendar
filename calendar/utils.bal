@@ -135,8 +135,8 @@ isolated function prepareUrlWithCalendarOptional(string? pageToken = (), Calenda
 # + syncToken - Token for getting incremental sync
 # + optional - Record that contains optional parameters
 # + return - The prepared URL with encoded query
-isolated function prepareUrlWithEventsOptional(string calendarId, int? count, string? pageToken, string? syncToken,
-    EventFilterCriteria? optional = ()) returns string {
+isolated function prepareUrlWithEventsOptionalParams(string calendarId, int? count = (), string? pageToken = (), string? 
+    syncToken = (), EventFilterCriteria? optional = ()) returns string {
     string[] value = [];
     map<string> optionals = {};    
     if (count is int) {
