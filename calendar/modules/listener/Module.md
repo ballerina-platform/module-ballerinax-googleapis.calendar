@@ -144,3 +144,12 @@ Samples are available at : https://github.com/ballerina-platform/module-ballerin
 - #### [Trigger for deleted event](../../../samples/trigger_delete_event.bal)
 
   This sample shows how to create a trigger on cancelled event. When a new event is cancelled, that event details can be captured in this listener.
+
+
+> **NOTE:**
+At user function implementation if there was an error we throw it up & the http client will return status 500 error. 
+If no any error occured & the user logic is executed successfully we respond with status 200 OK. 
+If the user logic in listener remote operations include heavy processing, the user may face http timeout issues. 
+To solve this issue, user must use asynchronous processing when it includes heavy processing.
+
+- #### [Trigger for heavy event processing](../../../samples/trigger_on_heavy_processing.bal)
