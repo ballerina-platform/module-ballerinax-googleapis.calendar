@@ -72,10 +72,9 @@ class Job {
     isolated function registerWatchChannelWithRetry() {
         error? err = self.'listener.registerWatchChannel();
         if (err is error) {
-            string message = err.message();
-            if (message.startsWith("Unauthorized WebHook callback channel")) {
+            if (err.message().includes(UNAUTHORIZED_WEBHOOK_CALLBACK)) {
                 self.registerInitialChannel(err);
-            } else if (message.startsWith("Not Found")) {
+            } else if (err.message().includes(NOT_FOUND)) {
                 panic error(ERR_CHANNEL_REGISTRATION, 'error = err);
             } else {
                 self.registerChannel(err);

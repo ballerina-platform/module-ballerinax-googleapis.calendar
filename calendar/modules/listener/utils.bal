@@ -13,7 +13,6 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-
 import ballerina/http;
 import ballerina/uuid;
 import ballerinax/googleapis.calendar;
@@ -44,7 +43,7 @@ isolated function watchEvents(ListenerConfiguration config) returns @tainted Wat
     string path = prepareUrl([CALENDAR_PATH, CALENDAR, config.calendarId, EVENTS, WATCH]);
     req.setJsonPayload(payload);
     http:Client httpClient = check getClient(config.clientConfiguration);
-    http:Response response = check httpClient->post(path, req);
+    var response = httpClient->post(path, req);
     json result = check checkAndSetErrors(response);
     return toWatchResponse(result);
 }
@@ -56,8 +55,8 @@ isolated function watchEvents(ListenerConfiguration config) returns @tainted Wat
 # + resourceId - Id of resource being watched
 # + token - An arbitrary string delivered to the target address with each notification
 # + return - Error on failure
-isolated function stopChannel(calendar:CalendarConfiguration config, string channelId, string resourceId, string? token = ()) 
-returns @tainted error? {
+isolated function stopChannel(calendar:CalendarConfiguration config, string channelId, string resourceId, 
+                              string? token = ()) returns @tainted error? {
     json payload = {
         id: channelId,
         resourceId: resourceId,
@@ -67,7 +66,7 @@ returns @tainted error? {
     http:Request req = new;
     req.setJsonPayload(payload);
     http:Client httpClient = check getClient(config);
-    http:Response response = check httpClient->post(path, req);
+    var response = httpClient->post(path, req);
     _ = check checkAndSetErrors(response);
 }
 
@@ -98,24 +97,27 @@ isolated function prepareUrl(string[] paths) returns string {
 #
 # + httpResponse - HTTP respone or HTTP payload or error
 # + return - JSON result on success else an error
-isolated function checkAndSetErrors(http:Response httpResponse) returns @tainted json|error {
-    if (httpResponse.statusCode == http:STATUS_OK || httpResponse.statusCode == http:STATUS_CREATED) {
-        json|error jsonResponse = httpResponse.getJsonPayload();
-        if (jsonResponse is json) {
-            return jsonResponse;
+isolated function checkAndSetErrors(http:Response|http:PayloadType|error httpResponse) returns @tainted json|error {
+    if (httpResponse is http:Response) {
+        if (httpResponse.statusCode == http:STATUS_OK || httpResponse.statusCode == http:STATUS_CREATED) {
+            json|error jsonResponse = httpResponse.getJsonPayload();
+            if (jsonResponse is json) {
+                return jsonResponse;
+            } else {
+                return error(JSON_ACCESSING_ERROR_MSG, jsonResponse);
+            }
+        } else if (httpResponse.statusCode == http:STATUS_NO_CONTENT) {
+            return {};
         } else {
-            return error(JSON_ACCESSING_ERROR_MSG, jsonResponse);
+            json|error jsonResponse = httpResponse.getJsonPayload();
+            if (jsonResponse is json) {
+                return error(HTTP_ERROR_MSG + jsonResponse.toString());
+            } else {
+                return error(ERR_EXTRACTING_ERROR_MSG, jsonResponse);
+            }
         }
-    } else if (httpResponse.statusCode == http:STATUS_NO_CONTENT) {
-        return {};
     } else {
-        json|error jsonResponse = httpResponse.getJsonPayload();
-        if (jsonResponse is json) {
-            json message = check (<map<json>>jsonResponse).'error.message;
-            return error(message.toString() + jsonResponse.toString());
-        } else {
-            return error(ERR_EXTRACTING_ERROR_MSG, jsonResponse);
-        }
+        return error(HTTP_ERROR_MSG + (<error>httpResponse).message());
     }
 }
 
