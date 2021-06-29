@@ -13,60 +13,52 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-
 import ballerina/http;
-import ballerina/log;
 import ballerina/uuid;
 import ballerinax/googleapis.calendar;
 
 # Create subscription to get notification.
-# 
-# + config - Calendar configuration
-# + calendarId - Calendar id
-# + address - The address where notifications are delivered for this channel
-# + expiration - The time-to-live in seconds for the notification channel
+#
+# + config - Listener configuration
 # + return - WatchResponse object on success else an error
-isolated function watchEvents(calendar:CalendarConfiguration config, string calendarId, string address,
-                                string? expiration = ()) returns @tainted WatchResponse|error {
+isolated function watchEvents(ListenerConfiguration config) returns @tainted WatchResponse|error {
     json payload;
-    if (expiration is string) {
+    if (config?.expiration is string) {
         payload = {
             id: uuid:createType1AsString(),
             token: uuid:createType1AsString(),
             'type: WEBHOOK,
-            address: address,
-            params: {
-                ttl: expiration
-            }
+            address: config.callbackUrl + "/events",
+            params: {ttl: config?.expiration}
         };
     } else {
         payload = {
             id: uuid:createType1AsString(),
             token: uuid:createType1AsString(),
             'type: WEBHOOK,
-            address: address
+            address: config.callbackUrl + "/events"
         };
     }
     http:Request req = new;
-    string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, WATCH]);
+    string path = prepareUrl([CALENDAR_PATH, CALENDAR, config.calendarId, EVENTS, WATCH]);
     req.setJsonPayload(payload);
-    http:Client httpClient = check getClient(config);
+    http:Client httpClient = check getClient(config.clientConfiguration);
     var response = httpClient->post(path, req);
     json result = check checkAndSetErrors(response);
     return toWatchResponse(result);
 }
 
 # Stop channel from subscription
-# 
+#
 # + config - Calendar configuration
-# + id - Channel id
+# + channelId - Channel id
 # + resourceId - Id of resource being watched
-# + token - An arbitrary string delivered to the target address with each notification (optional)
+# + token - An arbitrary string delivered to the target address with each notification
 # + return - Error on failure
-isolated function stopChannel(calendar:CalendarConfiguration config, string id, string resourceId, string? token = ()) 
-                                returns @tainted error? {
+isolated function stopChannel(calendar:CalendarConfiguration config, string channelId, string resourceId, 
+                              string? token = ()) returns @tainted error? {
     json payload = {
-        id: id,
+        id: channelId,
         resourceId: resourceId,
         token: token
     };
@@ -87,7 +79,7 @@ isolated function getClient(calendar:CalendarConfiguration config) returns http:
 }
 
 # Prepare URL.
-# 
+#
 # + paths - An array of paths prefixes
 # + return - The prepared URL
 isolated function prepareUrl(string[] paths) returns string {
@@ -102,7 +94,7 @@ isolated function prepareUrl(string[] paths) returns string {
 }
 
 # Check HTTP response and return JSON payload on success else an error.
-# 
+#
 # + httpResponse - HTTP respone or HTTP payload or error
 # + return - JSON result on success else an error
 isolated function checkAndSetErrors(http:Response|http:PayloadType|error httpResponse) returns @tainted json|error {
@@ -130,7 +122,7 @@ isolated function checkAndSetErrors(http:Response|http:PayloadType|error httpRes
 }
 
 # Convert json to WatchResponse.
-# 
+#
 # + payload - Json response
 # + return - A WatchResponse object on success else an error
 isolated function toWatchResponse(json payload) returns WatchResponse|error {
@@ -138,7 +130,6 @@ isolated function toWatchResponse(json payload) returns WatchResponse|error {
     if (res is WatchResponse) {
         return res;
     } else {
-        log:printError(ERR_WATCH_RESPONSE + PAYLOAD + payload.toJsonString(), 'error = res);
         return error(ERR_WATCH_RESPONSE, res);
     }
 }

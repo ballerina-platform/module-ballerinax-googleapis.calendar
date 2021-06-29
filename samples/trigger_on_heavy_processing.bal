@@ -29,6 +29,13 @@ listener listen:Listener googleListener = new (listenerConfig);
 
 service / on googleListener {
     remote function onNewEvent(calendar:Event event) returns error? {
-        log:printInfo("Created new event : " + event.toString());
+        // Write your logic here.....
+        log:printInfo("Received onAppendRow-message ", eventMsg = event);
+        _ = @strand { thread: "any" } start userLogic(event);
     }
+}
+
+function userLogic(calendar:Event event) returns error? {
+    // Write your logic here
+    log:printInfo("Received onAppendRow-message 1 ", eventMsg = event);
 }
