@@ -111,8 +111,7 @@ isolated function checkAndSetErrors(http:Response httpResponse) returns @tainted
     } else {
         json|error jsonResponse = httpResponse.getJsonPayload();
         if (jsonResponse is json) {
-            json message = check (<map<json>>jsonResponse).'error.message;
-            return error(message.toString() + jsonResponse.toString());
+            return error(HTTP_ERROR_MSG + jsonResponse.toString());
         } else {
             return error(ERR_EXTRACTING_ERROR_MSG, jsonResponse);
         }

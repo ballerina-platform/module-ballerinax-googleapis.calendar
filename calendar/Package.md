@@ -124,6 +124,7 @@ https://developers.google.com/identity/protocols/oauth2/service-account#delegati
 
 * Callback address and domain verification file content are additionally required in order to use Google Calendar listener. It is the path of the listener resource function. The time-to-live in seconds for the notification channel is provided in optional parameter expiration time. By default it is 604800 seconds.
   * Callback address
+  * Domain verification file content
   * Expiration time
 
 * Add the project configuration file by creating a `Config.toml` file under the root path of the project structure.
@@ -134,7 +135,8 @@ This file should have following configurations. Add the tokens obtained in the p
   clientSecret = "<client_secret>"
   refreshToken = "<refresh_token>"
   refreshUrl = "<refresh_URL>"
-  address = "<call_back url>"
+  callbackUrl = "<call_back url>"
+  domainVerificationFileContent = "<domain_verification_file_content>"
   ```
 
 # Quickstart(s)

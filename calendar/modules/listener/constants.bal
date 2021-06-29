@@ -51,6 +51,8 @@ const string ERR_CHANNEL_REGISTRATION = "Unable to register new channel.";
 const string ERR_SCHEDULE = "Unable to schedule subscription renewal.";
 const string INVALID_ID_ERROR = "Invalid channel id/ resource id";
 const string INVALID_DOMAIN_INPUT = "Invalid input for domain verification";
+const string UNAUTHORIZED_WEBHOOK_CALLBACK = "Unauthorized WebHook callback channel";
+const string NOT_FOUND = "Not Found";
 
 // Warn constants
 const string WARN_CHANNEL_REGISTRATION = "Could not register watch channel";

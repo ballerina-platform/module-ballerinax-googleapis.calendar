@@ -69,7 +69,7 @@ public class Listener {
         self.resourceId = res.resourceId;
         self.httpService.channelId = self.channelId;
         self.httpService.resourceId = self.resourceId;
-        log:printInfo("Subscribed to channel id : " + self.channelId + " resourcs id :  " + self.resourceId);
+        log:printDebug("Subscribed to channel id : " + self.channelId + " resourcs id :  " + self.resourceId);
         self.expirationTime = check decimal:fromString(res.expiration);
     }
 }
