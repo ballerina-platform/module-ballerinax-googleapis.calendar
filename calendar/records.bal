@@ -85,7 +85,7 @@ public type InputEvent record {
     Attachment[] attachments?;
 };
 
-# Represent the optional query parameters of creating event.
+# Represents the optional query parameters of creating event.
 #
 # + conferenceDataVersion - Version number of conference data supported by the API client
 # + maxAttendees - The maximum number of attendees to include in the response
@@ -102,7 +102,7 @@ public type EventsToAccess record {
     boolean? supportsAttachments = ();
 };
 
-# Define Calendar Resource.
+# Defines Calendar.
 # 
 # + kind - Type of the resource
 # + etag - ETag of the resource
@@ -123,14 +123,14 @@ public type CalendarResource record {
     ConferenceProperties conferenceProperties;
 };
 
-# Define Event response.
+# Defines event response.
 #
 # + kind - Type of the collection
 # + etag - ETag of the collection
-# + summary - Title of the calendar.
+# + summary - Title of the calendar
 # + updated - Last modification time of the calendar
 # + timeZone - The time zone of the calendar
-# + accessRole - The user's access role for this calendar.
+# + accessRole - The user's access role for this calendar
 # + defaultReminders - The default reminders on the calendar for the authenticated user
 # + nextSyncToken - Token used to retrieve only the entries that have changed since this result was returned
 # + nextPageToken - Token used to access the next page of this result
@@ -148,10 +148,10 @@ public type EventResponse record {
     Event[] items;
 };
 
-# Represent default reminders on the calendar for the authenticated user.
+# Represents default reminders on the calendar for the authenticated user.
 #
 # + method - The method used by the reminder
-# + minutes - Number of minutes before the start of the event when the reminder should trigger.
+# + minutes - Number of minutes before the start of the event when the reminder should trigger
 public type Reminder record {
     @display {label: "Reminder Method"}
     string method;
@@ -159,7 +159,7 @@ public type Reminder record {
     int minutes;
 };
 
-# Define Event Resource.
+# Defines Event.
 #
 # + kind - Type of the resource
 # + etag - ETag of the resource
@@ -174,8 +174,8 @@ public type Reminder record {
 # + colorId - The color id of the event
 # + creator - The creator of the event
 # + organizer - The organizer of the event
-# + start - The start time of the event.
-# + end - The end time of the event.
+# + start - The start time of the event
+# + end - The end time of the event
 # + endTimeUnspecified - Whether the end time is actually unspecified
 # + recurrence - List of RRULE, EXRULE, RDATE and EXDATE lines for a recurring event, as specified in RFC5545
 # + recurringEventId - The id of the recurring event
@@ -248,17 +248,17 @@ public type ExtendedProperties record {
     *Shared;
 };
 
-# Define private event properties.
+# Defines private event properties.
 public type Private record {|
     string...;
 |};
 
-# Define shared event properties.
+# Defines shared event properties.
 public type Shared record {|
     string...;
 |};
 
-# Define conference-related information.
+# Defines conference-related information.
 #
 # + entryPoints - Information about individual conference entry points
 # + conferenceSolution - The conference solution
@@ -273,14 +273,15 @@ public type ConferenceData record {
     string notes?;
 };
 
-# Define conference-related information.
+# Defines conference-related information.
 #
 # + createRequest - A request to generate a new conference and attach it to the event
 public type ConferenceInputData record {
     @display {label: "Request to Generate Conference"}
     CreateRequest createRequest?;
 };
-# A request to generate a new conference and attach it to the event.
+
+# Defines a request to generate a new conference and attach it to the event.
 #
 # + requestId - The client-generated unique ID for this request
 # + conferenceSolutionKey - The conference solution
@@ -294,7 +295,7 @@ public type CreateRequest record {
     Status status?;
 };
 
-# Define conference solution key.
+# Defines conference solution key.
 #
 # + type - The conference solution type
 public type ConferenceSolutionKey record {
@@ -302,7 +303,7 @@ public type ConferenceSolutionKey record {
     string 'type;
 };
 
-# Define status.
+# Defines status.
 #
 # + statusCode - The current status of the conference create request
 public type Status record {
@@ -310,7 +311,7 @@ public type Status record {
     string statusCode;
 };
 
-# Define conference entry points.
+# Defines conference entry points.
 #
 # + entryPointType - The type of the conference entry point
 # + uri - The URI of the entry point
@@ -333,7 +334,7 @@ public type EntryPoint record {
     string regionCode?;
 };
 
-# Define conference solution.
+# Defines conference solution.
 #
 # + key - The key which can uniquely identify the conference solution for this event
 # + name - The user-visible name of this solution
@@ -344,14 +345,14 @@ public type ConferenceSolution record {
     string iconUri;
 };
 
-# Define key record.
+# Defines key.
 #
 # + type - The conference solution type
 public type Key record {
     string 'type;
 };
 
-# Define attendee record.
+# Defines attendee.
 #
 # + id - The attendee's Profile ID
 # + email - The attendee's email address
@@ -380,7 +381,7 @@ public type Attendee record {
     int additionalGuests?;
 };
 
-# Define user record.
+# Defines user.
 #
 # + id - Id of the user
 # + email - Email of the user
@@ -393,7 +394,7 @@ public type User record {
     boolean self?;
 };
 
-# Define time record.
+# Defines time.
 #
 # + date - The date, in the format "yyyy-mm-dd"
 # + dateTime - A combined date-time value formatted according to RFC3339
@@ -407,7 +408,7 @@ public type Time record {
     string timeZone?;
 };
 
-# Define gadget record.
+# Defines gadget.
 #
 # + preferences - Preferences
 # + type - Type of the gadget
@@ -428,12 +429,12 @@ public type Gadget record {
     string display?;
 };
 
-# Define Preferences record.
+# Defines preferences.
 public type Preferences record {|
     string...;
 |};
 
-# Define reminder record.
+# Defines reminders.
 #
 # + useDefault - Whether the default reminders of the calendar apply to the event
 # + overrides - List the reminders specific to the event
@@ -444,7 +445,7 @@ public type Reminders record {
     Reminder[] overrides?;
 };
 
-# Define source record.
+# Defines source.
 #
 # + url - URL of the source pointing to a resource
 # + title - Title of the source
@@ -455,7 +456,7 @@ public type Source record {
     string title;
 };
 
-# Define attachment record.
+# Defines Attachment.
 #
 # + fileUrl - URL link to the attachment
 # + title - Attachment title
@@ -471,7 +472,7 @@ public type Attachment record {
     string fileId?;
 };
 
-# Define watch response.
+# Defines watch response.
 #
 # + kind - Identifies this as a notification channel used to watch for changes to a resource
 # + id - A UUID or similar unique string that identifies this channel
@@ -488,7 +489,7 @@ public type WatchResponse record {
     string expiration;
 };
 
-# Refer calendar record.
+# Represents Calendar.
 #
 # + kind - Type of the resource
 # + etag - ETag of the resource
@@ -531,21 +532,21 @@ public type Calendar record {
     NotificationSettings notificationSettings?;
 };
 
-#  Define conference properties.
+# Defines conference properties.
 #
 # + allowedConferenceSolutionTypes -Types of conference solutions that are supported for this calendar
 public type ConferenceProperties record {
     string[] allowedConferenceSolutionTypes;
 };
 
-# Define notification settings.
+# Defines notification settings.
 #
 # + notifications - The list of notifications set for this calendar
 public type NotificationSettings record {
     Notification[] notifications;
 };
 
-# Define notification record.
+# Defines notification.
 #
 # + type - The method used to deliver the notification
 # + method - The type of notification
@@ -554,7 +555,7 @@ public type Notification record {
     string method;
 };
 
-# Define optionals for calendar list request.
+# Defines optionals for calendar list request.
 #
 # + minAccessRole - The minimum access role for the user in the returned entries
 # + showDeleted - Whether to include deleted calendar list entries in the result
@@ -568,7 +569,7 @@ public type CalendarsToAccess record {
     boolean showHidden?;
 };
 
-# Define calendar list response.
+# Defines calendar list response.
 #
 # + kind - Type of the collection
 # + etag - ETag of the collection
@@ -583,7 +584,7 @@ public type CalendarResponse record {
     Calendar[] items;
 };
 
-# Define get events optional parameters.
+# Defines get events optional parameters.
 # 
 # + iCalUID - Event unique identifier
 # + maxAttendees - The maximum number of attendees to include in the response

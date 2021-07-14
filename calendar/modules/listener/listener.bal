@@ -35,6 +35,14 @@ public class Listener {
     private HttpService httpService;
     private calendar:CalendarConfiguration config;
 
+    # Initializes Google Calendar connector listener.
+    #
+    # + port - Port number
+    # + calendarConfig -  Configurations required to initialize the `Client` endpoint
+    # + calendarId - Calendar ID
+    # + address - Callback URL
+    # + expiration - Life time of a channel. After this time, connector will create a new channel automatically
+    # + return - An error on failure of initialization or else `()`
     public isolated function init(int port, calendar:CalendarConfiguration config, string calendarId, string address,
                                     string? expiration = ()) returns error? {
         self.httpListener = check new (port);
