@@ -32,7 +32,7 @@ public class Listener {
     private string channelId = "";
     private string? syncToken = ();
     public decimal expirationTime = 0;
-    private HttpService httpService;
+    private HttpService? httpService;
     private calendar:CalendarConfiguration config;
 
     public isolated function init(int port, calendar:CalendarConfiguration config, string calendarId, string address,
@@ -43,12 +43,14 @@ public class Listener {
         self.calendarId = calendarId;
         self.address = address;
         self.expiration = expiration;
+        self.httpService = ();
     }
 
     public isolated function attach(SimpleHttpService s, string[]|string? name = ()) returns @tainted error? {
-        self.httpService = new HttpService(s, self.calendarClient, self.calendarId, self.channelId, self.resourceId);
+        HttpToCalendarAdaptor adaptor = check new (s);
+        self.httpService = new HttpService(adaptor, self.config, self.calendarId, self.channelId, self.resourceId);
         check self.registerWatchChannel();
-        check self.httpListener.attach(self.httpService, name);
+        check self.httpListener.attach(<HttpService>self.httpService, name);
         Job job = new (self);
         check job.scheduleNextChannelRenewal();
     }
@@ -75,9 +77,12 @@ public class Listener {
         WatchResponse res = check watchEvents(self.config, self.calendarId, self.address, self.expiration);
         self.channelId = res.id;
         self.resourceId = res.resourceId;
-        self.httpService.channelId = self.channelId;
-        self.httpService.resourceId = self.resourceId;
-        log:printDebug("Subscribed to channel id : " + self.channelId + " resourcs id :  " + self.resourceId);
+        HttpService? httpService = self.httpService;
+        if httpService is HttpService {
+            httpService.setChannelId(self.channelId);
+            httpService.setResourceId(self.resourceId);
+        }
+        log:printDebug("Subscribed to channel id : " + self.channelId + " resource id :  " + self.resourceId);
         self.expirationTime = check decimal:fromString(res.expiration);
     }
 }
