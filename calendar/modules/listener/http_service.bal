@@ -13,47 +13,51 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
+
 import ballerina/http;
 import ballerina/log;
 import ballerinax/googleapis.calendar;
 
-service class HttpService {
-
-    private boolean isOnNewEventAvailable = false;
-    private boolean isOnEventUpdateAvailable = false;
-    private boolean isOnEventDeleteAvailable = false;
-    private SimpleHttpService httpService;
-    private calendar:Client calendarClient;
+isolated service class HttpService {
+    private final boolean isOnNewEventAvailable;
+    private final boolean isOnEventUpdateAvailable;
+    private final boolean isOnEventDeleteAvailable;
+    private final HttpToCalendarAdaptor adaptor;
+    private final calendar:CalendarConfiguration & readonly calendarConfig;
     private string calendarId;
-    public string channelId;
-    public string resourceId;
+    private string channelId;
+    private string resourceId;
     private string? currentSyncToken = ();
 
-    public isolated function init(SimpleHttpService|HttpService httpService, calendar:Client calendarClient, 
-                                  string calendarId, string channelId, string resourceId) {
-        self.httpService = httpService;
-        self.calendarClient = calendarClient;
+    isolated function init(HttpToCalendarAdaptor adaptor, calendar:CalendarConfiguration config, string calendarId, 
+                            string channelId, string resourceId) {
+        self.adaptor = adaptor;
+        self.calendarConfig = config.cloneReadOnly();
         self.calendarId = calendarId;
         self.channelId = channelId;
         self.resourceId = resourceId;
 
-        string[] methodNames = getServiceMethodNames(httpService);
+        string[] methodNames = adaptor.getServiceMethodNames();
+        self.isOnNewEventAvailable = isMethodAvailable(ON_NEW_EVENT, methodNames);
+        self.isOnEventUpdateAvailable = isMethodAvailable(ON_EVENT_UPDATE, methodNames);
+        self.isOnEventDeleteAvailable = isMethodAvailable(ON_EVENT_DELETE, methodNames);
 
-        foreach var methodName in methodNames {
-            match methodName {
-                "onNewEvent" => {
-                    self.isOnNewEventAvailable = true;
-                }
-                "onEventUpdate" => {
-                    self.isOnEventUpdateAvailable = true;
-                }
-                "onEventDelete" => {
-                    self.isOnEventDeleteAvailable = true;
-                }
-                _ => {
-                    log:printError("Unrecognized method [" + methodName + "] found in the implementation");
-                }
+        if (methodNames.length() > 0) {
+            foreach string methodName in methodNames {
+                log:printError("Unrecognized method [" + methodName + "] found in user implementation."); 
             }
+        }
+    }
+
+    public isolated function setChannelId(string channelId) {
+        lock {
+            self.channelId = channelId;
+        }
+    }
+
+    public isolated function setResourceId(string resourceId) {
+        lock {
+            self.resourceId = resourceId;
         }
     }
 
@@ -62,12 +66,15 @@ service class HttpService {
             http:Response res = new;
             res.statusCode = http:STATUS_OK;
             if (check self.isValidSyncRequest(request)) {
-                self.currentSyncToken = check self.getInitialSyncToken(self.calendarClient, self.calendarId);
+                lock {
+                    self.currentSyncToken = check self.getInitialSyncToken(self.calendarConfig, self.calendarId);
+                }
                 check caller->respond(res);
             } else {
-                [string, calendar:Event] [syncToken, event] = check self.processEvent();
-                check self.dispatchEvent(event);
-                self.currentSyncToken = syncToken;
+                string syncToken = check self.processEvent();
+                lock {
+                    self.currentSyncToken = syncToken;
+                }
                 check caller->respond(res);
             }
         } else {
@@ -76,17 +83,19 @@ service class HttpService {
     }
 
     isolated function isValidRequest(http:Request request) returns boolean|error {
-        return ((check request.getHeader(GOOGLE_CHANNEL_ID)) == self.channelId && (check request.getHeader(
-        GOOGLE_RESOURCE_ID)) == self.resourceId);
+        lock {
+            return ((check request.getHeader(GOOGLE_CHANNEL_ID)) == self.channelId && (check request.getHeader(
+                GOOGLE_RESOURCE_ID)) == self.resourceId);
+        }
     }
 
-    isolated function getInitialSyncToken(calendar:Client httpClient, string calendarId, string? pageToken = ()) 
-    returns @tainted string?|error {
-        calendar:EventResponse resp = check httpClient->getEventsResponse(calendarId, pageToken = pageToken);
+    isolated function getInitialSyncToken(calendar:CalendarConfiguration config, string calendarId, 
+                                            string? pageToken = ()) returns @tainted string?|error {
+        calendar:EventResponse resp = check self.getEventsResponse(pageToken = pageToken);
         string? nextPageToken = resp?.nextPageToken;
         string? syncToken = ();
         if (nextPageToken is string) {
-            syncToken = check self.getInitialSyncToken(httpClient, calendarId, nextPageToken);
+            syncToken = check self.getInitialSyncToken(config, calendarId, nextPageToken);
         }
         if (syncToken is string) {
             return syncToken;
@@ -98,25 +107,25 @@ service class HttpService {
         return ((check request.getHeader(GOOGLE_RESOURCE_STATE)) == SYNC);
     }
 
-    isolated function processEvent() returns [string, calendar:Event]|error {
-        calendar:EventResponse resp = check self.calendarClient->getEventsResponse(self.calendarId, syncToken = self.
-        currentSyncToken);
-        string syncToken = resp?.nextSyncToken ?: "";
+    isolated function processEvent() returns string|error {
+        calendar:EventResponse resp = check self.getEventsResponse();
+        string syncToken = resp?.nextSyncToken ?: EMPTY_STRING;
         calendar:Event event = resp?.items[0];
-        return [syncToken, event];
+        check self.dispatchEvent(event);
+        return syncToken;
     }
 
     isolated function dispatchEvent(calendar:Event event) returns error? {
         if (self.isCreateOrUpdateEvent(event)) {
             if (self.isNewEvent(event)) {
                 if (self.isOnNewEventAvailable) {
-                    check callOnNewEventMethod(self.httpService, event);
+                    check self.adaptor.callOnNewEventMethod(event);
                 }
             } else if (self.isOnEventUpdateAvailable) {
-                check callOnEventUpdateMethod(self.httpService, event);
+                check self.adaptor.callOnEventUpdateMethod(event);
             }
         } else if (self.isOnEventDeleteAvailable) {
-            check callOnEventDeleteMethod(self.httpService, event);
+            check self.adaptor.callOnEventDeleteMethod(event);
         }
     }
 
@@ -133,4 +142,33 @@ service class HttpService {
         string updatedTime = event?.updated.toString();
         return (createdTime.substring(0, 19) == updatedTime.substring(0, 19));
     }
+
+    isolated function getEventsResponse(int? count = (), string? pageToken = ()) returns @tainted 
+            calendar:EventResponse|error {
+        string path = EMPTY_STRING;
+        lock {
+            path = calendar:prepareUrlWithEventsOptionalParams(self.calendarId, count, pageToken, self.currentSyncToken);
+        }
+
+        http:Client httpClient = check getClient(self.calendarConfig);
+        http:Response httpResponse = check httpClient->get(path);
+        json resp = check checkAndSetErrors(httpResponse);
+        return toEventResponse(resp);
+    }
+}
+
+# Retrieves whether the particular remote method is available.
+#
+# + methodName - Name of the required method
+# + methods - All available methods
+# + return - `true` if method available or else `false`
+isolated function isMethodAvailable(string methodName, string[] methods) returns boolean {
+    boolean isAvailable = methods.indexOf(methodName) is int;
+    if (isAvailable) {
+        var index = methods.indexOf(methodName);
+        if (index is int) {
+            _ = methods.remove(index);
+        }
+    }
+    return isAvailable;
 }

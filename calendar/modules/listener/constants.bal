@@ -54,3 +54,8 @@ const string WARN_SCHEDULE = "Could not schedule subscription renewal";
 // Info constants
 const string INFO_RETRY_CHANNEL_REGISTRATION = "Retrying to register new channel. Attempt - ";
 const string INFO_RETRY_SCHEDULE = "Retrying to schedule subscription renewal. Attempt - ";
+
+// Method names
+const string ON_NEW_EVENT = "onNewEvent";
+const string ON_EVENT_UPDATE = "onEventUpdate";
+const string ON_EVENT_DELETE = "onEventDelete";

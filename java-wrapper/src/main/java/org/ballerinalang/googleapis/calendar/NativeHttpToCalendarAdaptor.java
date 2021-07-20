@@ -19,22 +19,32 @@ import java.util.ArrayList;
 
 import static io.ballerina.runtime.api.utils.StringUtils.fromString;
 
-public class HttpNativeOperationHandler {
-    public static Object callOnNewEventMethod(Environment env, BObject bHttpService, BMap<BString, Object> message) {
-        return invokeRemoteFunction(env, bHttpService, message, "callOnNewEventMethod", "onNewEvent");
+public class NativeHttpToCalendarAdaptor {
+    public static final String SERVICE_OBJECT = "CALENDAR_SERVICE_OBJECT";
+
+    public static void externInit(BObject adaptor, BObject service) {
+        adaptor.addNativeData(SERVICE_OBJECT, service);
     }
 
-    public static Object callOnEventUpdateMethod(Environment env, BObject bHttpService, BMap<BString, Object> message) {
-        return invokeRemoteFunction(env, bHttpService, message, "callOnNewEventMethod", "onEventUpdate");
+    public static Object callOnNewEventMethod(Environment env, BObject adaptor, BMap<BString, Object> message) {
+        BObject serviceObj = (BObject) adaptor.getNativeData(SERVICE_OBJECT);
+        return invokeRemoteFunction(env, serviceObj, message, "callOnNewEventMethod", "onNewEvent");
     }
 
-    public static Object callOnEventDeleteMethod(Environment env, BObject bHttpService, BMap<BString, Object> message) {
-        return invokeRemoteFunction(env, bHttpService, message, "callOnNewEventMethod", "onEventDelete");
+    public static Object callOnEventUpdateMethod(Environment env, BObject adaptor, BMap<BString, Object> message) {
+        BObject serviceObj = (BObject) adaptor.getNativeData(SERVICE_OBJECT);
+        return invokeRemoteFunction(env, serviceObj, message, "callOnNewEventMethod", "onEventUpdate");
     }
 
-    public static BArray getServiceMethodNames(BObject bSubscriberService) {
+    public static Object callOnEventDeleteMethod(Environment env, BObject adaptor, BMap<BString, Object> message) {
+        BObject serviceObj = (BObject) adaptor.getNativeData(SERVICE_OBJECT);
+        return invokeRemoteFunction(env, serviceObj, message, "callOnNewEventMethod", "onEventDelete");
+    }
+
+    public static BArray getServiceMethodNames(BObject adaptor) {
+        BObject serviceObj = (BObject) adaptor.getNativeData(SERVICE_OBJECT);
         ArrayList<BString> methodNamesList = new ArrayList<>();
-        for (MethodType method : bSubscriberService.getType().getMethods()) {
+        for (MethodType method : serviceObj.getType().getMethods()) {
             methodNamesList.add(StringUtils.fromString(method.getName()));
         }
         return ValueCreator.createArrayValue(methodNamesList.toArray(BString[]::new));

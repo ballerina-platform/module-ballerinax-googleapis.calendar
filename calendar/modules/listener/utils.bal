@@ -78,6 +78,20 @@ isolated function stopChannel(calendar:CalendarConfiguration config, string id, 
     _ = check checkAndSetErrors(httpResponse);
 }
 
+# Convert json to Event.
+# 
+# + payload - Json response
+# + return - An Event record on success else an error
+isolated function toEventResponse(json payload) returns calendar:EventResponse|error {
+    calendar:EventResponse|error res = payload.cloneWithType(calendar:EventResponse);
+    if (res is calendar:EventResponse) {
+        return res;
+    } else {
+        log:printError("calendar:ERR_EVENT" + PAYLOAD + payload.toJsonString(), 'error = res);
+        return error("calendar:ERR_EVENT", res);
+    }
+}
+
 isolated function getClient(calendar:CalendarConfiguration config) returns http:Client|error {
     http:ClientSecureSocket? socketConfig = config?.secureSocketConfig;
     return check new (BASE_URL, {
