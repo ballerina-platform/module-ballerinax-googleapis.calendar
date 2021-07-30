@@ -14,6 +14,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
+const string REFRESH_URL = "https://www.googleapis.com/oauth2/v3/token";
+
 // Path Constants
 const string BASE_URL = "https://www.googleapis.com";
 const string CALENDAR_PATH = "/calendar/v3";

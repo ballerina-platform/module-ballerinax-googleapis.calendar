@@ -22,9 +22,9 @@ import ballerina/jwt;
 # 
 # + calendarClient - HTTP client endpoint
 @display {label: "Google Calendar", iconPath: "logo.png"}
-public client class Client {
-    public http:Client calendarClient;
-    private ClientOAuth2ExtensionGrantHandler clientHandler;
+public isolated client class Client {
+    private final http:Client calendarClient;
+    private final ClientOAuth2ExtensionGrantHandler clientHandler;
 
     # Initializes the connector. During initialization you can pass either http:BearerTokenConfig if you have a bearer
     # token or http:OAuth2RefreshTokenGrantConfig if you have Oauth tokens.
@@ -45,7 +45,7 @@ public client class Client {
             self.calendarClient = check new (BASE_URL, {
                 secureSocket: socketConfig
             });
-            self.clientHandler = check new (<jwt:IssuerConfig>calendarConfig.oauth2Config);
+            self.clientHandler = check new(<jwt:IssuerConfig>calendarConfig.oauth2Config);
         }
     }
 
