@@ -1,15 +1,16 @@
 Connects to Google Calendar from Ballerina
 
 ## Package overview
-The `ballerinax/googleapis.calendar` is a [Ballerina](https://ballerina.io/) connector for Google Calendar.
+The `ballerinax/googleapis.calendar` is a [Ballerina](https://ballerina.io/) connector for Google Calendar. It is comprised of the following capabilities.
 
-This package provides the capability to manage calendars and events in the Google Calendar and listen the events occurred in the calendar. 
+* Perform Google Calendar related operations programmatically. The `ballerinax/googleapis.calendar` module provides this capability.
+* Listen for Google Calendar events and process them. The `ballerinax/googleapis.calendar.'listener` module provides this capability.
 
 ### Compatibility
-|                       |         Version          |
-|:---------------------:|:------------------------:|
-| Ballerina Language    |     Swan Lake Beta2      |
-| Google Calendar API   |             V3           |
+|                     | Version         |
+|---------------------|-----------------|
+| Ballerina Language  | Swan Lake Beta2 |
+| Google Calendar API | V3              |
 
 ## Report issues
 To report bugs, request new features, start new discussions, view project boards, etc., go to the [Ballerina Google Calendar repository](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar)

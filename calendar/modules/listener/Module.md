@@ -1,27 +1,27 @@
 ## Overview
-This module provides you a notification for the events created, updated and deleted in the calendar.
+The Google Calendar Connector listener provides you to capture the events created, updated and deleted in the calendar.
 
-This module supports [Google Calendar API](https://developers.google.com/calendar/api) version V3.
+This module supports [Google Calendar API V3](https://developers.google.com/calendar/api).
 
 ## Prerequisites
 Before using this connector in your Ballerina application, complete the following:
-- Create[Google account](https://accounts.google.com/signup/v2/webcreateaccount?utm_source=ga-ob-search&utm_medium=google-account&flowName=GlifWebSignIn&flowEntry=SignUp)
-- [Domain registered callback URL](https://developers.google.com/calendar/api/guides/push#registering-your-domain)
-- Obtain tokens - Follow [this link](https://developers.google.com/identity/protocols/oauth2)
+1. Create a [Google account](https://accounts.google.com/signup/v2/webcreateaccount?.utm_source=ga-ob-search&utm_medium=google-account&flowName=GlifWebSignIn&flowEntry=SignUp)
+2. [Register the callback URL domain.](https://developers.google.com/calendar/api/guides/push#registering-your-domain)
+3. Obtain tokens - Follow the steps [here](https://developers.google.com/identity/protocols/oauth2) to obtain tokens.
 
 ## Quickstart
 To use the Google Calendar listener connector in your Ballerina application, update the .bal file as follows:
 
 ### Step 1: Import connector
-First, import the `ballerinax/googleapis.calendar` and `ballerinax/googleapis.calendar.'listener as listen` modules into the Ballerina project.
+Import the `ballerinax/googleapis.calendar` and `ballerinax/googleapis.calendar.'listener` modules into the Ballerina project.
 
 ```ballerina
 import ballerinax/googleapis.calendar;
 import ballerinax/googleapis.calendar.'listener as listen;
 ```
 
-### Step 2: Create a new connector instance
-Create a `calendar:CalendarConfiguration` with the OAuth2 tokens obtained, and initialize the connector with it.
+### Step 2: Create a new listener instance
+Create a `calendar:CalendarConfiguration` with the OAuth2.0 tokens obtained and initialize the connector with it.
 
 ```ballerina
 int port = 4567;
@@ -40,7 +40,7 @@ calendar:CalendarConfiguration config = {
 listener listen:Listener googleListener = new (port, config, calendarId, address);
 ```
 
-### Step 3: Invoke connector operation
+### Step 3: Define Ballerina service with the listener
 1. Now you can use the operations available within the connector. Note that they are in the form of remote operations.
 Following is an example on how to create a listener for new event occurred in the calendar using the connector.
     ```ballerina
@@ -50,23 +50,6 @@ Following is an example on how to create a listener for new event occurred in th
         }
     }
     ```
-  2. Use `bal run` command to compile and run the Ballerina program.
-
-## Quick reference
-Code snippets of some frequently used functions: 
-
-- On event update
-  ```ballerina
-  remote function onEventUpdate(calendar:Event event) returns error? {
-    //
-  }
-  ```
-
-- On event delete
-  ```ballerina
-  remote function onEventDelete(calendar:Event event) returns error? {
-    //
-  }
-  ```
+2. Use `bal run` command to compile and run the Ballerina program.
  
 **[You can find a list of samples here](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/master/samples)**

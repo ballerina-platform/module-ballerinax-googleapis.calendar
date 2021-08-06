@@ -7,21 +7,17 @@ Ballerina Google Calendar Connector
 
 [Google Calendar](https://developers.google.com/calendar) is a time-management and scheduling calendar service developed by Google. It lets users to organize their schedule and share events with others.
 
-This connector provides the capability to programmatically manage events and calendar and listen the events occurred in the calendar. 
+This connector provides the capability to programmatically manage events and calendars and listen to the events occurred in the calendar. 
 For more information about configuration and operations, go to the module.
-- [ballerinax/googleapis.calendar](calendar/Module.md)
-- [ballerinax/googleapis.calendar.listener](calendar/modules/listener/Module.md)
+- [googleapis.calendar](calendar/Module.md) - Perform Google Calendar related operations programmatically
+- [googleapis.calendar.listener](calendar/modules/listener/Module.md) - Listen for Google Calendar events and process them.
  
 ## Building from the source
 ### Setting up the prerequisites
-1. Download and install Java SE Development Kit (JDK) version 11 (from one of the following locations).
+1. Download and install Java SE Development Kit (JDK) version 11. You can install either [OpenJDK](https://adoptopenjdk.net/) or [Oracle JDK](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html).
  
-  * [Oracle](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
- 
-  * [OpenJDK](https://adoptopenjdk.net/)
- 
-       > **Note:** Set the JAVA_HOME environment variable to the path name of the directory into which you installed
-       JDK.
+      > **Note:** Set the JAVA_HOME environment variable to the path name of the directory into which you installed
+      JDK.
  
 2. Download and install [Ballerina Swan Lake Beta2](https://ballerina.io/)
 
@@ -33,14 +29,14 @@ Execute the commands below to build from the source.
    ```   
    ./gradlew build
    ```
-2. To build the package:
-   ```   
-   bal build -c ./calendar
-   ```
-3. To run the without tests:
-   ```
-   bal build -c --skip-tests ./calendar
-   ```
+2. * To build the package:
+      ```   
+      bal build -c ./calendar
+      ```
+   * To build the package without tests:
+      ```
+      bal build -c --skip-tests ./calendar
+      ```
 ## Contributing to Ballerina
  
 As an open source project, Ballerina welcomes contributions from the community.
