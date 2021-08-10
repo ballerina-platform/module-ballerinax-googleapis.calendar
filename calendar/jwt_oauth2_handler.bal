@@ -22,16 +22,16 @@ const string OAUTH_URL = "https://oauth2.googleapis.com";
 type Error distinct error;
 
 # Defines the OAuth2 handler for client authentication.
-public client class ClientOAuth2ExtensionGrantHandler {
+public isolated client class ClientOAuth2ExtensionGrantHandler {
 
-    OAuth2ExtensionGrantProvider provider;
+    private final OAuth2ExtensionGrantProvider provider;
 
     public isolated function init(jwt:IssuerConfig? config = ()) returns error? {
         self.provider = check new(config);
     }
 
     # Returns the headers map with the relevant authentication requirements.
-    # 
+    #
     # + userAccount - The email address of the user for requesting delegated access in service account
     # + return - The updated headers map or else an `Error` in case of an error
     public isolated function getSecurityHeaders(string userAccount) returns map<string>|Error {
@@ -44,18 +44,22 @@ public client class ClientOAuth2ExtensionGrantHandler {
             return prepareError("Failed to enrich headers with OAuth2 token.", result);
         }
     }
+
+    isolated function isServiceAccount() returns boolean {
+        return self.provider.getServiceAccountState();
+    }
 }
 
-public class OAuth2ExtensionGrantProvider {
+public isolated class OAuth2ExtensionGrantProvider {
 
-    jwt:IssuerConfig jwtIssuerConfig = {};
-    boolean isServiceAccount = false;
-    http:Client clientEndpoint;
-    
+    private jwt:IssuerConfig jwtIssuerConfig = {};
+    private boolean isServiceAccount = false;
+    private final http:Client clientEndpoint;
+
     public isolated function init(jwt:IssuerConfig? config) returns error? {
         self.clientEndpoint = check new(OAUTH_URL);
         if (config is jwt:IssuerConfig) {
-            self.jwtIssuerConfig = config;
+            self.jwtIssuerConfig = config.cloneReadOnly();
             self.isServiceAccount = true;
         } 
     }
@@ -65,18 +69,26 @@ public class OAuth2ExtensionGrantProvider {
     # + userAccount - The email address of the user for requesting delegated access in service account
     # + return - Generated OAuth2 token or else an `Error` if an error occurred
     public isolated function generateToken(string userAccount) returns string|Error {
-        self.jwtIssuerConfig.customClaims["sub"] = userAccount;
-        string|jwt:Error jwt = jwt:issue(self.jwtIssuerConfig);
-        if (jwt is string) {
-            json payload =  {"grant_type": "urn:ietf:params:oauth:grant-type:jwt-bearer", "assertion": jwt};
-            http:Response|http:ClientError response = self.clientEndpoint->post("/token", payload);
-            if (response is http:Response) {
-                return extractAccessToken(response);
-            } else {
-                return prepareError("Failed to call the token endpoint.", response);
+        lock {
+            self.jwtIssuerConfig.customClaims["sub"] = userAccount;
+            string|jwt:Error jwt = jwt:issue(self.jwtIssuerConfig);
+            if (jwt is string) {
+                json payload = {"grant_type": "urn:ietf:params:oauth:grant-type:jwt-bearer", "assertion": jwt};
+                http:Response|http:ClientError response = self.clientEndpoint->post("/token", payload);
+                if (response is http:Response) {
+                    return extractAccessToken(response);
+                } else {
+                    return prepareError("Failed to call the token endpoint.", response);
+                }
             }
-        } 
-        return prepareError("Failed to generate JWT.", <error>jwt);
+            return prepareError("Failed to generate JWT.", <error>jwt);
+        }
+    }
+
+    isolated function getServiceAccountState() returns boolean {
+        lock {
+            return self.isServiceAccount;
+        }
     }
 }
 
@@ -104,8 +116,8 @@ isolated function prepareError(string message, error? err = ()) returns Error {
 
 public isolated function setHeaders(ClientOAuth2ExtensionGrantHandler clientHandler, string? userAccount = ()) returns map<string>|error {
     map<string> headers = {};
-    if (clientHandler.provider.isServiceAccount){
-        headers = check  clientHandler.getSecurityHeaders(<string>userAccount);
-    } 
+    if (clientHandler.isServiceAccount()) {
+        headers = check clientHandler.getSecurityHeaders(<string>userAccount);
+    }
     return headers;
 }

@@ -17,14 +17,22 @@
 import ballerina/http;
 import ballerina/jwt;
 
-# Client for Google Calendar connector.
+# Ballerina Google Calendar connector provides the capability to access Google Calendar API.
+# The connector let you perform calendar and event management operations.
 # 
 # + calendarClient - HTTP client endpoint
 @display {label: "Google Calendar", iconPath: "logo.png"}
-public client class Client {
-    public http:Client calendarClient;
-    private ClientOAuth2ExtensionGrantHandler clientHandler;
+public isolated client class Client {
+    private final http:Client calendarClient;
+    private final ClientOAuth2ExtensionGrantHandler clientHandler;
 
+    # Initializes the connector. During initialization you can pass either http:BearerTokenConfig if you have a bearer
+    # token or http:OAuth2RefreshTokenGrantConfig if you have Oauth tokens.
+    # Create a Google account and obtain tokens following 
+    # [this guide](https://developers.google.com/identity/protocols/oauth2). 
+    # 
+    # + calendarConfig -  Configurations required to initialize the client
+    # + return - An error on failure of initialization or else `()`
     public isolated function init(CalendarConfiguration calendarConfig) returns error? {
         http:ClientSecureSocket? socketConfig = calendarConfig?.secureSocketConfig;
         if (calendarConfig.oauth2Config is (http:BearerTokenConfig|http:OAuth2RefreshTokenGrantConfig)) {
@@ -37,15 +45,15 @@ public client class Client {
             self.calendarClient = check new (BASE_URL, {
                 secureSocket: socketConfig
             });
-            self.clientHandler = check new (<jwt:IssuerConfig>calendarConfig.oauth2Config);
+            self.clientHandler = check new(<jwt:IssuerConfig>calendarConfig.oauth2Config);
         }
     }
 
-    # Get Calendars
+    # Gets calendars.
     # 
     # + optional - Record that contains optionals
     # + userAccount - The email address of the user for requesting delegated access in service account
-    # + return - Stream of Calendars on success else an error
+    # + return - Stream of Calendars on success or else an error
     @display {label: "Get Calendars"}
     remote isolated function getCalendars(@display {label: "Calendars to Access"} CalendarsToAccess? optional = (),
                                             @display {label: "User Account"} string? userAccount = ()) returns
@@ -56,11 +64,11 @@ public client class Client {
         return new stream<Calendar,error>(calendarStream);
     }
 
-    # Create a calendar.
+    # Creates a calendar.
     # 
     # + title - Calendar name
     # + userAccount - The email address of the user for requesting delegated access in service account
-    # + return - Created calendar on success else an error
+    # + return - Created calendar on success or else an error
     @display {label: "Create Calendar"}
     remote isolated function createCalendar(@display {label: "Calendar Name"} string title,
                                             @display {label: "User Account"} string? userAccount = ())
@@ -77,11 +85,11 @@ public client class Client {
         return toCalendar(result);
     }
 
-    # Delete a calendar.
+    # Deletes a calendar.
     # 
     # + calendarId - Calendar ID
     # + userAccount - The email address of the user for requesting delegated access in service account
-    # + return - Error on failure
+    # + return - `()` or error on failure
     @display {label: "Delete Calendar"}
     remote isolated function deleteCalendar(@display {label: "Calendar ID"} string calendarId,
                                             @display {label: "User Account"} string? userAccount = ())
@@ -92,13 +100,13 @@ public client class Client {
         _ = check checkAndSetErrors(httpResponse);
     }
 
-    # Create an event.
+    # Creates an event.
     # 
     # + calendarId - Calendar ID
-    # + event - Record that contains event information.
+    # + event - Record that contains event information
     # + optional - Record that contains optional query parameters
     # + userAccount - The email address of the user for requesting delegated access in service account
-    # + return - Created Event on success else an error
+    # + return - Created Event on success or else an error
     @display {label: "Create Event"}
     remote isolated function createEvent(@display {label: "Calendar ID"} string calendarId,
                                             @display {label: "Event Details"} InputEvent event,
@@ -115,13 +123,13 @@ public client class Client {
         return toEvent(result);
     }
            
-    # Create an event at the moment with simple text .
+    # Creates an event at the moment with simple text.
     # 
     # + calendarId - Calendar ID
     # + text - Event description
     # + sendUpdates - Configuration for notifing the creation
     # + userAccount - The email address of the user for requesting delegated access in service account
-    # + return - Created event on success else an error
+    # + return - Created event on success or else an error
     @display {label: "Create Quick Event"}
     remote isolated function quickAddEvent(@display {label: "Calendar ID"} string calendarId,
                                             @display {label: "Event Description"} string text,
@@ -137,14 +145,14 @@ public client class Client {
         return toEvent(result);
     }
 
-    # Update an existing event.
+    # Updates an existing event.
     # 
     # + calendarId - Calendar ID
     # + eventId - Event ID
     # + event - Record that contains updated information
     # + optional - Record that contains optional query parameters
     # + userAccount - The email address of the user for requesting delegated access in service account
-    # + return - Updated event on success else an error
+    # + return - Updated event on success or else an error
     @display {label: "Update Event"}
     remote isolated function updateEvent(@display {label: "Calendar ID"} string calendarId,
                                             @display {label: "Event ID"} string eventId,
@@ -162,12 +170,12 @@ public client class Client {
         return toEvent(result);      
     }
 
-    # Get all events.
+    # Gets events.
     # 
     # + calendarId - Calendar ID
     # + userAccount - The email address of the user for requesting delegated access in service account
     # + filter - Record that contains filtering criteria
-    # + return - Event stream on success, else an error
+    # + return - Event stream on success or else an error
     @display {label: "Get Events"}
     remote isolated function getEvents(@display {label: "Calendar ID"} string calendarId,
                                         @display {label: "Filtering Criteria"} EventFilterCriteria? filter = (),
@@ -178,12 +186,12 @@ public client class Client {
         return new stream<Event,error>(eventStream);    
     }
 
-    # Get an event.
+    # Gets an event.
     # 
     # + calendarId - Calendar ID
     # + eventId - Event ID
     # + userAccount - The email address of the user for requesting delegated access in service account
-    # + return - An Event object on success, else an error
+    # + return - An Event object on success or else an error
     @display {label: "Get Event"}
     remote isolated function getEvent(@display {label: "Calendar ID"} string calendarId,
                                         @display {label: "Event ID"} string eventId,
@@ -196,12 +204,12 @@ public client class Client {
         return toEvent(resp);
     }
 
-    # Delete an event.
+    # Deletes an event.
     # 
     # + calendarId - Calendar ID
     # + eventId - Event ID
     # + userAccount - The email address of the user for requesting delegated access in service account
-    # + return - Error on failure
+    # + return - `()` or else an error on failure
     @display {label: "Delete Event"}
     remote isolated function deleteEvent(@display {label: "Calendar ID"} string calendarId,
                                             @display {label: "Event ID"} string eventId,
@@ -213,7 +221,7 @@ public client class Client {
         _ = check checkAndSetErrors(httpResponse);
     }
 
-    # Get events response.
+    # Gets events response.
     # 
     # + calendarId - Calendar ID
     # + count - Number of events required in one page
@@ -221,7 +229,7 @@ public client class Client {
     # + syncToken - Token for getting incremental sync
     # + filter - Record that contains filtering criteria
     # + userAccount - The email address of the user for requesting delegated access in service account
-    # + return - EventResponse object on success, else an error
+    # + return - EventResponse object on success or else an error
     @display {label: "Get Events By Page"}
     remote isolated function getEventsResponse(@display {label: "Calendar ID"} string calendarId, 
                                                 @display {label: "Number of Events Required"} int? count = (),
@@ -238,7 +246,7 @@ public client class Client {
     }
 }
 
-# Holds the parameters used to create a `Client`.
+# Holds the parameters used to create a client.
 #
 # + oauth2Config - OAuth2 configuration
 # + secureSocketConfig- Secure socket configuration

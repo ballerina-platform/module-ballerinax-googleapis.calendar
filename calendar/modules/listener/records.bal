@@ -14,7 +14,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-# Define watch response.
+# Defines watch response.
 #
 # + kind - Identifies this as a notification channel used to watch for changes to a resource
 # + id - A UUID or similar unique string that identifies this channel
