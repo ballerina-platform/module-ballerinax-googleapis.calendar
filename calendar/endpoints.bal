@@ -57,11 +57,11 @@ public isolated client class Client {
     @display {label: "Get Calendars"}
     remote isolated function getCalendars(@display {label: "Calendars to Access"} CalendarsToAccess? optional = (),
                                             @display {label: "User Account"} string? userAccount = ()) returns
-                                            @tainted @display {label: "Stream of Calendars"} stream<Calendar,error>
+                                            @tainted @display {label: "Stream of Calendars"} stream<Calendar,error?>
                                             |error {
         CalendarStream calendarStream = check new CalendarStream(self.calendarClient, self.clientHandler, optional,
             userAccount);
-        return new stream<Calendar,error>(calendarStream);
+        return new stream<Calendar,error?>(calendarStream);
     }
 
     # Creates a calendar.
@@ -180,10 +180,10 @@ public isolated client class Client {
     remote isolated function getEvents(@display {label: "Calendar ID"} string calendarId,
                                         @display {label: "Filtering Criteria"} EventFilterCriteria? filter = (),
                                         @display {label: "User Account"} string? userAccount = ())
-                                        returns @tainted @display {label: "Stream of Events"} stream<Event,error>|error {
+                                        returns @tainted @display {label: "Stream of Events"} stream<Event,error?>|error {
         EventStream eventStream = check new EventStream(self.calendarClient, calendarId, self.clientHandler, filter,
             userAccount);
-        return new stream<Event,error>(eventStream);    
+        return new stream<Event,error?>(eventStream);    
     }
 
     # Gets an event.
