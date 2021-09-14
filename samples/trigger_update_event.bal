@@ -11,8 +11,8 @@ configurable string calendarId = ?;
 configurable string address = ?;
 configurable string expiration = ?;
 
-calendar:CalendarConfiguration config = {
-    oauth2Config: {
+calendar:ConnectionConfig config = {
+    auth: {
         clientId: clientId,
         clientSecret: clientSecret,
         refreshToken: refreshToken,

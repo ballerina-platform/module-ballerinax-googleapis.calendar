@@ -26,7 +26,7 @@ import ballerinax/googleapis.calendar;
 # + address - The address where notifications are delivered for this channel
 # + expiration - The time-to-live in seconds for the notification channel
 # + return - WatchResponse object on success else an error
-isolated function watchEvents(calendar:CalendarConfiguration config, string calendarId, string address,
+isolated function watchEvents(calendar:ConnectionConfig config, string calendarId, string address,
                                 string? expiration = ()) returns @tainted WatchResponse|error {
     json payload;
     if (expiration is string) {
@@ -63,7 +63,7 @@ isolated function watchEvents(calendar:CalendarConfiguration config, string cale
 # + resourceId - Id of resource being watched
 # + token - An arbitrary string delivered to the target address with each notification (optional)
 # + return - Error on failure
-isolated function stopChannel(calendar:CalendarConfiguration config, string id, string resourceId, string? token = ()) 
+isolated function stopChannel(calendar:ConnectionConfig config, string id, string resourceId, string? token = ()) 
                                 returns @tainted error? {
     json payload = {
         id: id,
@@ -92,12 +92,8 @@ isolated function toEventResponse(json payload) returns calendar:EventResponse|e
     }
 }
 
-isolated function getClient(calendar:CalendarConfiguration config) returns http:Client|error {
-    http:ClientSecureSocket? socketConfig = config?.secureSocketConfig;
-    return check new (BASE_URL, {
-        auth: config.oauth2Config,
-        secureSocket: socketConfig
-    });
+isolated function getClient(calendar:ConnectionConfig config) returns http:Client|error {
+    return check new (BASE_URL, config);
 }
 
 # Prepare URL.

@@ -23,13 +23,13 @@ isolated service class HttpService {
     private final boolean isOnEventUpdateAvailable;
     private final boolean isOnEventDeleteAvailable;
     private final HttpToCalendarAdaptor adaptor;
-    private final calendar:CalendarConfiguration & readonly calendarConfig;
+    private final calendar:ConnectionConfig & readonly calendarConfig;
     private string calendarId;
     private string channelId;
     private string resourceId;
     private string? currentSyncToken = ();
 
-    isolated function init(HttpToCalendarAdaptor adaptor, calendar:CalendarConfiguration config, string calendarId, 
+    isolated function init(HttpToCalendarAdaptor adaptor, calendar:ConnectionConfig config, string calendarId, 
                             string channelId, string resourceId) {
         self.adaptor = adaptor;
         self.calendarConfig = config.cloneReadOnly();
@@ -89,7 +89,7 @@ isolated service class HttpService {
         }
     }
 
-    isolated function getInitialSyncToken(calendar:CalendarConfiguration config, string calendarId, 
+    isolated function getInitialSyncToken(calendar:ConnectionConfig config, string calendarId, 
                                             string? pageToken = ()) returns @tainted string?|error {
         calendar:EventResponse resp = check self.getEventsResponse(pageToken = pageToken);
         string? nextPageToken = resp?.nextPageToken;

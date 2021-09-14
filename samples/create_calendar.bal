@@ -8,8 +8,8 @@ configurable string refreshUrl = ?;
 
 public function main() returns error? {
 
-   calendar:CalendarConfiguration config = {
-      oauth2Config: {
+   calendar:ConnectionConfig config = {
+      auth: {
          clientId: clientId,
          clientSecret: clientSecret,
          refreshToken: refreshToken,

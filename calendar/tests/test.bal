@@ -25,8 +25,8 @@ configurable string refreshToken = os:getEnv("REFRESH_TOKEN");
 configurable string refreshUrl = os:getEnv("REFRESH_URL");
 configurable string address = os:getEnv("ADDRESS");
 
-CalendarConfiguration config = {
-    oauth2Config: {
+ConnectionConfig config = {
+    auth: {
         clientId: clientId,
         clientSecret: clientSecret,
         refreshToken: refreshToken,

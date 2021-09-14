@@ -5,7 +5,7 @@ version= "0.1.6-SNAPSHOT"
 export= ["googleapis.calendar", "googleapis.calendar.listener"]
 license= ["Apache-2.0"]
 authors = ["Ballerina"]
-keywords = ["google", "calendar"]
+keywords = ["productivity/calendars", "cost/free", "vendor/google"]
 repository = "https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar"
 
 [[platform.java11.dependency]]

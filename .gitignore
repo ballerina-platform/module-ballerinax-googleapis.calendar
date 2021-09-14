@@ -10,6 +10,9 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
+# .DS_Store files
+*.DS_Store
+
 # Package Files #
 *.war
 *.nar
