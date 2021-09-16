@@ -21,7 +21,7 @@ import ballerinax/googleapis.calendar;
 # Listener for Google Calendar connector
 # 
 # + expirationTime - Expiration time in unix timestamp
-@display {label: "Google Calendar Listener"}
+@display {label: "Google Calendar Listener", iconPath: "resources/googleapis.calendar.svg"}
 public class Listener {
     private http:Listener httpListener;
     private calendar:Client calendarClient;
@@ -33,7 +33,7 @@ public class Listener {
     private string? syncToken = ();
     public decimal expirationTime = 0;
     private HttpService? httpService;
-    private calendar:CalendarConfiguration config;
+    private calendar:ConnectionConfig config;
 
     # Initializes Google Calendar connector listener.
     #
@@ -43,7 +43,7 @@ public class Listener {
     # + address - Callback URL
     # + expiration - Life time of a channel. After this time, connector will create a new channel automatically
     # + return - An error on failure of initialization or else `()`
-    public isolated function init(int port, calendar:CalendarConfiguration config, string calendarId, string address,
+    public isolated function init(int port, calendar:ConnectionConfig config, string calendarId, string address,
                                     string? expiration = ()) returns error? {
         self.httpListener = check new (port);
         self.calendarClient = check new (config);

@@ -26,8 +26,8 @@ configurable string keyPassword = ?;
 configurable string calendarId = ?;
 configurable string userAccount = ?;
 
-calendar:CalendarConfiguration config = {
-    oauth2Config: {
+calendar:ConnectionConfig config = {
+    auth: {
         issuer: issuer,
         audience: audience,
         customClaims: {"scope": scope},

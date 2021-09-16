@@ -18,10 +18,10 @@ import ballerinax/googleapis.calendar;
 ```
 
 ### Step 2: Create a new connector instance
-Create a `calendar:CalendarConfiguration` with the OAuth2.0 tokens obtained and initialize the connector with it.
+Create a `calendar:ConnectionConfig` with the OAuth2.0 tokens obtained and initialize the connector with it.
 ```ballerina
-calendar:CalendarConfiguration config = {
-    oauth2Config: {
+calendar:ConnectionConfig config = {
+    auth: {
         clientId: <CLIENT_ID>,
         clientSecret: <CLIENT_SECRET>
         refreshToken: <REFRESH_TOKEN>,
