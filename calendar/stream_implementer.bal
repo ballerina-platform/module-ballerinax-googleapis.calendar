@@ -55,7 +55,7 @@ class EventStream {
         string path = <@untainted>prepareUrlWithEventsOptionalParams(self.calendarId, pageToken = self.pageToken, 
         optional = self.optional);
         map<string> headerMap = check setHeaders(self.clientHandler, self.userAccount);
-        var httpResponse = check self.httpClient->get(path, headerMap);
+        http:Response httpResponse = check self.httpClient->get(path, headerMap);
         json resp = check checkAndSetErrors(httpResponse);
         EventResponse|error res = resp.cloneWithType(EventResponse);
         if (res is EventResponse) {
@@ -104,7 +104,7 @@ class CalendarStream {
     isolated function fetchCalendars() returns @tainted Calendar[]|error {
         string path = <@untainted>prepareUrlWithCalendarOptional(self.pageToken, self.optional);
         map<string> headerMap = check setHeaders(self.clientHandler, self.userAccount);
-        var httpResponse = check self.httpClient->get(path, headerMap);
+        http:Response httpResponse = check self.httpClient->get(path, headerMap);
         json resp = check checkAndSetErrors(httpResponse);
         CalendarResponse|error res = resp.cloneWithType(CalendarResponse);
         if (res is CalendarResponse) {

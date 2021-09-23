@@ -49,11 +49,11 @@ public client class Client {
     @display {label: "Get Calendars"}
     remote isolated function getCalendars(@display {label: "Calendars To Access"} CalendarsToAccess? optional = (),
                                             @display {label: "User Account"} string? userAccount = ()) returns
-                                            @tainted @display {label: "Stream of Calendars"} stream<Calendar,error>
+                                            @tainted @display {label: "Stream of Calendars"} stream<Calendar,error?>
                                             |error {
         CalendarStream calendarStream = check new CalendarStream(self.calendarClient, self.clientHandler, optional,
             userAccount);
-        return new stream<Calendar,error>(calendarStream);
+        return new stream<Calendar,error?>(calendarStream);
     }
 
     # Create a calendar.
@@ -72,8 +72,8 @@ public client class Client {
         };
         req.setJsonPayload(payload);
         map<string> headerMap = check setHeaders(self.clientHandler, userAccount);
-        var response = self.calendarClient->post(path, req, headers = headerMap);
-        json result = check checkAndSetErrors(response);
+        http:Response httpResponse = check self.calendarClient->post(path, req, headers = headerMap);
+        json result = check checkAndSetErrors(httpResponse);
         return toCalendar(result);
     }
 
@@ -88,7 +88,7 @@ public client class Client {
                                             returns @tainted error? {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId]);
         map<string> headerMap = check setHeaders(self.clientHandler, userAccount);
-        var httpResponse = self.calendarClient->delete(path, headers = headerMap);
+        http:Response httpResponse = check self.calendarClient->delete(path, headers = headerMap);
         _ = check checkAndSetErrors(httpResponse);
     }
 
@@ -110,8 +110,8 @@ public client class Client {
         string path = prepareUrlWithEventOptional(calendarId, optional);
         req.setJsonPayload(payload);
         map<string> headerMap = check setHeaders(self.clientHandler, userAccount);
-        var response = self.calendarClient->post(path, req, headers = headerMap);
-        json result = check checkAndSetErrors(response);
+        http:Response httpResponse = check self.calendarClient->post(path, req, headers = headerMap);
+        json result = check checkAndSetErrors(httpResponse);
         return toEvent(result);
     }
            
@@ -132,8 +132,8 @@ public client class Client {
         path = sendUpdates is string ? prepareQueryUrl([path], [TEXT, SEND_UPDATES], [text, sendUpdates])
             : prepareQueryUrl([path], [TEXT], [text]);
         map<string> headerMap = check setHeaders(self.clientHandler, userAccount);
-        var response = self.calendarClient->post(path, (), headers = headerMap);
-        json result = check checkAndSetErrors(response);
+        http:Response httpResponse = check self.calendarClient->post(path, (), headers = headerMap);
+        json result = check checkAndSetErrors(httpResponse);
         return toEvent(result);
     }
 
@@ -157,7 +157,7 @@ public client class Client {
         string path = prepareUrlWithEventOptional(calendarId, optional, eventId);
         req.setJsonPayload(payload);
         map<string> headerMap = check setHeaders(self.clientHandler, userAccount);
-        var response = self.calendarClient->put(path, req, headers = headerMap);
+        http:Response response = check self.calendarClient->put(path, req, headers = headerMap);
         json result = check checkAndSetErrors(response);
         return toEvent(result);      
     }
@@ -172,10 +172,10 @@ public client class Client {
     remote isolated function getEvents(@display {label: "Calendar ID"} string calendarId,
                                         @display {label: "Filtering Criteria"} EventFilterCriteria? filter = (),
                                         @display {label: "User Account"} string? userAccount = ())
-                                        returns @tainted @display {label: "Stream of Events"} stream<Event,error>|error {
+                                        returns @tainted @display {label: "Stream of Events"} stream<Event,error?>|error {
         EventStream eventStream = check new EventStream(self.calendarClient, calendarId, self.clientHandler, filter,
             userAccount);
-        return new stream<Event,error>(eventStream);    
+        return new stream<Event,error?>(eventStream);    
     }
 
     # Get an event.
@@ -191,7 +191,7 @@ public client class Client {
                                         returns @tainted @display {label: "Event"} Event|error {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, eventId]);
         map<string> headerMap = check setHeaders(self.clientHandler, userAccount);
-        var httpResponse = self.calendarClient->get(path, headerMap);
+        http:Response httpResponse = check self.calendarClient->get(path, headerMap);
         json resp = check checkAndSetErrors(httpResponse);
         return toEvent(resp);
     }
@@ -209,7 +209,7 @@ public client class Client {
                                             returns @tainted error? {
         string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, eventId]);
         map<string> headerMap = check setHeaders(self.clientHandler, userAccount);
-        var httpResponse = self.calendarClient->delete(path, headers = headerMap);
+        http:Response httpResponse = check self.calendarClient->delete(path, headers = headerMap);
         _ = check checkAndSetErrors(httpResponse);
     }
 
@@ -232,7 +232,7 @@ public client class Client {
                                                 @tainted @display {label: "Events Response"} EventResponse|error {
         string path = prepareUrlWithEventsOptionalParams(calendarId, count, pageToken, syncToken, filter);
         map<string> headerMap = check setHeaders(self.clientHandler, userAccount);
-        var httpResponse = self.calendarClient->get(path, headerMap);
+        http:Response httpResponse = check self.calendarClient->get(path, headerMap);
         json resp = check checkAndSetErrors(httpResponse);
         return toEventResponse(resp);
     }

@@ -51,7 +51,7 @@ isolated function watchEvents(calendar:CalendarConfiguration config, string cale
     string path = prepareUrl([CALENDAR_PATH, CALENDAR, calendarId, EVENTS, WATCH]);
     req.setJsonPayload(payload);
     http:Client httpClient = check getClient(config);
-    var response = httpClient->post(path, req);
+    http:Response response = check httpClient->post(path, req);
     json result = check checkAndSetErrors(response);
     return toWatchResponse(result);
 }
@@ -74,7 +74,7 @@ isolated function stopChannel(calendar:CalendarConfiguration config, string id, 
     http:Request req = new;
     req.setJsonPayload(payload);
     http:Client httpClient = check getClient(config);
-    var response = httpClient->post(path, req);
+    http:Response response = check httpClient->post(path, req);
     _ = check checkAndSetErrors(response);
 }
 
