@@ -20,6 +20,7 @@ import ballerinax/googleapis.calendar;
 isolated class HttpToCalendarAdaptor {
     isolated function init(SimpleHttpService serviceObj) returns error? {
         externInit(self, serviceObj);
+        return;
     }
 
     isolated function callOnNewEventMethod(calendar:Event event) returns error? 

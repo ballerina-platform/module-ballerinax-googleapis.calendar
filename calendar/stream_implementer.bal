@@ -34,6 +34,7 @@ class EventStream {
         self.optional = optional;
         self.userAccount = userAccount;
         self.currentEntries = check self.fetchEvents();
+        return;
     }
 
     public isolated function next() returns @tainted record {| Event value; |}|error? {
@@ -49,6 +50,7 @@ class EventStream {
             self.index += 1;
             return event;
         }
+        return;
     }
 
     isolated function fetchEvents() returns @tainted Event[]|error {
@@ -83,6 +85,7 @@ class CalendarStream {
         self.clientHandler = clientHandler;
         self.userAccount = userAccount;
         self.currentEntries = check self.fetchCalendars();
+        return;
     }
 
     public isolated function next() returns @tainted record {| Calendar value; |}|error? {
@@ -99,6 +102,7 @@ class CalendarStream {
             self.index += 1;
             return calendar;
         }
+        return;
     }
 
     isolated function fetchCalendars() returns @tainted Calendar[]|error {

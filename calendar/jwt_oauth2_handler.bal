@@ -28,6 +28,7 @@ public isolated client class ClientOAuth2ExtensionGrantHandler {
 
     public isolated function init(jwt:IssuerConfig? config = ()) returns error? {
         self.provider = check new(config);
+        return;
     }
 
     # Returns the headers map with the relevant authentication requirements.
@@ -61,7 +62,8 @@ public isolated class OAuth2ExtensionGrantProvider {
         if (config is jwt:IssuerConfig) {
             self.jwtIssuerConfig = config.cloneReadOnly();
             self.isServiceAccount = true;
-        } 
+        }
+        return; 
     }
 
     # Get an OAuth2 access token from authorization server for the OAuth2 authentication.
