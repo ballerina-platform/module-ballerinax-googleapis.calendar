@@ -80,6 +80,7 @@ isolated service class HttpService {
         } else {
             return error(INVALID_ID_ERROR);
         }
+        return;
     }
 
     isolated function isValidRequest(http:Request request) returns boolean|error {
@@ -127,6 +128,7 @@ isolated service class HttpService {
         } else if (self.isOnEventDeleteAvailable) {
             check self.adaptor.callOnEventDeleteMethod(event);
         }
+        return;
     }
 
     isolated function isCreateOrUpdateEvent(calendar:Event event) returns boolean {

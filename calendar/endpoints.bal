@@ -43,6 +43,7 @@ public isolated client class Client {
             });
             self.clientHandler = check new(<jwt:IssuerConfig>calendarConfig.auth);
         }
+        return;
     }
 
     # Gets calendars.
@@ -94,6 +95,7 @@ public isolated client class Client {
         map<string> headerMap = check setHeaders(self.clientHandler, userAccount);
         http:Response httpResponse = check self.calendarClient->delete(path, headers = headerMap);
         _ = check checkAndSetErrors(httpResponse);
+        return;
     }
 
     # Creates an event.
@@ -215,6 +217,7 @@ public isolated client class Client {
         map<string> headerMap = check setHeaders(self.clientHandler, userAccount);
         http:Response httpResponse = check self.calendarClient->delete(path, headers = headerMap);
         _ = check checkAndSetErrors(httpResponse);
+        return;
     }
 
     # Gets events response.

@@ -52,6 +52,7 @@ public class Listener {
         self.address = address;
         self.expiration = expiration;
         self.httpService = ();
+        return;
     }
 
     public isolated function attach(SimpleHttpService s, string[]|string? name = ()) returns @tainted error? {
@@ -61,6 +62,7 @@ public class Listener {
         check self.httpListener.attach(<HttpService>self.httpService, name);
         Job job = new (self);
         check job.scheduleNextChannelRenewal();
+        return;
     }
 
     public isolated function detach(service object {} s) returns error? {
@@ -92,5 +94,6 @@ public class Listener {
         }
         log:printDebug("Subscribed to channel id : " + self.channelId + " resource id :  " + self.resourceId);
         self.expirationTime = check decimal:fromString(res.expiration);
+        return;
     }
 }

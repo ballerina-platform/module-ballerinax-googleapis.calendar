@@ -76,6 +76,7 @@ isolated function stopChannel(calendar:ConnectionConfig config, string id, strin
     http:Client httpClient = check getClient(config);
     http:Response httpResponse = check httpClient->post(path, req);
     _ = check checkAndSetErrors(httpResponse);
+    return;
 }
 
 # Convert json to Event.

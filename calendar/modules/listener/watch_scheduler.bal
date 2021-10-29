@@ -67,5 +67,6 @@ class Job {
         time:Utc scheduledUtcTime = time:utcAddSeconds(currentUtc, timeDifference);
         time:Civil scheduledTime = time:utcToCivil(scheduledUtcTime);
         task:JobId result = check task:scheduleOneTimeJob(self, scheduledTime);
+        return;
     }
 }

@@ -40,7 +40,7 @@ jobs:
               uses: ballerina-platform/ballerina-action/@nightly
               with:
                   args:
-                      build -c --skip-tests
+                      pack --with-tests
               env:
                 WORKING_DIR: ./calendar
                 JAVA_HOME: /usr/lib/jvm/default-jvm
