@@ -57,16 +57,20 @@ public class Listener {
 
     public isolated function attach(SimpleHttpService s, string[]|string? name = ()) returns @tainted error? {
         HttpToCalendarAdaptor adaptor = check new (s);
-        self.httpService = new HttpService(adaptor, self.config, self.calendarId, self.channelId, self.resourceId);
+        HttpService currentHttpService = new HttpService(adaptor, self.config, self.calendarId, self.channelId, self.resourceId);
+        self.httpService = currentHttpService;
         check self.registerWatchChannel();
-        check self.httpListener.attach(<HttpService>self.httpService, name);
+        check self.httpListener.attach(currentHttpService, name);
         Job job = new (self);
         check job.scheduleNextChannelRenewal();
         return;
     }
 
-    public isolated function detach(service object {} s) returns error? {
-        return self.httpListener.detach(s);
+    public isolated function detach(SimpleHttpService s) returns error? {
+        HttpService? currentHttpService = self.httpService;
+        if currentHttpService is HttpService {
+            return self.httpListener.detach(currentHttpService);
+        }
     }
 
     public isolated function 'start() returns error? {
