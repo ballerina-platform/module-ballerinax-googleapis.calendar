@@ -19,6 +19,7 @@ import ballerina/log;
 import ballerinax/googleapis.calendar;
 
 isolated service class HttpService {
+    *http:Service;
     private final boolean isOnNewEventAvailable;
     private final boolean isOnEventUpdateAvailable;
     private final boolean isOnEventDeleteAvailable;
