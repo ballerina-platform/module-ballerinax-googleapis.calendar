@@ -21,7 +21,7 @@ import ballerina/jwt;
 # The connector let you perform calendar and event management operations.
 # 
 # + calendarClient - HTTP client endpoint
-@display {label: "Google Calendar", iconPath: "resources/googleapis.calendar.svg"}
+@display {label: "Google Calendar", iconPath: "icon.png"}
 public isolated client class Client {
     private final http:Client calendarClient;
     private final ClientOAuth2ExtensionGrantHandler clientHandler;
