@@ -155,10 +155,10 @@ function testUpdateEvent() {
 @test:Config {
     dependsOn: [testGetEvent, testUpdateEvent]
 }
-function testDeleteEvent() {
+function testDeleteEvent() returns error? {
     log:printInfo("calendarClient -> deleteEvent()");
     error? res = calendarClient->deleteEvent(testCalendarId, testEventId);
-    error? resp = calendarClient->deleteEvent(testCalendarId, testQuickAddEventId);
+    _ = check calendarClient->deleteEvent(testCalendarId, testQuickAddEventId);
     if (res is error) {
         test:assertFail(res.message());
     }

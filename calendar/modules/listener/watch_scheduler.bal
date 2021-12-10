@@ -66,7 +66,7 @@ class Job {
         decimal timeDifference = (self.'listener.expirationTime/1000) - (<decimal>currentUtc[0]) - 60;
         time:Utc scheduledUtcTime = time:utcAddSeconds(currentUtc, timeDifference);
         time:Civil scheduledTime = time:utcToCivil(scheduledUtcTime);
-        task:JobId result = check task:scheduleOneTimeJob(self, scheduledTime);
+        _ = check task:scheduleOneTimeJob(self, scheduledTime);
         return;
     }
 }
