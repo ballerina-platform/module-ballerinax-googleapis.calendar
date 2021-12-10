@@ -157,11 +157,7 @@ function testUpdateEvent() {
 }
 function testDeleteEvent() returns error? {
     log:printInfo("calendarClient -> deleteEvent()");
-    error? res = calendarClient->deleteEvent(testCalendarId, testEventId);
-    _ = check calendarClient->deleteEvent(testCalendarId, testQuickAddEventId);
-    if (res is error) {
-        test:assertFail(res.message());
-    }
+    _ = check calendarClient->deleteEvent(testCalendarId, testEventId);
 }
 
 @test:Config {
