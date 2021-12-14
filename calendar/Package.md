@@ -9,7 +9,7 @@ The `ballerinax/googleapis.calendar` is a [Ballerina](https://ballerina.io/) con
 ### Compatibility
 |                     | Version         |
 |---------------------|-----------------|
-| Ballerina Language  | Swan Lake Beta3 |
+| Ballerina Language  | Swan Lake Beta6 |
 | Google Calendar API | V3              |
 
 ## Report issues
