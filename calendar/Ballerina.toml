@@ -2,7 +2,7 @@
 distribution = "slbeta6"
 org= "ballerinax"
 name= "googleapis.calendar"
-version= "2.1.0"
+version= "2.1.1"
 export= ["googleapis.calendar", "googleapis.calendar.listener"]
 license= ["Apache-2.0"]
 authors = ["Ballerina"]
@@ -11,7 +11,7 @@ icon = "icon.png"
 repository = "https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar"
 
 [[platform.java11.dependency]]
-path = "../java-wrapper/build/libs/java-wrapper-2.1.0.jar"
+path = "../java-wrapper/build/libs/java-wrapper-2.1.1.jar"
 groupId = "org.ballerinalang.googleapis.calendar"
 artifactId = "java-wrapper"
-version = "2.1.0"
+version = "2.1.1"
