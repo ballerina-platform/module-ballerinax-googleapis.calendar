@@ -22,7 +22,7 @@ const string OAUTH_URL = "https://oauth2.googleapis.com";
 type Error distinct error;
 
 # Defines the OAuth2 handler for client authentication.
-public isolated client class ClientOAuth2ExtensionGrantHandler {
+isolated class ClientOAuth2ExtensionGrantHandler {
 
     private final OAuth2ExtensionGrantProvider provider;
 
@@ -51,7 +51,7 @@ public isolated client class ClientOAuth2ExtensionGrantHandler {
     }
 }
 
-public isolated class OAuth2ExtensionGrantProvider {
+isolated class OAuth2ExtensionGrantProvider {
 
     private jwt:IssuerConfig jwtIssuerConfig = {};
     private boolean isServiceAccount = false;
@@ -60,7 +60,7 @@ public isolated class OAuth2ExtensionGrantProvider {
     public isolated function init(jwt:IssuerConfig? config) returns error? {
         self.clientEndpoint = check new(OAUTH_URL);
         if (config is jwt:IssuerConfig) {
-            self.jwtIssuerConfig = config.cloneReadOnly();
+            self.jwtIssuerConfig = config.clone();
             self.isServiceAccount = true;
         }
         return; 
@@ -116,7 +116,7 @@ isolated function prepareError(string message, error? err = ()) returns Error {
     return error Error(message);
 }
 
-public isolated function setHeaders(ClientOAuth2ExtensionGrantHandler clientHandler, string? userAccount = ()) returns map<string>|error {
+isolated function setHeaders(ClientOAuth2ExtensionGrantHandler clientHandler, string? userAccount = ()) returns map<string>|error {
     map<string> headers = {};
     if (clientHandler.isServiceAccount()) {
         headers = check clientHandler.getSecurityHeaders(<string>userAccount);
