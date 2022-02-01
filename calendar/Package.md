@@ -7,10 +7,10 @@ The `ballerinax/googleapis.calendar` is a [Ballerina](https://ballerina.io/) con
 * Listen for Google Calendar events and process them. The `ballerinax/googleapis.calendar.'listener` module provides this capability.
 
 ### Compatibility
-|                     | Version         |
-|---------------------|-----------------|
-| Ballerina Language  | Swan Lake Beta6 |
-| Google Calendar API | V3              |
+|                     | Version            |
+|---------------------|--------------------|
+| Ballerina Language  | Swan Lake 2201.0.0 |
+| Google Calendar API | V3                 |
 
 ## Report issues
 To report bugs, request new features, start new discussions, view project boards, etc., go to the [Ballerina Extended Library repository](https://github.com/ballerina-platform/ballerina-extended-library)
