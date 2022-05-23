@@ -7,10 +7,9 @@ Ballerina Google Calendar Connector
 
 [Google Calendar](https://developers.google.com/calendar) is a time-management and scheduling calendar service developed by Google. It lets users to organize their schedule and share events with others.
 
-This connector provides the capability to programmatically manage events and calendars and listen to the events occurred in the calendar. 
+This connector provides the capability to programmatically manage events and calendars. 
 For more information about configuration and operations, go to the module.
 - [googleapis.calendar](calendar/Module.md) - Perform Google Calendar related operations programmatically
-- [googleapis.calendar.listener](calendar/modules/listener/Module.md) - Listen for Google Calendar events and process them.
  
 ## Building from the source
 ### Setting up the prerequisites
@@ -25,11 +24,7 @@ For more information about configuration and operations, go to the module.
  
 Execute the commands below to build from the source.
 
-1. To build Java dependency
-   ```   
-   ./gradlew build
-   ```
-2. * To build the package:
+1. * To build the package:
       ```   
       bal pack ./calendar
       ```

@@ -23,7 +23,6 @@ configurable string clientId = os:getEnv("CLIENT_ID");
 configurable string clientSecret = os:getEnv("CLIENT_SECRET");
 configurable string refreshToken = os:getEnv("REFRESH_TOKEN");
 configurable string refreshUrl = os:getEnv("REFRESH_URL");
-configurable string address = os:getEnv("ADDRESS");
 
 ConnectionConfig config = {
     auth: {
