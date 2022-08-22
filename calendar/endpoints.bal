@@ -26,22 +26,39 @@ public isolated client class Client {
     private final http:Client calendarClient;
     private final ClientOAuth2ExtensionGrantHandler clientHandler;
 
-    # Initializes the connector. During initialization you can pass either http:BearerTokenConfig if you have a bearer
-    # token or http:OAuth2RefreshTokenGrantConfig if you have Oauth tokens.
+    # Initializes the connector. During initialization you can pass either BearerTokenConfig if you have a bearer
+    # token or OAuth2RefreshTokenGrantConfig if you have Oauth tokens.
     # Create a Google account and obtain tokens following 
     # [this guide](https://developers.google.com/identity/protocols/oauth2). 
     # 
-    # + calendarConfig -  Configurations required to initialize the client
+    # + config -  Configurations required to initialize the client
     # + return - An error on failure of initialization or else `()`
-    public isolated function init(ConnectionConfig calendarConfig) returns error? {
-        if (calendarConfig.auth is (http:BearerTokenConfig|http:OAuth2RefreshTokenGrantConfig)) {
-            self.calendarClient = check new (BASE_URL, calendarConfig);
+    public isolated function init(ConnectionConfig config) returns error? {
+        http:ClientConfiguration httpClientConfig = {
+            auth: config.auth,
+            httpVersion: config.httpVersion,
+            http1Settings: {...config.http1Settings},
+            http2Settings: config.http2Settings,
+            timeout: config.timeout,
+            forwarded: config.forwarded,
+            poolConfig: config.poolConfig,
+            cache: config.cache,
+            compression: config.compression,
+            circuitBreaker: config.circuitBreaker,
+            retryConfig: config.retryConfig,
+            responseLimits: config.responseLimits,
+            secureSocket: config.secureSocket,
+            proxy: config.proxy,
+            validation: config.validation
+        };
+        if (config.auth is (BearerTokenConfig|OAuth2RefreshTokenGrantConfig)) {
+            self.calendarClient = check new (BASE_URL, httpClientConfig);
             self.clientHandler = check new();
         } else {
             self.calendarClient = check new (BASE_URL, {
-                secureSocket: calendarConfig.secureSocket
+                secureSocket: httpClientConfig.secureSocket
             });
-            self.clientHandler = check new(<jwt:IssuerConfig>calendarConfig.auth);
+            self.clientHandler = check new(<jwt:IssuerConfig>httpClientConfig.auth);
         }
         return;
     }
@@ -244,53 +261,3 @@ public isolated client class Client {
         return toEventResponse(resp);
     }
 }
-
-# Holds the parameters used to create a client.
-#
-@display {label: "Connection Config"}
-public type ConnectionConfig record {|
-    # Configurations related to client authentication
-    http:BearerTokenConfig|http:OAuth2RefreshTokenGrantConfig|http:JwtIssuerConfig auth;
-    # The HTTP version understood by the client
-    string httpVersion = "1.1";
-    # Configurations related to HTTP/1.x protocol
-    http:ClientHttp1Settings http1Settings = {};
-    # Configurations related to HTTP/2 protocol
-    http:ClientHttp2Settings http2Settings = {};
-    # The maximum time to wait (in seconds) for a response before closing the connection
-    decimal timeout = 60;
-    # The choice of setting `forwarded`/`x-forwarded` header
-    string forwarded = "disable";
-    # Configurations associated with Redirection
-    http:FollowRedirects? followRedirects = ();
-    # Configurations associated with request pooling
-    http:PoolConfiguration? poolConfig = ();
-    # HTTP caching related configurations
-    http:CacheConfig cache = {};
-    # Specifies the way of handling compression (`accept-encoding`) header
-    http:Compression compression = http:COMPRESSION_AUTO;
-    # Configurations associated with the behaviour of the Circuit Breaker
-    http:CircuitBreakerConfig? circuitBreaker = ();
-    # Configurations associated with retrying
-    http:RetryConfig? retryConfig = ();
-    # Configurations associated with cookies
-    CookieConfig? cookieConfig = ();
-    # Configurations associated with inbound response size limits
-    http:ResponseLimitConfigs responseLimits = {};
-    #SSL/TLS-related options
-    http:ClientSecureSocket? secureSocket = ();
-|};
-
-# Client configuration for cookies.
-#
-# + enabled - User agents provide users with a mechanism for disabling or enabling cookies
-# + maxCookiesPerDomain - Maximum number of cookies per domain, which is 50
-# + maxTotalCookieCount - Maximum number of total cookies allowed to be stored in cookie store, which is 3000
-# + blockThirdPartyCookies - User can block cookies from third party responses and refuse to send cookies for third 
-#                            party requests, if needed
-public type CookieConfig record {|
-    boolean enabled = false;
-    int maxCookiesPerDomain = 50;
-    int maxTotalCookieCount = 3000;
-    boolean blockThirdPartyCookies = true;
-|};

@@ -8,7 +8,7 @@ The `ballerinax/googleapis.calendar` is a [Ballerina](https://ballerina.io/) con
 ### Compatibility
 |                     | Version            |
 |---------------------|--------------------|
-| Ballerina Language  | Swan Lake 2201.0.0 |
+| Ballerina Language  | Swan Lake 2201.2.0 |
 | Google Calendar API | V3                 |
 
 ## Report issues
