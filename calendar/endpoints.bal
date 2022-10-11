@@ -16,6 +16,7 @@
 
 import ballerina/http;
 import ballerina/jwt;
+import ballerinax/'client.config;
 
 # Ballerina Google Calendar connector provides the capability to access Google Calendar API.
 # The connector let you perform calendar and event management operations.
@@ -34,24 +35,8 @@ public isolated client class Client {
     # + config -  Configurations required to initialize the client
     # + return - An error on failure of initialization or else `()`
     public isolated function init(ConnectionConfig config) returns error? {
-        http:ClientConfiguration httpClientConfig = {
-            auth: let var authConfig = config.auth in (authConfig is BearerTokenConfig|JwtIssuerConfig ?  authConfig : {...authConfig}),
-            httpVersion: config.httpVersion,
-            http1Settings: {...config.http1Settings},
-            http2Settings: config.http2Settings,
-            timeout: config.timeout,
-            forwarded: config.forwarded,
-            poolConfig: config.poolConfig,
-            cache: config.cache,
-            compression: config.compression,
-            circuitBreaker: config.circuitBreaker,
-            retryConfig: config.retryConfig,
-            responseLimits: config.responseLimits,
-            secureSocket: config.secureSocket,
-            proxy: config.proxy,
-            validation: config.validation
-        };
-        if (config.auth is (BearerTokenConfig|OAuth2RefreshTokenGrantConfig)) {
+        http:ClientConfiguration httpClientConfig = check config:constructHTTPClientConfig(config);
+        if (config.auth is (http:BearerTokenConfig|config:OAuth2RefreshTokenGrantConfig)) {
             self.calendarClient = check new (BASE_URL, httpClientConfig);
             self.clientHandler = check new();
         } else {
