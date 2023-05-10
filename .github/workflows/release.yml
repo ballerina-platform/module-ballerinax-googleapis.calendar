@@ -10,7 +10,7 @@ jobs:
         steps:
             - uses: actions/checkout@v2
             - name: Ballerina Build
-              uses: ballerina-platform/ballerina-action/@2201.2.1
+              uses: ballerina-platform/ballerina-action/@2201.4.1
               with:
                   args: pack
               env:
@@ -20,7 +20,7 @@ jobs:
                   REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
                   REFRESH_URL: ${{ secrets.REFRESH_URL }}
             - name: Ballerina Push
-              uses: ballerina-platform/ballerina-action/@2201.2.1
+              uses: ballerina-platform/ballerina-action/@2201.4.1
               with:
                   args: push
               env:
