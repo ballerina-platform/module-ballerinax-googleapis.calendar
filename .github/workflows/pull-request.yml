@@ -17,3 +17,15 @@ jobs:
                   CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
                   REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
                   REFRESH_URL: ${{ secrets.REFRESH_URL }}
+            - name: Ballerina Test
+              uses: ballerina-platform/ballerina-action/@nightly
+              with:
+                  args: test --test-report --code-coverage --coverage-format=xml
+              env:
+                  WORKING_DIR: ./calendar
+                  CLIENT_ID: ${{ secrets.CLIENT_ID }}
+                  CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+                  REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
+                  REFRESH_URL: ${{ secrets.REFRESH_URL }}
+            - name: Upload coverage reports to Codecov
+              uses: codecov/codecov-action@v3
