@@ -1,31 +1,43 @@
 name: CI
 
-on: [pull_request]
+on: [ pull_request ]
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v2
-            - name: Ballerina Build
-              uses: ballerina-platform/ballerina-action/@nightly
-              with:
-                  args: pack
-              env:
-                  WORKING_DIR: ./calendar
-                  CLIENT_ID: ${{ secrets.CLIENT_ID }}
-                  CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-                  REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
-                  REFRESH_URL: ${{ secrets.REFRESH_URL }}
-            - name: Ballerina Test
-              uses: ballerina-platform/ballerina-action/@nightly
-              with:
-                  args: test --test-report --code-coverage --coverage-format=xml
-              env:
-                  WORKING_DIR: ./calendar
-                  CLIENT_ID: ${{ secrets.CLIENT_ID }}
-                  CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-                  REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
-                  REFRESH_URL: ${{ secrets.REFRESH_URL }}
-            - name: Upload coverage reports to Codecov
-              uses: codecov/codecov-action@v3
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      # Setup Ballerina Environment
+      - name: Set Up Ballerina
+        uses: ballerina-platform/setup-ballerina@v1.1.0
+        with:
+          version: latest
+
+      # Build Ballerina Project
+      - name: Ballerina Build
+        run: bal pack ./ballerina
+        env:
+          JAVA_HOME: /usr/lib/jvm/default-jvm
+
+      # Build Module Examples
+      - name: Ballerina Examples Build
+        run: chmod +x ./examples/build.sh && ./examples/build.sh
+        env:
+          JAVA_HOME: /usr/lib/jvm/default-jvm
+
+      # Test Ballerina Project
+      - name: Ballerina Test
+        # tests will be skipped if the PR is from a forked repository (as the secrets are not available)
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+        run: bal test --test-report --code-coverage --coverage-format=xml
+        env:
+          WORKING_DIR: ./calendar
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
+          REFRESH_URL: ${{ secrets.REFRESH_URL }}
+          JAVA_HOME: /usr/lib/jvm/default-jvm
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3

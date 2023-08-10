@@ -2,27 +2,37 @@ name: Deployment
 
 on:
   release:
-    types: [published]
+    types: [ published ]
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v2
-            - name: Ballerina Build
-              uses: ballerina-platform/ballerina-action/@2201.2.1
-              with:
-                  args: pack
-              env:
-                  WORKING_DIR: ./calendar
-                  CLIENT_ID: ${{ secrets.CLIENT_ID }}
-                  CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-                  REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
-                  REFRESH_URL: ${{ secrets.REFRESH_URL }}
-            - name: Ballerina Push
-              uses: ballerina-platform/ballerina-action/@2201.2.1
-              with:
-                  args: push
-              env:
-                  WORKING_DIR: ./calendar
-                  BALLERINA_CENTRAL_ACCESS_TOKEN: ${{ secrets.BALLERINA_CENTRAL_ACCESS_TOKEN }}
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      # Setup Ballerina Environment
+      - name: Set Up Ballerina
+        uses: ballerina-platform/setup-ballerina@v1.1.0
+        with:
+          version: latest
+
+      # Build Ballerina Project
+      - name: Ballerina Build
+        run: bal pack ./ballerina
+        env:
+          JAVA_HOME: /usr/lib/jvm/default-jvm
+
+      # Build Module Examples
+      - name: Ballerina Examples Build
+        run: chmod +x ./examples/build.sh && ./examples/build.sh
+        env:
+          JAVA_HOME: /usr/lib/jvm/default-jvm
+
+      # Push to Ballerina Central
+      - name: Ballerina Push
+        run: bal push
+        env:
+          BALLERINA_CENTRAL_ACCESS_TOKEN: ${{ secrets.BALLERINA_CENTRAL_DEV_ACCESS_TOKEN }}
+          WORKING_DIR: ./ballerina
+          JAVA_HOME: /usr/lib/jvm/default-jvm
+

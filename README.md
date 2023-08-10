@@ -28,11 +28,11 @@ Execute the commands below to build from the source.
 
 1. * To build the package:
       ```   
-      bal pack ./calendar
+      bal build ./ballerina
       ```
    * To run tests after build:
       ```
-      bal test ./calendar
+      bal test ./ballerina
       ```
 ## Contributing to Ballerina
  
