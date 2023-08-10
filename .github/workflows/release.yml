@@ -24,15 +24,15 @@ jobs:
 
       # Build Module Examples
       - name: Ballerina Examples Build
-        run: chmod +x ./examples/build.sh && ./examples/build.sh
+        run: chmod +x ./examples/build.sh && ./examples/build.sh build
         env:
           JAVA_HOME: /usr/lib/jvm/default-jvm
 
       # Push to Ballerina Central
       - name: Ballerina Push
         run: bal push
+        working-directory: ./ballerina
         env:
           BALLERINA_CENTRAL_ACCESS_TOKEN: ${{ secrets.BALLERINA_CENTRAL_DEV_ACCESS_TOKEN }}
-          WORKING_DIR: ./ballerina
           JAVA_HOME: /usr/lib/jvm/default-jvm
 

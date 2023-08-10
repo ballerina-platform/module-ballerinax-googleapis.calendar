@@ -28,15 +28,14 @@ jobs:
 
       # Build Module Examples
       - name: Ballerina Examples Build
-        run: chmod +x ./examples/build.sh && ./examples/build.sh
+        run: chmod +x ./examples/build.sh && ./examples/build.sh build
         env:
           JAVA_HOME: /usr/lib/jvm/default-jvm
 
       # Test Ballerina Project
       - name: Ballerina Test
-        run: bal test --test-report --code-coverage --coverage-format=xml
+        run: bal test ./ballerina --test-report --code-coverage --coverage-format=xml
         env:
-          WORKING_DIR: ./calendar
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}

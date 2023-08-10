@@ -6,19 +6,31 @@ BAL_HOME_DIR="$BAL_EXAMPLES_DIR/../ballerina"
 
 set -e
 
+case "$1" in
+build)
+  BAL_CMD="build"
+  ;;
+run)
+  BAL_CMD="run"
+  ;;
+*)
+  echo "Invalid command provided: '$1'. Please provide 'build' or 'test' as the command."
+  exit 1
+  ;;
+esac
+
 # Read Ballerina package name
 BAL_PACKAGE_NAME=$(awk -F'"' '/^name/ {print $2}' "$BAL_HOME_DIR/Ballerina.toml")
 
 # Push the package to the local repository
-cd $BAL_HOME_DIR && 
-    bal pack &&
-    bal push --repository=local
+cd "$BAL_HOME_DIR" &&
+  bal pack &&
+  bal push --repository=local
 
 # Remove the cache directories in the repositories
-echo 'Testing'
 cacheDirs=($(ls -d "$BAL_CENTRAL_DIR"/cache-* 2>/dev/null))
 for dir in "${cacheDirs[@]}"; do
-    [ -d "$dir" ] && rm -r "$dir"
+  [ -d "$dir" ] && rm -r "$dir"
 done
 echo "Successfully cleaned the cache directories"
 
@@ -30,6 +42,6 @@ BAL_SOURCE_DIR="$HOME/.ballerina/repositories/local/bala/ballerinax/$BAL_PACKAGE
 echo "Successfully updated the local central repositories"
 
 # Loop through examples in the examples directory
-find $BAL_EXAMPLES_DIR -type f -name "*.bal" | while read -r file; do
-    bal build --offline $file
+find "$BAL_EXAMPLES_DIR" -type f -name "*.bal" | while read -r BAL_EXAMPLE_FILE; do
+  bal "$BAL_CMD" --offline "$BAL_EXAMPLE_FILE"
 done
