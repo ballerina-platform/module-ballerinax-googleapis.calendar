@@ -1,10 +1,13 @@
 [package]
-distribution = "2201.3.0"
-org= "ballerinax"
-name= "googleapis.calendar"
-version= "3.1.0"
-license= ["Apache-2.0"]
+distribution = "2201.7.0"
+org = "ballerinax"
+name = "googleapis.calendar"
+version = "0.1.0"
+license = ["Apache-2.0"]
 authors = ["Ballerina"]
 keywords = ["Productivity/Calendars", "Cost/Free", "Vendor/Google"]
 icon = "icon.png"
 repository = "https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar"
+
+[build-options]
+observabilityIncluded = true
