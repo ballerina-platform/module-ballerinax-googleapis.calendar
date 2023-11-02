@@ -22,24 +22,61 @@ For more information about configuration and operations, go to the module.
  
 2. Download and install [Ballerina Swan Lake](https://ballerina.io/)
 
+3. Generate a Github access token with read package permissions, then set the following `env` variables:
+    ```
+   export packageUser=<Your GitHub Username>
+   export packagePAT=<GitHub Personal Access Token>
+    ```
+
 ### Building the source
  
 Execute the commands below to build from the source.
 
-1. * To build the package:
-      ```   
-      bal build ./ballerina
-      ```
-   * To run tests after build:
-      ```
-      bal test ./ballerina
-      ```
+1. To build the package:
+   ```
+   ./gradlew clean build
+   ```
+
+2. To run the tests:
+   ```
+   ./gradlew clean test
+   ```
+
+3. To run a group of tests
+   ```
+   ./gradlew clean test -Pgroups=<test_group_names>
+   ```
+
+4. To build the without the tests:
+   ```
+   ./gradlew clean build -x test
+   ```
+
+5. To debug package with a remote debugger:
+   ```
+   ./gradlew clean build -Pdebug=<port>
+   ```
+
+6. To debug with Ballerina language:
+   ```
+   ./gradlew clean build -PbalJavaDebug=<port>
+   ```
+
+7. Publish the generated artifacts to the local Ballerina central repository:
+    ```
+    ./gradlew clean build -PpublishToLocalCentral=true
+    ```
+8. Publish the generated artifacts to the Ballerina central repository:
+   ```
+   ./gradlew clean build -PpublishToCentral=true
+   ```
+
 ## Contributing to Ballerina
  
 As an open source project, Ballerina welcomes contributions from the community.
  
 For more information, go to the [contribution guidelines](https://github.com/ballerina-platform/ballerina-lang/blob/master/CONTRIBUTING.md).
- 
+
 ## Code of conduct
  
 All contributors are encouraged to read the [Ballerina Code of Conduct](https://ballerina.io/code-of-conduct).

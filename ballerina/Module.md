@@ -19,6 +19,7 @@ import ballerinax/googleapis.calendar;
 
 ### Step 2: Create a new connector instance
 Create a `calendar:ConnectionConfig` with the OAuth2.0 tokens obtained and initialize the connector with it.
+
 ```ballerina
 calendar:ConnectionConfig config = {
     auth: {
@@ -36,14 +37,14 @@ calendar:Client calendarClient = check new(config);
 1. Now you can use the operations available within the connector. Note that they are in the form of remote operations.  
 Following is an example on how to create quick event using the connector.
 
-    ```ballerina
-    string calendarId = "primary";
-    string title = "Sample Event";
+```ballerina
+string calendarId = "primary";
+string title = "Sample Event";
 
-    public function main() returns error? {
-        calendar:Event response = check calendarClient->quickAddEvent(calendarId, title);
-    }
-    ``` 
+public function main() returns error? {
+    calendar:Event response = check calendarClient->quickAddEvent(calendarId, title);
+}
+``` 
 2. Use `bal run` command to compile and run the Ballerina program.
 
-**[You can find a list of samples here](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/master/samples)**
+**[You can find a list of examples here](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/master/examples)**
