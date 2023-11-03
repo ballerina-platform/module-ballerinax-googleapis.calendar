@@ -127,12 +127,11 @@ public isolated client class Client {
     # + userIp - Deprecated. Please use quotaUser instead.
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
     # + return - Successful response 
-    remote isolated function deleteCalendar(string calendarId, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), string? userIp = ()) returns http:Response|error {
+    remote isolated function deleteCalendar(string calendarId, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), string? userIp = ()) returns error? {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "userIp": userIp};
         resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        http:Response response = check self.clientEp->delete(resourcePath);
-        return response;
+        return self.clientEp->delete(resourcePath);
     }
 
     # Updates metadata for a calendar. This method supports patch semantics.
@@ -295,12 +294,11 @@ public isolated client class Client {
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
     # + ruleId - ACL rule identifier.
     # + return - Successful response 
-    remote isolated function deleteAclRule(string calendarId, string ruleId, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), string? userIp = ()) returns http:Response|error {
+    remote isolated function deleteAclRule(string calendarId, string ruleId, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), string? userIp = ()) returns error? {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/acl/${getEncodedUri(ruleId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "userIp": userIp};
         resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        http:Response response = check self.clientEp->delete(resourcePath);
-        return response;
+        return self.clientEp->delete(resourcePath);
     }
 
     # Updates an access control rule. This method supports patch semantics.
@@ -339,13 +337,12 @@ public isolated client class Client {
     # + userIp - Deprecated. Please use quotaUser instead.
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
     # + return - Successful response 
-    remote isolated function clearCalendar(string calendarId, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), string? userIp = ()) returns http:Response|error {
+    remote isolated function clearCalendar(string calendarId, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), string? userIp = ()) returns error? {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/clear`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "userIp": userIp};
         resourcePath = resourcePath + check getPathForQueryParam(queryParam);
         http:Request request = new;
-        http:Response response = check self.clientEp->post(resourcePath, request);
-        return response;
+        return self.clientEp->post(resourcePath, request);
     }
 
     # Returns events on the specified calendar.
@@ -615,12 +612,11 @@ public isolated client class Client {
     # Whether to send notifications about the deletion of the event. Note that some emails might still be sent even if you set the value to false. The default is false.
     # + sendUpdates - Guests who should receive notifications about the deletion of the event.
     # + return - Successful response 
-    remote isolated function deleteEvent(string calendarId, string eventId, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), string? userIp = (), boolean? sendNotifications = (), "all"|"externalOnly"|"none"? sendUpdates = ()) returns http:Response|error {
+    remote isolated function deleteEvent(string calendarId, string eventId, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), string? userIp = (), boolean? sendNotifications = (), "all"|"externalOnly"|"none"? sendUpdates = ()) returns error? {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/events/${getEncodedUri(eventId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "userIp": userIp, "sendNotifications": sendNotifications, "sendUpdates": sendUpdates};
         resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        http:Response response = check self.clientEp->delete(resourcePath);
-        return response;
+        return self.clientEp->delete(resourcePath);
     }
 
     # Updates an event. This method supports patch semantics.
@@ -719,15 +715,14 @@ public isolated client class Client {
     # + userIp - Deprecated. Please use quotaUser instead.
     # + payload - Data required to identify the channel to be stopped.
     # + return - Successful response 
-    remote isolated function stopChannel(Channel payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), string? userIp = ()) returns http:Response|error {
+    remote isolated function stopChannel(Channel payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), string? userIp = ()) returns error? {
         string resourcePath = string `/channels/stop`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "userIp": userIp};
         resourcePath = resourcePath + check getPathForQueryParam(queryParam);
         http:Request request = new;
         json jsonBody = payload.toJson();
         request.setPayload(jsonBody, "application/json");
-        http:Response response = check self.clientEp->post(resourcePath, request);
-        return response;
+        return self.clientEp->post(resourcePath, request);
     }
 
     # Returns the color definitions for calendars and events.
@@ -907,12 +902,11 @@ public isolated client class Client {
     # + userIp - Deprecated. Please use quotaUser instead.
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
     # + return - Successful response 
-    remote isolated function deleteCalendarFromCalendarlist(string calendarId, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), string? userIp = ()) returns http:Response|error {
+    remote isolated function deleteCalendarFromCalendarlist(string calendarId, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), string? userIp = ()) returns error? {
         string resourcePath = string `/users/me/calendarList/${getEncodedUri(calendarId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "userIp": userIp};
         resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        http:Response response = check self.clientEp->delete(resourcePath);
-        return response;
+        return self.clientEp->delete(resourcePath);
     }
 
     # Updates an existing calendar on the user's calendar list. This method supports patch semantics.
