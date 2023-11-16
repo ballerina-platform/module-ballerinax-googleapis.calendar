@@ -36,12 +36,14 @@ Execute the following commands to build all the examples against the changes you
 Sarah relies on the Google Calendar API to efficiently manage her work schedule. Her application interacts with the API for various tasks related to scheduling and organizing work-related events and meetings.
 
 ### Step 1: Import connector
+
 Import the `ballerinax/googleapis.calendar` module into the Ballerina project.
 ```ballerina
 import ballerinax/googleapis.calendar;
 ```
 
 ### Step 2: Create a new connector instance
+
 Create a `calendar:ConnectionConfig` with the OAuth2.0 tokens obtained and initialize the connector with it.
 
 ```ballerina
@@ -177,11 +179,12 @@ calendar:AclRule|error response = calendarClient->updateAclRule(<string>calendar
 });
 ```
 
-## Scenario 02: Alex's Personal Project Management with Google Calendar API in Ballerina
+## Scenario 02: Alex's Personal Project Management with Google Calendar API
 
 Let's explore how Alex, a software developer, leverages the Google Calendar API in Ballerina for managing his personal project schedule and collaborating with team members.
 
 ### Step 1: Import Google Calendar Connector
+
 Alex begins by importing the `ballerinax/googleapis.calendar` module into his Ballerina project.
 
 ```ballerina
@@ -189,6 +192,7 @@ import ballerinax/googleapis.calendar;
 ```
 
 ### Step 2: Create a Connector Instance
+
 Next, Alex creates a `calendar:ConnectionConfig` with his OAuth2.0 tokens and initializes the connector.
 
 ```ballerina

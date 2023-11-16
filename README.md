@@ -17,8 +17,8 @@ For more information about configuration and operations, go to the module.
 ### Setting up the prerequisites
 1. Download and install Java SE Development Kit (JDK) version 11. You can install either [OpenJDK](https://adoptopenjdk.net/) or [Oracle JDK](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html).
  
-      > **Note:** Set the JAVA_HOME environment variable to the path name of the directory into which you installed
-      JDK.
+   > **Note:** Set the JAVA_HOME environment variable to the path name of the directory into which you installed
+   JDK.
  
 2. Download and install [Ballerina Swan Lake](https://ballerina.io/)
 
@@ -37,6 +37,7 @@ import ballerinax/googleapis.calendar;
 ```
 
 ### Step 2: Instantiate a new connector
+
 Create a `calendar:ConnectionConfig` with the obtained OAuth2.0 tokens and initialize the connector with it.
 ```ballerina
 calendar:Client calendarClient = check new ({
@@ -50,9 +51,12 @@ calendar:Client calendarClient = check new ({
 ```
 
 ### Step 3: Invoke the connector operation
+
 You can now utilize the operations available within the connector.
 ```ballerina
-calendar:Calendar calendarResult = check calendarClient->/calendars.post({ summary: "Work Schedule" });
+calendar:Calendar calendarResult = check calendarClient->/calendars.post({
+   summary: "Work Schedule"
+});
 ```
 
 ## Examples
@@ -65,8 +69,8 @@ The `calendar` connector provides practical examples illustrating usage in vario
 2. [Work Schedule](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/examples/work-schedule/main.bal)
     This example shows how to use Google calendar APIs to managing personal project schedule and collaborating with team members.
 
-### Building the source
- 
+### Building from the Source
+
 Execute the commands below to build from the source.
 
 1. To build the package:
@@ -100,9 +104,10 @@ Execute the commands below to build from the source.
    ```
 
 7. Publish the generated artifacts to the local Ballerina central repository:
-    ```
-    ./gradlew clean build -PpublishToLocalCentral=true
-    ```
+   ```
+   ./gradlew clean build -PpublishToLocalCentral=true
+   ```
+
 8. Publish the generated artifacts to the Ballerina central repository:
    ```
    ./gradlew clean build -PpublishToCentral=true
@@ -123,4 +128,3 @@ All contributors are encouraged to read the [Ballerina Code of Conduct](https://
 * Discuss code changes of the Ballerina project in [ballerina-dev@googlegroups.com](mailto:ballerina-dev@googlegroups.com).
 * Chat live with us via our [Discord server](https://discord.gg/ballerinalang).
 * Post all technical questions on Stack Overflow with the [#ballerina](https://stackoverflow.com/questions/tagged/ballerina) tag.
-
