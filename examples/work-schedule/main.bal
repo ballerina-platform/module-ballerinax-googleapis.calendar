@@ -14,9 +14,9 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import ballerinax/googleapis.calendar;
 import ballerina/log;
 import ballerina/os;
-import ballerinax/googleapis.calendar;
 
 configurable string clientId = os:getEnv("CLIENT_ID");
 configurable string clientSecret = os:getEnv("CLIENT_SECRET");
@@ -34,12 +34,12 @@ public function main() returns error? {
     });
 
     // create new calendar
-    calendar:Calendar calendarResult = check calendarClient->createCalendar({
+    calendar:Calendar calendarResult = check calendarClient->/calendars.post({
         summary: "Work Schedule"
     });
 
     // create new event
-    calendar:Event event = check calendarClient->createEvent(<string>calendarResult.id, {
+    calendar:Event event = check calendarClient->/calendars/[<string>calendarResult.id]/events.post({
         'start: {
             dateTime: "2023-10-19T09:00:00+05:30",
             timeZone: "Asia/Colombo"
@@ -52,7 +52,7 @@ public function main() returns error? {
     });
 
     // update event to invite attendees by email
-    calendar:Event updatedEvent = check calendarClient->updateEvent(<string>calendarResult.id, <string>event.id, {
+    calendar:Event updatedEvent = check calendarClient->/calendars/[<string>calendarResult.id]/events/[<string>event.id].put({
         'start: {
             dateTime: "2023-10-19T09:00:00+05:30",
             timeZone: "Asia/Colombo"
@@ -75,7 +75,7 @@ public function main() returns error? {
     });
 
     // update event to add reminders to send timely notifications to attendees before the meeting
-    calendar:Event|error reminderEvent = calendarClient->updateEvent(<string>calendarResult.id, <string>updatedEvent.id, {
+    calendar:Event|error reminderEvent = calendarClient->/calendars/[<string>calendarResult.id]/events/[<string>updatedEvent.id].put({
         'start: {
             dateTime: "2023-10-19T03:00:00+05:30",
             timeZone: "Asia/Colombo"
@@ -98,7 +98,7 @@ public function main() returns error? {
     }
 
     // create access control rule and assign it to a team member
-    calendar:AclRule acl = check calendarClient->createAclRule(<string>calendarResult.id, {
+    calendar:AclRule acl = check calendarClient->/calendars/[<string>calendarResult.id]/acl.post({
         scope: {
             'type: "user",
             value: "team_member@gmail.com"
@@ -107,7 +107,7 @@ public function main() returns error? {
     });
 
     // change access control rule
-    calendar:AclRule|error response = calendarClient->updateAclRule(<string>calendarResult.id, <string>acl.id, {
+    calendar:AclRule|error response = calendarClient->/calendars/[<string>calendarResult.id]/acl/[<string>acl.id].put({
         scope: {
             'type: "user",
             value: "team_member@gmail.com"
