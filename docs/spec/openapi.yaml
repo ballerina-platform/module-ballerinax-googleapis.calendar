@@ -46,7 +46,6 @@ paths:
       - $ref: "#/components/parameters/oauth_token"
       - $ref: "#/components/parameters/prettyPrint"
       - $ref: "#/components/parameters/quotaUser"
-      - $ref: "#/components/parameters/userIp"
     post:
       description: Creates a secondary calendar.
       operationId: create.calendar
@@ -93,7 +92,7 @@ paths:
         - calendars
     get:
       description: Returns metadata for a calendar.
-      operationId: get.calendar
+      operationId: calendar.calendars.get
       parameters:
         - description: Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
           in: path
@@ -126,10 +125,9 @@ paths:
       - $ref: "#/components/parameters/oauth_token"
       - $ref: "#/components/parameters/prettyPrint"
       - $ref: "#/components/parameters/quotaUser"
-      - $ref: "#/components/parameters/userIp"
     patch:
       description: Updates metadata for a calendar. This method supports patch semantics.
-      operationId: patch.calendar
+      operationId: calendar.calendars.patch
       parameters:
         - description: Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
           in: path
@@ -159,7 +157,7 @@ paths:
         - calendars
     put:
       description: Updates metadata for a calendar.
-      operationId: update.calendar
+      operationId: calendar.calendars.update
       parameters:
         - description: Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
           in: path
@@ -190,7 +188,7 @@ paths:
   /calendars/{calendarId}/acl:
     get:
       description: Returns the rules in the access control list for the calendar.
-      operationId: get.acl.rules.list
+      operationId: calendar.acl.list
       parameters:
         - description: Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
           in: path
@@ -244,10 +242,9 @@ paths:
       - $ref: "#/components/parameters/oauth_token"
       - $ref: "#/components/parameters/prettyPrint"
       - $ref: "#/components/parameters/quotaUser"
-      - $ref: "#/components/parameters/userIp"
     post:
       description: Creates an access control rule.
-      operationId: create.acl.rule
+      operationId: calendar.acl.insert
       parameters:
         - description: Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
           in: path
@@ -288,10 +285,9 @@ paths:
       - $ref: "#/components/parameters/oauth_token"
       - $ref: "#/components/parameters/prettyPrint"
       - $ref: "#/components/parameters/quotaUser"
-      - $ref: "#/components/parameters/userIp"
     post:
       description: Watch for changes to ACL resources.
-      operationId: watch.acl.resource
+      operationId: calendar.acl.watch
       parameters:
         - description: Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
           in: path
@@ -347,7 +343,7 @@ paths:
   /calendars/{calendarId}/acl/{ruleId}:
     delete:
       description: Deletes an access control rule.
-      operationId: delete.acl.rule
+      operationId: calendar.acl.delete
       parameters:
         - description: Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
           in: path
@@ -373,7 +369,7 @@ paths:
         - acl
     get:
       description: Returns an access control rule.
-      operationId: get.acl.rule
+      operationId: calendar.acl.get
       parameters:
         - description: Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
           in: path
@@ -412,10 +408,9 @@ paths:
       - $ref: "#/components/parameters/oauth_token"
       - $ref: "#/components/parameters/prettyPrint"
       - $ref: "#/components/parameters/quotaUser"
-      - $ref: "#/components/parameters/userIp"
     patch:
       description: Updates an access control rule. This method supports patch semantics.
-      operationId: patch.acl.rule
+      operationId: calendar.acl.patch
       parameters:
         - description: Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
           in: path
@@ -456,7 +451,7 @@ paths:
         - acl
     put:
       description: Updates an access control rule.
-      operationId: update.acl.rule
+      operationId: calendar.acl.update
       parameters:
         - description: Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
           in: path
@@ -503,10 +498,9 @@ paths:
       - $ref: "#/components/parameters/oauth_token"
       - $ref: "#/components/parameters/prettyPrint"
       - $ref: "#/components/parameters/quotaUser"
-      - $ref: "#/components/parameters/userIp"
     post:
       description: Clears a primary calendar. This operation deletes all events associated with the primary calendar of an account.
-      operationId: clear.calendar
+      operationId: calendar.calendars.clear
       parameters:
         - description: Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
           in: path
@@ -527,7 +521,7 @@ paths:
   /calendars/{calendarId}/events:
     get:
       description: Returns events on the specified calendar.
-      operationId: get.events
+      operationId: calendar.events.list
       parameters:
         - description: Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
           in: path
@@ -535,11 +529,6 @@ paths:
           required: true
           schema:
             type: string
-        - description: Deprecated and ignored. A value will always be returned in the email field for the organizer, creator and attendees, even if no real email address is available (i.e. a generated, non-working value will be provided).
-          in: query
-          name: alwaysIncludeEmail
-          schema:
-            type: boolean
         - description: |-
             Event types to return. Optional. Possible values are: 
             - "default" 
@@ -698,10 +687,9 @@ paths:
       - $ref: "#/components/parameters/oauth_token"
       - $ref: "#/components/parameters/prettyPrint"
       - $ref: "#/components/parameters/quotaUser"
-      - $ref: "#/components/parameters/userIp"
     post:
       description: Creates an event.
-      operationId: create.event
+      operationId: calendar.events.insert
       parameters:
         - description: Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
           in: path
@@ -722,14 +710,6 @@ paths:
           schema:
             minimum: 1
             type: integer
-        - description: |-
-            Deprecated. Please use sendUpdates instead.
-
-            Whether to send notifications about the creation of the new event. Note that some emails might still be sent even if you set the value to false. The default is false.
-          in: query
-          name: sendNotifications
-          schema:
-            type: boolean
         - description: Whether to send notifications about the creation of the new event. Note that some emails might still be sent. The default is false.
           in: query
           name: sendUpdates
@@ -776,10 +756,9 @@ paths:
       - $ref: "#/components/parameters/oauth_token"
       - $ref: "#/components/parameters/prettyPrint"
       - $ref: "#/components/parameters/quotaUser"
-      - $ref: "#/components/parameters/userIp"
     post:
       description: Imports an event. This operation is used to add a private copy of an existing event to a calendar.
-      operationId: import.event
+      operationId: calendar.events.import
       parameters:
         - description: Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
           in: path
@@ -831,10 +810,9 @@ paths:
       - $ref: "#/components/parameters/oauth_token"
       - $ref: "#/components/parameters/prettyPrint"
       - $ref: "#/components/parameters/quotaUser"
-      - $ref: "#/components/parameters/userIp"
     post:
       description: Creates an event based on a simple text string.
-      operationId: quickAdd.event
+      operationId: calendar.events.quickAdd
       parameters:
         - description: Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
           in: path
@@ -848,14 +826,6 @@ paths:
           required: true
           schema:
             type: string
-        - description: |-
-            Deprecated. Please use sendUpdates instead.
-
-            Whether to send notifications about the creation of the event. Note that some emails might still be sent even if you set the value to false. The default is false.
-          in: query
-          name: sendNotifications
-          schema:
-            type: boolean
         - description: Guests who should receive notifications about the creation of the new event.
           in: query
           name: sendUpdates
@@ -891,10 +861,9 @@ paths:
       - $ref: "#/components/parameters/oauth_token"
       - $ref: "#/components/parameters/prettyPrint"
       - $ref: "#/components/parameters/quotaUser"
-      - $ref: "#/components/parameters/userIp"
     post:
       description: Watch for changes to Events resources.
-      operationId: watch.event.resource
+      operationId: calendar.events.watch
       parameters:
         - description: Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
           in: path
@@ -902,11 +871,6 @@ paths:
           required: true
           schema:
             type: string
-        - description: Deprecated and ignored. A value will always be returned in the email field for the organizer, creator and attendees, even if no real email address is available (i.e. a generated, non-working value will be provided).
-          in: query
-          name: alwaysIncludeEmail
-          schema:
-            type: boolean
         - description: |-
             Event types to return. Optional. Possible values are: 
             - "default" 
@@ -1067,7 +1031,7 @@ paths:
   /calendars/{calendarId}/events/{eventId}:
     delete:
       description: Deletes an event.
-      operationId: delete.event
+      operationId: calendar.events.delete
       parameters:
         - description: Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
           in: path
@@ -1081,14 +1045,6 @@ paths:
           required: true
           schema:
             type: string
-        - description: |-
-            Deprecated. Please use sendUpdates instead.
-
-            Whether to send notifications about the deletion of the event. Note that some emails might still be sent even if you set the value to false. The default is false.
-          in: query
-          name: sendNotifications
-          schema:
-            type: boolean
         - description: Guests who should receive notifications about the deletion of the event.
           in: query
           name: sendUpdates
@@ -1114,7 +1070,7 @@ paths:
         - events
     get:
       description: Returns an event based on its Google Calendar ID. To retrieve an event using its iCalendar ID, call the events.list method using the iCalUID parameter.
-      operationId: get.event
+      operationId: calendar.events.get
       parameters:
         - description: Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
           in: path
@@ -1128,11 +1084,6 @@ paths:
           required: true
           schema:
             type: string
-        - description: Deprecated and ignored. A value will always be returned in the email field for the organizer, creator and attendees, even if no real email address is available (i.e. a generated, non-working value will be provided).
-          in: query
-          name: alwaysIncludeEmail
-          schema:
-            type: boolean
         - description: The maximum number of attendees to include in the response. If there are more than the specified number of attendees, only the participant is returned. Optional.
           in: query
           name: maxAttendees
@@ -1177,10 +1128,9 @@ paths:
       - $ref: "#/components/parameters/oauth_token"
       - $ref: "#/components/parameters/prettyPrint"
       - $ref: "#/components/parameters/quotaUser"
-      - $ref: "#/components/parameters/userIp"
     patch:
       description: Updates an event. This method supports patch semantics.
-      operationId: patch.event
+      operationId: calendar.events.patch
       parameters:
         - description: Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
           in: path
@@ -1194,11 +1144,6 @@ paths:
           required: true
           schema:
             type: string
-        - description: Deprecated and ignored. A value will always be returned in the email field for the organizer, creator and attendees, even if no real email address is available (i.e. a generated, non-working value will be provided).
-          in: query
-          name: alwaysIncludeEmail
-          schema:
-            type: boolean
         - description: Version number of conference data supported by the API client. Version 0 assumes no conference data support and ignores conference data in the event's body. Version 1 enables support for copying of ConferenceData as well as for creating new conferences using the createRequest field of conferenceData. The default is 0.
           in: query
           name: conferenceDataVersion
@@ -1212,14 +1157,6 @@ paths:
           schema:
             minimum: 1
             type: integer
-        - description: |-
-            Deprecated. Please use sendUpdates instead.
-
-            Whether to send notifications about the event update (for example, description changes, etc.). Note that some emails might still be sent even if you set the value to false. The default is false.
-          in: query
-          name: sendNotifications
-          schema:
-            type: boolean
         - description: Guests who should receive notifications about the event update (for example, title changes, etc.).
           in: query
           name: sendUpdates
@@ -1260,7 +1197,7 @@ paths:
         - events
     put:
       description: Updates an event.
-      operationId: update.event
+      operationId: calendar.events.update
       parameters:
         - description: Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
           in: path
@@ -1274,11 +1211,6 @@ paths:
           required: true
           schema:
             type: string
-        - description: Deprecated and ignored. A value will always be returned in the email field for the organizer, creator and attendees, even if no real email address is available (i.e. a generated, non-working value will be provided).
-          in: query
-          name: alwaysIncludeEmail
-          schema:
-            type: boolean
         - description: Version number of conference data supported by the API client. Version 0 assumes no conference data support and ignores conference data in the event's body. Version 1 enables support for copying of ConferenceData as well as for creating new conferences using the createRequest field of conferenceData. The default is 0.
           in: query
           name: conferenceDataVersion
@@ -1292,14 +1224,6 @@ paths:
           schema:
             minimum: 1
             type: integer
-        - description: |-
-            Deprecated. Please use sendUpdates instead.
-
-            Whether to send notifications about the event update (for example, description changes, etc.). Note that some emails might still be sent even if you set the value to false. The default is false.
-          in: query
-          name: sendNotifications
-          schema:
-            type: boolean
         - description: Guests who should receive notifications about the event update (for example, title changes, etc.).
           in: query
           name: sendUpdates
@@ -1341,7 +1265,7 @@ paths:
   /calendars/{calendarId}/events/{eventId}/instances:
     get:
       description: Returns instances of the specified recurring event.
-      operationId: get.event.instances
+      operationId: calendar.events.instances
       parameters:
         - description: Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
           in: path
@@ -1355,11 +1279,6 @@ paths:
           required: true
           schema:
             type: string
-        - description: Deprecated and ignored. A value will always be returned in the email field for the organizer, creator and attendees, even if no real email address is available (i.e. a generated, non-working value will be provided).
-          in: query
-          name: alwaysIncludeEmail
-          schema:
-            type: boolean
         - description: The maximum number of attendees to include in the response. If there are more than the specified number of attendees, only the participant is returned. Optional.
           in: query
           name: maxAttendees
@@ -1435,7 +1354,7 @@ paths:
       - $ref: "#/components/parameters/oauth_token"
       - $ref: "#/components/parameters/prettyPrint"
       - $ref: "#/components/parameters/quotaUser"
-      - $ref: "#/components/parameters/userIp"
+      
   /calendars/{calendarId}/events/{eventId}/move:
     parameters:
       - $ref: "#/components/parameters/alt"
@@ -1444,10 +1363,10 @@ paths:
       - $ref: "#/components/parameters/oauth_token"
       - $ref: "#/components/parameters/prettyPrint"
       - $ref: "#/components/parameters/quotaUser"
-      - $ref: "#/components/parameters/userIp"
+      
     post:
       description: Moves an event to another calendar, i.e. changes an event's organizer.
-      operationId: move.event
+      operationId: calendar.events.move
       parameters:
         - description: Calendar identifier of the source calendar where the event currently is on.
           in: path
@@ -1467,14 +1386,6 @@ paths:
           required: true
           schema:
             type: string
-        - description: |-
-            Deprecated. Please use sendUpdates instead.
-
-            Whether to send notifications about the change of the event's organizer. Note that some emails might still be sent even if you set the value to false. The default is false.
-          in: query
-          name: sendNotifications
-          schema:
-            type: boolean
         - description: Guests who should receive notifications about the change of the event's organizer.
           in: query
           name: sendUpdates
@@ -1510,10 +1421,10 @@ paths:
       - $ref: "#/components/parameters/oauth_token"
       - $ref: "#/components/parameters/prettyPrint"
       - $ref: "#/components/parameters/quotaUser"
-      - $ref: "#/components/parameters/userIp"
+      
     post:
       description: Stop watching resources through this channel
-      operationId: stop.channel
+      operationId: calendar.channels.stop
       requestBody:
         description: Data required to identify the channel to be stopped.
         content:
@@ -1549,7 +1460,7 @@ paths:
   /colors:
     get:
       description: Returns the color definitions for calendars and events.
-      operationId: get.colors
+      operationId: calendar.colors.get
       responses:
         "200":
           content:
@@ -1575,7 +1486,7 @@ paths:
       - $ref: "#/components/parameters/oauth_token"
       - $ref: "#/components/parameters/prettyPrint"
       - $ref: "#/components/parameters/quotaUser"
-      - $ref: "#/components/parameters/userIp"
+      
   /freeBusy:
     parameters:
       - $ref: "#/components/parameters/alt"
@@ -1584,10 +1495,10 @@ paths:
       - $ref: "#/components/parameters/oauth_token"
       - $ref: "#/components/parameters/prettyPrint"
       - $ref: "#/components/parameters/quotaUser"
-      - $ref: "#/components/parameters/userIp"
+      
     post:
       description: Returns free/busy information for a set of calendars.
-      operationId: query.freebusy
+      operationId: calendar.freebusy.query
       requestBody:
         description: Data required to return free/busy information
         content:
@@ -1615,7 +1526,7 @@ paths:
   /users/me/calendarList:
     get:
       description: Returns the calendars on the user's calendar list.
-      operationId: get.calendars
+      operationId: calendar.calendarList.list
       parameters:
         - description: Maximum number of entries returned on one result page. By default the value is 100 entries. The page size can never be larger than 250 entries. Optional.
           in: query
@@ -1683,10 +1594,10 @@ paths:
       - $ref: "#/components/parameters/oauth_token"
       - $ref: "#/components/parameters/prettyPrint"
       - $ref: "#/components/parameters/quotaUser"
-      - $ref: "#/components/parameters/userIp"
+      
     post:
       description: Inserts an existing calendar into the user's calendar list.
-      operationId: insert.calendar.into.calendar.list
+      operationId: calendar.calendarList.insert
       parameters:
         - description: Whether to use the foregroundColor and backgroundColor fields to write the calendar colors (RGB). If this feature is used, the index-based colorId field will be set to the best matching option automatically. Optional. The default is False.
           in: query
@@ -1721,10 +1632,9 @@ paths:
       - $ref: "#/components/parameters/oauth_token"
       - $ref: "#/components/parameters/prettyPrint"
       - $ref: "#/components/parameters/quotaUser"
-      - $ref: "#/components/parameters/userIp"
     post:
       description: Watch for changes to CalendarList resources.
-      operationId: watch.calendar.list
+      operationId: calendar.calendarList.watch
       parameters:
         - description: Maximum number of entries returned on one result page. By default the value is 100 entries. The page size can never be larger than 250 entries. Optional.
           in: query
@@ -1794,7 +1704,7 @@ paths:
   /users/me/calendarList/{calendarId}:
     delete:
       description: Removes a calendar from the user's calendar list.
-      operationId: delete.calendar.from.calendarList
+      operationId: calendar.calendarList.delete
       parameters:
         - description: Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
           in: path
@@ -1814,7 +1724,7 @@ paths:
         - calendarList
     get:
       description: Returns a calendar from the user's calendar list.
-      operationId: get.calendar.from.calendar.list
+      operationId: calendar.calendarList.get
       parameters:
         - description: Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
           in: path
@@ -1847,10 +1757,10 @@ paths:
       - $ref: "#/components/parameters/oauth_token"
       - $ref: "#/components/parameters/prettyPrint"
       - $ref: "#/components/parameters/quotaUser"
-      - $ref: "#/components/parameters/userIp"
+      
     patch:
       description: Updates an existing calendar on the user's calendar list. This method supports patch semantics.
-      operationId: patch.calendar.from.calendar.list
+      operationId: calendar.calendarList.patch
       parameters:
         - description: Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
           in: path
@@ -1885,7 +1795,7 @@ paths:
         - calendarList
     put:
       description: Updates an existing calendar on the user's calendar list.
-      operationId: update.calendar.from.calendar.list
+      operationId: calendar.calendarList.update
       parameters:
         - description: Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
           in: path
@@ -1921,7 +1831,7 @@ paths:
   /users/me/settings:
     get:
       description: Returns all user settings for the authenticated user.
-      operationId: get.all.user.settings
+      operationId: calendar.settings.list
       parameters:
         - description: Maximum number of entries returned on one result page. By default the value is 100 entries. The page size can never be larger than 250 entries. Optional.
           in: query
@@ -1972,7 +1882,7 @@ paths:
       - $ref: "#/components/parameters/oauth_token"
       - $ref: "#/components/parameters/prettyPrint"
       - $ref: "#/components/parameters/quotaUser"
-      - $ref: "#/components/parameters/userIp"
+      
   /users/me/settings/watch:
     parameters:
       - $ref: "#/components/parameters/alt"
@@ -1981,10 +1891,10 @@ paths:
       - $ref: "#/components/parameters/oauth_token"
       - $ref: "#/components/parameters/prettyPrint"
       - $ref: "#/components/parameters/quotaUser"
-      - $ref: "#/components/parameters/userIp"
+      
     post:
       description: Watch for changes to Settings resources.
-      operationId: watch.settings
+      operationId: calendar.settings.watch
       parameters:
         - description: Maximum number of entries returned on one result page. By default the value is 100 entries. The page size can never be larger than 250 entries. Optional.
           in: query
@@ -2037,7 +1947,7 @@ paths:
   /users/me/settings/{setting}:
     get:
       description: Returns a single user setting.
-      operationId: get.user.setting
+      operationId: calendar.settings.get
       parameters:
         - description: The id of the user setting.
           in: path
@@ -2074,7 +1984,7 @@ paths:
       - $ref: "#/components/parameters/oauth_token"
       - $ref: "#/components/parameters/prettyPrint"
       - $ref: "#/components/parameters/quotaUser"
-      - $ref: "#/components/parameters/userIp"
+      
 components:
   parameters:
     alt:
@@ -2113,12 +2023,6 @@ components:
       description: An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
       in: query
       name: quotaUser
-      schema:
-        type: string
-    userIp:
-      description: Deprecated. Please use quotaUser instead.
-      in: query
-      name: userIp
       schema:
         type: string
   schemas:
@@ -2688,42 +2592,6 @@ components:
                 type: string
               description: Properties that are shared between copies of the event on other attendees' calendars.
               type: object
-          type: object
-        gadget:
-          description: A gadget that extends this event. Gadgets are deprecated; this structure is instead only used for returning birthday calendar metadata.
-          properties:
-            display:
-              description: |-
-                The gadget's display mode. Deprecated. Possible values are:  
-                - "icon" - The gadget displays next to the event's title in the calendar view. 
-                - "chip" - The gadget displays when the event is clicked.
-              type: string
-            height:
-              description: The gadget's height in pixels. The height must be an integer greater than 0. Optional. Deprecated.
-              format: int32
-              type: integer
-            iconLink:
-              description: The gadget's icon URL. The URL scheme must be HTTPS. Deprecated.
-              type: string
-            link:
-              description: The gadget's URL. The URL scheme must be HTTPS. Deprecated.
-              type: string
-            preferences:
-              additionalProperties:
-                description: The preference name and corresponding value.
-                type: string
-              description: Preferences.
-              type: object
-            title:
-              description: The gadget's title. Deprecated.
-              type: string
-            type:
-              description: The gadget's type. Deprecated.
-              type: string
-            width:
-              description: The gadget's width in pixels. The width must be an integer greater than 0. Optional. Deprecated.
-              format: int32
-              type: integer
           type: object
         guestsCanInviteOthers:
           default: true
