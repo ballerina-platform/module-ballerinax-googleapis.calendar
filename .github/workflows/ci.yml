@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - master
+      - main
       - 2201.[0-9]+.x
   repository_dispatch:
     types: check_connector_for_breaking_changes
@@ -15,4 +15,4 @@ jobs:
     uses: ballerina-platform/ballerina-standard-library/.github/workflows/build-connector-template.yml@main
     secrets: inherit
     with:
-      repo-name: module-ballerinax-googleapis.gmail
+      repo-name: module-ballerinax-googleapis.calendar
