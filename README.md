@@ -3,7 +3,7 @@ Ballerina Google Calendar Connector
 
 [![Build](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/workflows/CI/badge.svg)](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/actions?query=workflow%3ACI)
 [![codecov](https://codecov.io/gh/ballerina-platform/module-ballerinax-googleapis.calendar/branch/main/graph/badge.svg)](https://codecov.io/gh/ballerina-platform/module-ballerinax-googleapis.calendar)
-[![GitHub Last Commit](https://img.shields.io/github/last-commit/ballerina-platform/module-ballerinax-googleapis.calendar.svg)](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/commits/master)
+[![GitHub Last Commit](https://img.shields.io/github/last-commit/ballerina-platform/module-ballerinax-googleapis.calendar.svg)](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/commits/main)
 [![GraalVM Check](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/actions/workflows/build-with-bal-test-native.yml/badge.svg)](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/actions/workflows/build-with-bal-test-native.yml)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
@@ -13,7 +13,7 @@ This connector provides the capability to programmatically manage events and cal
 For more information about configuration and operations, go to the module.
 - [googleapis.calendar](calendar/Module.md) - Perform Google Calendar related operations programmatically
  
-## Building from the source
+## Building from the Source
 ### Setting up the prerequisites
 1. Download and install Java SE Development Kit (JDK) version 11. You can install either [OpenJDK](https://adoptopenjdk.net/) or [Oracle JDK](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html).
  
@@ -27,6 +27,43 @@ For more information about configuration and operations, go to the module.
    export packageUser=<Your GitHub Username>
    export packagePAT=<GitHub Personal Access Token>
     ```
+
+To utilize the `calendar` connector in your Ballerina application, modify the `.bal` file as follows:
+
+### Step 1: Import the connector
+Import the `ballerinax/googleapis.calendar` package into your Ballerina project.
+```ballerina
+import ballerinax/googleapis.calendar;
+```
+
+### Step 2: Instantiate a new connector
+Create a `calendar:ConnectionConfig` with the obtained OAuth2.0 tokens and initialize the connector with it.
+```ballerina
+calendar:Client calendarClient = check new ({
+   auth: {
+      clientId: clientId,
+      clientSecret: clientSecret,
+      refreshToken: refreshToken,
+      refreshUrl: refreshUrl
+   }
+});
+```
+
+### Step 3: Invoke the connector operation
+You can now utilize the operations available within the connector.
+```ballerina
+calendar:Calendar calendarResult = check calendarClient->/calendars.post({ summary: "Work Schedule" });
+```
+
+## Examples
+
+The `calendar` connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/examples), covering use cases like creating calendar, scheduling meeting events, and adding reminders.
+
+1. [Project Management](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/examples/project-management/main.bal)
+    This example shows how to use Google calendar APIs to efficiently manage work schedule of a person. It interacts with the API for various tasks related to scheduling and organizing work-related events and meetings.
+
+2. [Work Schedule](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/examples/work-schedule/main.bal)
+    This example shows how to use Google calendar APIs to managing personal project schedule and collaborating with team members.
 
 ### Building the source
  
