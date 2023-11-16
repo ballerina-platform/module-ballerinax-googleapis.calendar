@@ -80,4 +80,4 @@ To use the `calendar` connector, create Calendar credentials to interact with Ca
 
 3. **Get the access token and refresh token**: Generate an access token and a refresh token using the OAuth playground.
 
-For detailed steps, including necessary links, refer to the [Setup Guide](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/master/docs/setup/setup.md).
+For detailed steps, including necessary links, refer to the [Setup Guide](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/docs/setup/setup.md).
