@@ -321,30 +321,6 @@ public type Settings record {
     string nextSyncToken?;
 };
 
-# A gadget that extends this event. Gadgets are deprecated; this structure is instead only used for returning birthday calendar metadata.
-public type Event_gadget record {
-    # The gadget's display mode. Deprecated. Possible values are:  
-    # - "icon" - The gadget displays next to the event's title in the calendar view. 
-    # - "chip" - The gadget displays when the event is clicked.
-    string display?;
-    # The gadget's height in pixels. The height must be an integer greater than 0. Optional. Deprecated.
-    int:Signed32 height?;
-    # The gadget's icon URL. The URL scheme must be HTTPS. Deprecated.
-    string iconLink?;
-    # The gadget's URL. The URL scheme must be HTTPS. Deprecated.
-    string link?;
-    # Preferences.
-    record {|string...;|} preferences?;
-    # The gadget's title. Deprecated.
-    string title?;
-    # The gadget's type. Deprecated.
-    string 'type?;
-    # The gadget's width in pixels. The width must be an integer greater than 0. Optional. Deprecated.
-    int:Signed32 width?;
-};
-
-# Represents information about conferences associated with calendar events.
-#
 public type ConferenceData record {
     # The ID of the conference.
     # Can be used by developers to keep track of conferences, should not be displayed to users.
@@ -730,8 +706,6 @@ public type Event record {
     string eventType?;
     # Extended properties of the event.
     Event_extendedProperties extendedProperties?;
-    # A gadget that extends this event. Gadgets are deprecated; this structure is instead only used for returning birthday calendar metadata.
-    Event_gadget gadget?;
     # Whether attendees other than the organizer can invite others to the event. Optional. The default is True.
     boolean guestsCanInviteOthers?;
     # Whether attendees other than the organizer can modify the event. Optional. The default is False.
