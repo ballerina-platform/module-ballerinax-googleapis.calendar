@@ -82,7 +82,7 @@ public isolated client class Client {
     # + prettyPrint - Returns response with indentations and line breaks.
     # + quotaUser - An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
-    # + return - Successful response 
+    # + return - Successful response
     resource isolated function get calendars/[string calendarId]("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns Calendar|error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
@@ -101,7 +101,7 @@ public isolated client class Client {
     # + prettyPrint - Returns response with indentations and line breaks.
     # + quotaUser - An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
-    # + return - Successful response 
+    # + return - Successful response
     resource isolated function put calendars/[string calendarId](Calendar payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns Calendar|error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
@@ -127,7 +127,7 @@ public isolated client class Client {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
         resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        return check self.clientEp-> delete(resourcePath);
+        return check self.clientEp->delete(resourcePath);
     }
 
     # Updates metadata for a calendar. This method supports patch semantics.
@@ -258,7 +258,7 @@ public isolated client class Client {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/acl/${getEncodedUri(ruleId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
         resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        return check self.clientEp-> delete(resourcePath);
+        return check self.clientEp->delete(resourcePath);
     }
 
     # Updates an access control rule. This method supports patch semantics.
@@ -300,7 +300,7 @@ public isolated client class Client {
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
         resourcePath = resourcePath + check getPathForQueryParam(queryParam);
         http:Request request = new;
-        return check self.clientEp-> post(resourcePath, request);
+        return check self.clientEp->post(resourcePath, request);
     }
 
     # Returns events on the specified calendar.
@@ -426,7 +426,7 @@ public isolated client class Client {
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "text": text, "sendUpdates": sendUpdates};
         resourcePath = resourcePath + check getPathForQueryParam(queryParam);
         http:Request request = new;
-        Event response = check self.clientEp-> post(resourcePath, request);
+        Event response = check self.clientEp->post(resourcePath, request);
         return response;
     }
 
@@ -494,7 +494,7 @@ public isolated client class Client {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/events/${getEncodedUri(eventId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "sendUpdates": sendUpdates};
         resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        return check self.clientEp-> delete(resourcePath);
+        return check self.clientEp->delete(resourcePath);
     }
 
     # Updates an event. This method supports patch semantics.
@@ -569,7 +569,7 @@ public isolated client class Client {
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "destination": destination, "sendUpdates": sendUpdates};
         resourcePath = resourcePath + check getPathForQueryParam(queryParam);
         http:Request request = new;
-        Event response = check self.clientEp-> post(resourcePath, request);
+        Event response = check self.clientEp->post(resourcePath, request);
         return response;
     }
 
@@ -715,7 +715,7 @@ public isolated client class Client {
         string resourcePath = string `/users/me/calendarList/${getEncodedUri(calendarId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
         resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        return check self.clientEp-> delete(resourcePath);
+        return check self.clientEp->delete(resourcePath);
     }
 
     # Updates an existing calendar on the user's calendar list. This method supports patch semantics.
