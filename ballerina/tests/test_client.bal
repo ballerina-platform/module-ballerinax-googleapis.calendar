@@ -32,7 +32,7 @@ ConnectionConfig config = {
 };
 
 @test:Config {}
-function testCreateAndDeleteCalendar() returns error? {
+function testCreateAndDeleteCalendar() returns Error? {
     Client client1 = check new(config);
     string summary = "Test Calendar 1";
     Calendar cal = {
@@ -46,7 +46,7 @@ function testCreateAndDeleteCalendar() returns error? {
 }
 
 @test:Config{}
-function testGetCalendar() returns error? {
+function testGetCalendar() returns Error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {
@@ -60,7 +60,7 @@ function testGetCalendar() returns error? {
 }
 
 @test:Config{}
-function testUpdateCalendar() returns error? {
+function testUpdateCalendar() returns Error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {
@@ -76,7 +76,7 @@ function testUpdateCalendar() returns error? {
 }
 
 @test:Config{}
-function testPatchCalendar() returns error? {
+function testPatchCalendar() returns Error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {
@@ -92,7 +92,7 @@ function testPatchCalendar() returns error? {
 }
 
 @test:Config{}
-function testGetCalendarAcl() returns error? {
+function testGetCalendarAcl() returns Error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {
@@ -109,7 +109,7 @@ function testGetCalendarAcl() returns error? {
 }
 
 @test:Config{}
-function testGetCalendarEvents() returns error? {
+function testGetCalendarEvents() returns Error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {
@@ -138,7 +138,7 @@ function testGetCalendarEvents() returns error? {
 }
 
 @test:Config{}
-function testGetCalendarEvent() returns error? {
+function testGetCalendarEvent() returns Error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {
@@ -167,7 +167,7 @@ function testGetCalendarEvent() returns error? {
 }
 
 @test:Config{}
-function testCreateCalendarEvent() returns error? {
+function testCreateCalendarEvent() returns Error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {
@@ -196,7 +196,7 @@ function testCreateCalendarEvent() returns error? {
 }
 
 @test:Config{}
-function testUpdateCalendarEvent() returns error? {
+function testUpdateCalendarEvent() returns Error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {
@@ -227,7 +227,7 @@ function testUpdateCalendarEvent() returns error? {
 }
 
 @test:Config{}
-function testPatchCalendarEvent() returns error? {
+function testPatchCalendarEvent() returns Error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {
@@ -258,7 +258,7 @@ function testPatchCalendarEvent() returns error? {
 }
 
 @test:Config{}
-function testDeleteCalendarEvent() returns error? {
+function testDeleteCalendarEvent() returns Error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {
@@ -285,7 +285,7 @@ function testDeleteCalendarEvent() returns error? {
 }
 
 @test:Config {}
-function testCreateEvent() returns error? {
+function testCreateEvent() returns Error?  {
     Client client1 = check new(config);
     string summary = "Test Meeting 110";
     Calendar cal = {
@@ -308,7 +308,7 @@ function testCreateEvent() returns error? {
 }
 
 @test:Config {}
-function testUpdateEvent() returns error? {
+function testUpdateEvent() returns Error?  {
     Client client1 = check new(config);
     string summary = "Test Meeting 110";
     Calendar cal = {
@@ -339,7 +339,7 @@ function testUpdateEvent() returns error? {
 }
 
 @test:Config {}
-function testPatchEvent() returns error? {
+function testPatchEvent() returns Error?  {
     Client client1 = check new(config);
     string summary = "Test Meeting 110";
     Calendar cal = {
@@ -367,7 +367,7 @@ function testPatchEvent() returns error? {
 }
 
 @test:Config {}
-function testGetEvent() returns error? {
+function testGetEvent() returns Error?  {
     Client client1 = check new(config);
     string summary = "Test Meeting 110";
     Calendar cal = {
@@ -393,7 +393,7 @@ function testGetEvent() returns error? {
 }
 
 @test:Config {}
-function testDeleteEvent() returns error? {
+function testDeleteEvent() returns Error?  {
     Client client1 = check new(config);
     string summary = "Test Meeting 110";
     Calendar cal = {
@@ -417,7 +417,7 @@ function testDeleteEvent() returns error? {
 }
 
 @test:Config{}
-function testPostCalendarAcl() returns error? {
+function testPostCalendarAcl() returns error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {
@@ -434,12 +434,12 @@ function testPostCalendarAcl() returns error? {
     AclRule res = check client1->/calendars/[<string>createdCal.id]/acl.post(check acl.cloneWithType(AclRule));
     test:assertEquals(res.role, check acl.role);
     test:assertEquals((<AclRule_scope>res.scope).value, check acl.scope.value);
-    error? delRes = check client1->/calendars/[<string>createdCal.id].delete();
+    Error?  delRes = check client1->/calendars/[<string>createdCal.id].delete();
     test:assertEquals(delRes, ());
 }
 
 @test:Config{}
-function testCreateAclRule() returns error? {
+function testCreateAclRule() returns Error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {
@@ -473,7 +473,7 @@ function testCreateAclRule() returns error? {
 }
 
 @test:Config{}
-function testGetCalendarEventInstances() returns error? {
+function testGetCalendarEventInstances() returns Error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {
@@ -502,7 +502,7 @@ function testGetCalendarEventInstances() returns error? {
 }
 
 @test:Config{}
-function testMoveCalendarEvent() returns error? {
+function testMoveCalendarEvent() returns Error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {
@@ -538,7 +538,7 @@ function testMoveCalendarEvent() returns error? {
 }
 
 @test:Config {}
-function testDeleteCalendarFromList() returns error? {
+function testDeleteCalendarFromList() returns Error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {
@@ -555,7 +555,7 @@ function testDeleteCalendarFromList() returns error? {
 }
 
 @test:Config{}
-function testPatchCalendarListEntry() returns error? {
+function testPatchCalendarListEntry() returns Error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar List Entry";
     Calendar cal = {
@@ -577,7 +577,7 @@ function testPatchCalendarListEntry() returns error? {
 }
 
 @test:Config {}
-function testPostCalendarList() returns error? {
+function testPostCalendarList() returns Error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar List Entry";
     Calendar cal = {
@@ -596,7 +596,7 @@ function testPostCalendarList() returns error? {
 }
 
 @test:Config {}
-function testGetCalendarListEntry() returns error? {
+function testGetCalendarListEntry() returns Error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar List Entry";
     Calendar cal = {
@@ -615,7 +615,7 @@ function testGetCalendarListEntry() returns error? {
 }
 
 @test:Config{}
-function testUpdateCalendarListEntry() returns error? {
+function testUpdateCalendarListEntry() returns Error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar List Entry";
     Calendar cal = {
@@ -638,7 +638,7 @@ function testUpdateCalendarListEntry() returns error? {
 }
 
 @test:Config{}
-function testGetCalendarList() returns error? {
+function testGetCalendarList() returns Error?  {
     Client client1 = check new(config);
     CalendarList calendarList = check client1->/users/me/calendarList.get();
     test:assertNotEquals(calendarList, ());
@@ -649,7 +649,7 @@ function testGetCalendarList() returns error? {
 }
 
 @test:Config {}
-function testGetColors() returns error? {
+function testGetColors() returns Error?  {
     Client client1 = check new(config);
     Colors colors = check client1->/colors.get();
     test:assertNotEquals(colors.calendar, ());
@@ -658,7 +658,7 @@ function testGetColors() returns error? {
 }
 
 @test:Config {}
-function testFreeBusy() returns error? {
+function testFreeBusy() returns Error?  {
     Client client1 = check new(config);
     FreeBusyRequest freeBusyRequest = {
         timeMin: "2022-01-01T00:00:00Z",
@@ -676,7 +676,7 @@ function testFreeBusy() returns error? {
 }
 
 @test:Config{}
-function testCreateCalendarEventQuickAdd() returns error? {
+function testCreateCalendarEventQuickAdd() returns Error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {

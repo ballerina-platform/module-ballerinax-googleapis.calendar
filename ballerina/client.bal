@@ -24,7 +24,7 @@ public isolated client class Client {
     # + config - The configurations to be used when initializing the `connector` 
     # + serviceUrl - URL of the target service 
     # + return - An error if connector initialization failed 
-    public isolated function init(ConnectionConfig config, string serviceUrl = "https://www.googleapis.com/calendar/v3") returns error? {
+    public isolated function init(ConnectionConfig config, string serviceUrl = "https://www.googleapis.com/calendar/v3") returns Error? {
         http:ClientConfiguration httpClientConfig = {auth: config.auth, httpVersion: config.httpVersion, timeout: config.timeout, forwarded: config.forwarded, poolConfig: config.poolConfig, compression: config.compression, circuitBreaker: config.circuitBreaker, retryConfig: config.retryConfig, validation: config.validation};
         do {
             if config.http1Settings is ClientHttp1Settings {
@@ -46,9 +46,11 @@ public isolated client class Client {
             if config.proxy is http:ProxyConfig {
                 httpClientConfig.proxy = check config.proxy.ensureType(http:ProxyConfig);
             }
+            http:Client httpEp = check new (serviceUrl, httpClientConfig);
+            self.clientEp = httpEp;
+        } on fail var e {
+        	return error Error(e.message(), e.cause());
         }
-        http:Client httpEp = check new (serviceUrl, httpClientConfig);
-        self.clientEp = httpEp;
         return;
     }
 
@@ -132,11 +134,15 @@ public isolated client class Client {
     # + quotaUser - An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
     # + return - Successful response 
-    resource isolated function delete calendars/[string calendarId]("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns error? {
+    resource isolated function delete calendars/[string calendarId]("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns Error? {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        return check self.clientEp->delete(resourcePath);
+        do {
+            resourcePath = resourcePath + check getPathForQueryParam(queryParam);
+	        return check self.clientEp->delete(resourcePath);
+        } on fail var e {
+        	return error Error(e.message(), e.cause());
+        }
     }
 
     # Updates metadata for a calendar. This method supports patch semantics.
@@ -278,11 +284,15 @@ public isolated client class Client {
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
     # + ruleId - ACL rule identifier.
     # + return - Successful response 
-    resource isolated function delete calendars/[string calendarId]/acl/[string ruleId]("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns error? {
+    resource isolated function delete calendars/[string calendarId]/acl/[string ruleId]("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns Error? {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/acl/${getEncodedUri(ruleId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        return check self.clientEp->delete(resourcePath);
+        do {
+            resourcePath = resourcePath + check getPathForQueryParam(queryParam);
+	        return check self.clientEp->delete(resourcePath);
+        } on fail var e {
+        	return error Error(e.message(), e.cause());
+        }
     }
 
     # Updates an access control rule. This method supports patch semantics.
@@ -322,12 +332,16 @@ public isolated client class Client {
     # + quotaUser - An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
     # + return - Successful response 
-    resource isolated function post calendars/[string calendarId]/clear("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns error? {
+    resource isolated function post calendars/[string calendarId]/clear("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns Error? {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/clear`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        http:Request request = new;
-        return check self.clientEp->post(resourcePath, request);
+        do {
+            resourcePath = resourcePath + check getPathForQueryParam(queryParam);
+            http:Request request = new;
+	        return check self.clientEp->post(resourcePath, request);
+        } on fail var e {
+        	return error Error(e.message(), e.cause());
+        }
     }
 
     # Returns events on the specified calendar.
@@ -535,11 +549,15 @@ public isolated client class Client {
     # + eventId - Event identifier.
     # + sendUpdates - Guests who should receive notifications about the deletion of the event.
     # + return - Successful response 
-    resource isolated function delete calendars/[string calendarId]/events/[string eventId]("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), "all"|"externalOnly"|"none"? sendUpdates = ()) returns error? {
+    resource isolated function delete calendars/[string calendarId]/events/[string eventId]("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), "all"|"externalOnly"|"none"? sendUpdates = ()) returns Error? {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/events/${getEncodedUri(eventId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "sendUpdates": sendUpdates};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        return check self.clientEp->delete(resourcePath);
+        do {
+            resourcePath = resourcePath + check getPathForQueryParam(queryParam);
+	        return check self.clientEp->delete(resourcePath);
+        } on fail var e {
+        	return error Error(e.message(), e.cause());
+        }
     }
 
     # Updates an event. This method supports patch semantics.
@@ -783,11 +801,15 @@ public isolated client class Client {
     # + quotaUser - An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
     # + return - Successful response 
-    resource isolated function delete users/me/calendarList/[string calendarId]("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns error? {
+    resource isolated function delete users/me/calendarList/[string calendarId]("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns Error? {
         string resourcePath = string `/users/me/calendarList/${getEncodedUri(calendarId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        return check self.clientEp->delete(resourcePath);
+        do {
+            resourcePath = resourcePath + check getPathForQueryParam(queryParam);
+	        return check self.clientEp->delete(resourcePath);
+        } on fail var e {
+        	return error Error(e.message(), e.cause());
+        }
     }
 
     # Updates an existing calendar on the user's calendar list. This method supports patch semantics.
