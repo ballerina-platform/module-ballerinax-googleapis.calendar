@@ -62,15 +62,18 @@ public isolated client class Client {
     # + prettyPrint - Returns response with indentations and line breaks.
     # + quotaUser - An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
     # + return - Successful response 
-    resource isolated function post calendars(Calendar payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns Calendar|error {
+    resource isolated function post calendars(Calendar payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns Calendar|Error {
         string resourcePath = string `/calendars`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        http:Request request = new;
-        json jsonBody = payload.toJson();
-        request.setPayload(jsonBody, "application/json");
-        Calendar response = check self.clientEp->post(resourcePath, request);
-        return response;
+        do {
+            resourcePath = resourcePath + check getPathForQueryParam(queryParam);
+            http:Request request = new;
+            json jsonBody = payload.toJson();
+            request.setPayload(jsonBody, "application/json");
+	        return check self.clientEp->post(resourcePath, request);
+        } on fail var e {
+        	return error Error(e.message(), e.cause());
+        }
     }
 
     # Returns metadata for a calendar.
@@ -83,12 +86,15 @@ public isolated client class Client {
     # + quotaUser - An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
     # + return - Successful response
-    resource isolated function get calendars/[string calendarId]("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns Calendar|error {
+    resource isolated function get calendars/[string calendarId]("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns Calendar|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        Calendar response = check self.clientEp->get(resourcePath);
-        return response;
+        do {
+            resourcePath = resourcePath + check getPathForQueryParam(queryParam);
+	        return check self.clientEp->get(resourcePath);
+        } on fail var e {
+            return error Error(e.message(), e.cause());                
+        }
     }
 
     # Updates metadata for a calendar.
@@ -102,15 +108,18 @@ public isolated client class Client {
     # + quotaUser - An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
     # + return - Successful response
-    resource isolated function put calendars/[string calendarId](Calendar payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns Calendar|error {
+    resource isolated function put calendars/[string calendarId](Calendar payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns Calendar|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        http:Request request = new;
-        json jsonBody = payload.toJson();
-        request.setPayload(jsonBody, "application/json");
-        Calendar response = check self.clientEp->put(resourcePath, request);
-        return response;
+        do {
+            resourcePath = resourcePath + check getPathForQueryParam(queryParam);
+            http:Request request = new;
+            json jsonBody = payload.toJson();
+            request.setPayload(jsonBody, "application/json");
+	        return check self.clientEp->put(resourcePath, request);
+        } on fail var e {
+        	return error Error(e.message(), e.cause());
+        }
     }
 
     # Deletes a secondary calendar. Use calendars.clear for clearing all events on primary calendars.
@@ -141,15 +150,18 @@ public isolated client class Client {
     # + quotaUser - An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
     # + return - Successful response 
-    resource isolated function patch calendars/[string calendarId](Calendar payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns Calendar|error {
+    resource isolated function patch calendars/[string calendarId](Calendar payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns Calendar|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        http:Request request = new;
-        json jsonBody = payload.toJson();
-        request.setPayload(jsonBody, "application/json");
-        Calendar response = check self.clientEp->patch(resourcePath, request);
-        return response;
+        do {
+            resourcePath = resourcePath + check getPathForQueryParam(queryParam);
+            http:Request request = new;
+            json jsonBody = payload.toJson();
+            request.setPayload(jsonBody, "application/json");
+	        return check self.clientEp->patch(resourcePath, request);
+        } on fail var e {
+        	return error Error(e.message(), e.cause());
+        }
     }
 
     # Returns the rules in the access control list for the calendar.
@@ -169,12 +181,15 @@ public isolated client class Client {
     # Learn more about incremental synchronization.
     # Optional. The default is to return all entries.
     # + return - Successful response 
-    resource isolated function get calendars/[string calendarId]/acl("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), int? maxResults = (), string? pageToken = (), boolean? showDeleted = (), string? syncToken = ()) returns Acl|error {
+    resource isolated function get calendars/[string calendarId]/acl("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), int? maxResults = (), string? pageToken = (), boolean? showDeleted = (), string? syncToken = ()) returns Acl|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/acl`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "maxResults": maxResults, "pageToken": pageToken, "showDeleted": showDeleted, "syncToken": syncToken};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        Acl response = check self.clientEp->get(resourcePath);
-        return response;
+        do {
+            resourcePath = resourcePath + check getPathForQueryParam(queryParam);
+	        return check self.clientEp->get(resourcePath);
+        } on fail var e {
+        	return error Error(e.message(), e.cause());
+        }
     }
 
     # Creates an access control rule.
@@ -189,15 +204,18 @@ public isolated client class Client {
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
     # + sendNotifications - Whether to send notifications about the calendar sharing change. Optional. The default is True.
     # + return - Successful response 
-    resource isolated function post calendars/[string calendarId]/acl(AclRule payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), boolean? sendNotifications = ()) returns AclRule|error {
+    resource isolated function post calendars/[string calendarId]/acl(AclRule payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), boolean? sendNotifications = ()) returns AclRule|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/acl`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "sendNotifications": sendNotifications};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        http:Request request = new;
-        json jsonBody = payload.toJson();
-        request.setPayload(jsonBody, "application/json");
-        AclRule response = check self.clientEp->post(resourcePath, request);
-        return response;
+        do {
+            resourcePath = resourcePath + check getPathForQueryParam(queryParam);
+            http:Request request = new;
+            json jsonBody = payload.toJson();
+            request.setPayload(jsonBody, "application/json");
+	        return check self.clientEp->post(resourcePath, request);
+        } on fail var e {
+        	return error Error(e.message(), e.cause());
+        }
     }
 
     # Returns an access control rule.
@@ -211,12 +229,15 @@ public isolated client class Client {
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
     # + ruleId - ACL rule identifier.
     # + return - Successful response 
-    resource isolated function get calendars/[string calendarId]/acl/[string ruleId]("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns AclRule|error {
+    resource isolated function get calendars/[string calendarId]/acl/[string ruleId]("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns AclRule|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/acl/${getEncodedUri(ruleId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        AclRule response = check self.clientEp->get(resourcePath);
-        return response;
+        do {
+            resourcePath = resourcePath + check getPathForQueryParam(queryParam);
+	        return check self.clientEp->get(resourcePath);
+        } on fail var e {
+        	return error Error(e.message(), e.cause());
+        }
     }
 
     # Updates an access control rule.
@@ -232,15 +253,18 @@ public isolated client class Client {
     # + ruleId - ACL rule identifier.
     # + sendNotifications - Whether to send notifications about the calendar sharing change. Note that there are no notifications on access removal. Optional. The default is True.
     # + return - Successful response 
-    resource isolated function put calendars/[string calendarId]/acl/[string ruleId](AclRule payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), boolean? sendNotifications = ()) returns AclRule|error {
+    resource isolated function put calendars/[string calendarId]/acl/[string ruleId](AclRule payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), boolean? sendNotifications = ()) returns AclRule|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/acl/${getEncodedUri(ruleId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "sendNotifications": sendNotifications};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        http:Request request = new;
-        json jsonBody = payload.toJson();
-        request.setPayload(jsonBody, "application/json");
-        AclRule response = check self.clientEp->put(resourcePath, request);
-        return response;
+        do {
+            resourcePath = resourcePath + check getPathForQueryParam(queryParam);
+            http:Request request = new;
+            json jsonBody = payload.toJson();
+            request.setPayload(jsonBody, "application/json");
+	        return check self.clientEp->put(resourcePath, request);
+        } on fail var e {
+        	return error Error(e.message(), e.cause());
+        }
     }
 
     # Deletes an access control rule.
@@ -274,15 +298,18 @@ public isolated client class Client {
     # + ruleId - ACL rule identifier.
     # + sendNotifications - Whether to send notifications about the calendar sharing change. Note that there are no notifications on access removal. Optional. The default is True.
     # + return - Successful response 
-    resource isolated function patch calendars/[string calendarId]/acl/[string ruleId](AclRule payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), boolean? sendNotifications = ()) returns AclRule|error {
+    resource isolated function patch calendars/[string calendarId]/acl/[string ruleId](AclRule payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), boolean? sendNotifications = ()) returns AclRule|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/acl/${getEncodedUri(ruleId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "sendNotifications": sendNotifications};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        http:Request request = new;
-        json jsonBody = payload.toJson();
-        request.setPayload(jsonBody, "application/json");
-        AclRule response = check self.clientEp->patch(resourcePath, request);
-        return response;
+        do {
+            resourcePath = resourcePath + check getPathForQueryParam(queryParam);
+            http:Request request = new;
+            json jsonBody = payload.toJson();
+            request.setPayload(jsonBody, "application/json");
+	        return check self.clientEp->patch(resourcePath, request);
+        } on fail var e {
+        	return error Error(e.message(), e.cause());
+        }
     }
 
     # Clears a primary calendar. This operation deletes all events associated with the primary calendar of an account.
@@ -350,13 +377,16 @@ public isolated client class Client {
     # + timeZone - Time zone used in the response. Optional. The default is the time zone of the calendar.
     # + updatedMin - Lower bound for an event's last modification time (as a RFC3339 timestamp) to filter by. When specified, entries deleted since this time will always be included regardless of showDeleted. Optional. The default is not to filter by last modification time.
     # + return - Successful response 
-    resource isolated function get calendars/[string calendarId]/events("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), string[]? eventTypes = (), string? iCalUID = (), int? maxAttendees = (), int? maxResults = (), "startTime"|"updated"? orderBy = (), string? pageToken = (), string[]? privateExtendedProperty = (), string? q = (), string[]? sharedExtendedProperty = (), boolean? showDeleted = (), boolean? showHiddenInvitations = (), boolean? singleEvents = (), string? syncToken = (), string? timeMax = (), string? timeMin = (), string? timeZone = (), string? updatedMin = ()) returns Events|error {
+    resource isolated function get calendars/[string calendarId]/events("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), string[]? eventTypes = (), string? iCalUID = (), int? maxAttendees = (), int? maxResults = (), "startTime"|"updated"? orderBy = (), string? pageToken = (), string[]? privateExtendedProperty = (), string? q = (), string[]? sharedExtendedProperty = (), boolean? showDeleted = (), boolean? showHiddenInvitations = (), boolean? singleEvents = (), string? syncToken = (), string? timeMax = (), string? timeMin = (), string? timeZone = (), string? updatedMin = ()) returns Events|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/events`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "eventTypes": eventTypes, "iCalUID": iCalUID, "maxAttendees": maxAttendees, "maxResults": maxResults, "orderBy": orderBy, "pageToken": pageToken, "privateExtendedProperty": privateExtendedProperty, "q": q, "sharedExtendedProperty": sharedExtendedProperty, "showDeleted": showDeleted, "showHiddenInvitations": showHiddenInvitations, "singleEvents": singleEvents, "syncToken": syncToken, "timeMax": timeMax, "timeMin": timeMin, "timeZone": timeZone, "updatedMin": updatedMin};
         map<Encoding> queryParamEncoding = {"eventTypes": {style: FORM, explode: true}, "privateExtendedProperty": {style: FORM, explode: true}, "sharedExtendedProperty": {style: FORM, explode: true}};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam, queryParamEncoding);
-        Events response = check self.clientEp->get(resourcePath);
-        return response;
+        do {
+            resourcePath = resourcePath + check getPathForQueryParam(queryParam, queryParamEncoding);
+	        return check self.clientEp->get(resourcePath);
+        } on fail var e {
+        	return error Error(e.message(), e.cause());
+        }
     }
 
     # Creates an event.
@@ -374,15 +404,18 @@ public isolated client class Client {
     # + sendUpdates - Whether to send notifications about the creation of the new event. Note that some emails might still be sent. The default is false.
     # + supportsAttachments - Whether API client performing operation supports event attachments. Optional. The default is False.
     # + return - Successful response 
-    resource isolated function post calendars/[string calendarId]/events(Event payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), int? conferenceDataVersion = (), int? maxAttendees = (), "all"|"externalOnly"|"none"? sendUpdates = (), boolean? supportsAttachments = ()) returns Event|error {
+    resource isolated function post calendars/[string calendarId]/events(Event payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), int? conferenceDataVersion = (), int? maxAttendees = (), "all"|"externalOnly"|"none"? sendUpdates = (), boolean? supportsAttachments = ()) returns Event|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/events`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "conferenceDataVersion": conferenceDataVersion, "maxAttendees": maxAttendees, "sendUpdates": sendUpdates, "supportsAttachments": supportsAttachments};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        http:Request request = new;
-        json jsonBody = payload.toJson();
-        request.setPayload(jsonBody, "application/json");
-        Event response = check self.clientEp->post(resourcePath, request);
-        return response;
+        do {
+            resourcePath = resourcePath + check getPathForQueryParam(queryParam);
+            http:Request request = new;
+            json jsonBody = payload.toJson();
+            request.setPayload(jsonBody, "application/json");
+	        return check self.clientEp->post(resourcePath, request);
+        } on fail var e {
+        	return error Error(e.message(), e.cause());
+        }
     }
 
     # Imports an event. This operation is used to add a private copy of an existing event to a calendar.
@@ -398,15 +431,18 @@ public isolated client class Client {
     # + conferenceDataVersion - Version number of conference data supported by the API client. Version 0 assumes no conference data support and ignores conference data in the event's body. Version 1 enables support for copying of ConferenceData as well as for creating new conferences using the createRequest field of conferenceData. The default is 0.
     # + supportsAttachments - Whether API client performing operation supports event attachments. Optional. The default is False.
     # + return - Successful response 
-    resource isolated function post calendars/[string calendarId]/events/'import(Event payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), int? conferenceDataVersion = (), boolean? supportsAttachments = ()) returns Event|error {
+    resource isolated function post calendars/[string calendarId]/events/'import(Event payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), int? conferenceDataVersion = (), boolean? supportsAttachments = ()) returns Event|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/events/import`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "conferenceDataVersion": conferenceDataVersion, "supportsAttachments": supportsAttachments};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        http:Request request = new;
-        json jsonBody = payload.toJson();
-        request.setPayload(jsonBody, "application/json");
-        Event response = check self.clientEp->post(resourcePath, request);
-        return response;
+        do {
+            resourcePath = resourcePath + check getPathForQueryParam(queryParam);
+            http:Request request = new;
+            json jsonBody = payload.toJson();
+            request.setPayload(jsonBody, "application/json");
+	        return check self.clientEp->post(resourcePath, request);
+        } on fail var e {
+        	return error Error(e.message(), e.cause());
+        }
     }
 
     # Creates an event based on a simple text string.
@@ -421,13 +457,16 @@ public isolated client class Client {
     # + text - The text describing the event to be created.
     # + sendUpdates - Guests who should receive notifications about the creation of the new event.
     # + return - Successful response 
-    resource isolated function post calendars/[string calendarId]/events/quickAdd(string text, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), "all"|"externalOnly"|"none"? sendUpdates = ()) returns Event|error {
+    resource isolated function post calendars/[string calendarId]/events/quickAdd(string text, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), "all"|"externalOnly"|"none"? sendUpdates = ()) returns Event|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/events/quickAdd`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "text": text, "sendUpdates": sendUpdates};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        http:Request request = new;
-        Event response = check self.clientEp->post(resourcePath, request);
-        return response;
+        do {
+            resourcePath = resourcePath + check getPathForQueryParam(queryParam);
+            http:Request request = new;
+	        return check self.clientEp->post(resourcePath, request);
+        } on fail var e {
+        	return error Error(e.message(), e.cause());
+        }
     }
 
     # Returns an event based on its Google Calendar ID. To retrieve an event using its iCalendar ID, call the events.list method using the iCalUID parameter.
@@ -443,12 +482,15 @@ public isolated client class Client {
     # + maxAttendees - The maximum number of attendees to include in the response. If there are more than the specified number of attendees, only the participant is returned. Optional.
     # + timeZone - Time zone used in the response. Optional. The default is the time zone of the calendar.
     # + return - Successful response 
-    resource isolated function get calendars/[string calendarId]/events/[string eventId]("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), int? maxAttendees = (), string? timeZone = ()) returns Event|error {
+    resource isolated function get calendars/[string calendarId]/events/[string eventId]("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), int? maxAttendees = (), string? timeZone = ()) returns Event|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/events/${getEncodedUri(eventId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "maxAttendees": maxAttendees, "timeZone": timeZone};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        Event response = check self.clientEp->get(resourcePath);
-        return response;
+        do {
+            resourcePath = resourcePath + check getPathForQueryParam(queryParam);
+	        return check self.clientEp->get(resourcePath);
+        } on fail var e {
+        	return error Error(e.message(), e.cause());
+        }
     }
 
     # Updates an event.
@@ -467,15 +509,18 @@ public isolated client class Client {
     # + sendUpdates - Guests who should receive notifications about the event update (for example, title changes, etc.).
     # + supportsAttachments - Whether API client performing operation supports event attachments. Optional. The default is False.
     # + return - Successful response 
-    resource isolated function put calendars/[string calendarId]/events/[string eventId](Event payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), int? conferenceDataVersion = (), int? maxAttendees = (), "all"|"externalOnly"|"none"? sendUpdates = (), boolean? supportsAttachments = ()) returns Event|error {
+    resource isolated function put calendars/[string calendarId]/events/[string eventId](Event payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), int? conferenceDataVersion = (), int? maxAttendees = (), "all"|"externalOnly"|"none"? sendUpdates = (), boolean? supportsAttachments = ()) returns Event|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/events/${getEncodedUri(eventId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "conferenceDataVersion": conferenceDataVersion, "maxAttendees": maxAttendees, "sendUpdates": sendUpdates, "supportsAttachments": supportsAttachments};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        http:Request request = new;
-        json jsonBody = payload.toJson();
-        request.setPayload(jsonBody, "application/json");
-        Event response = check self.clientEp->put(resourcePath, request);
-        return response;
+        do {
+            resourcePath = resourcePath + check getPathForQueryParam(queryParam);
+            http:Request request = new;
+            json jsonBody = payload.toJson();
+            request.setPayload(jsonBody, "application/json");
+	        return check self.clientEp->put(resourcePath, request);
+        } on fail var e {
+        	return error Error(e.message(), e.cause());
+        }
     }
 
     # Deletes an event.
@@ -513,15 +558,18 @@ public isolated client class Client {
     # + sendUpdates - Guests who should receive notifications about the event update (for example, title changes, etc.).
     # + supportsAttachments - Whether API client performing operation supports event attachments. Optional. The default is False.
     # + return - Successful response 
-    resource isolated function patch calendars/[string calendarId]/events/[string eventId](Event payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), int? conferenceDataVersion = (), int? maxAttendees = (), "all"|"externalOnly"|"none"? sendUpdates = (), boolean? supportsAttachments = ()) returns Event|error {
+    resource isolated function patch calendars/[string calendarId]/events/[string eventId](Event payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), int? conferenceDataVersion = (), int? maxAttendees = (), "all"|"externalOnly"|"none"? sendUpdates = (), boolean? supportsAttachments = ()) returns Event|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/events/${getEncodedUri(eventId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "conferenceDataVersion": conferenceDataVersion, "maxAttendees": maxAttendees, "sendUpdates": sendUpdates, "supportsAttachments": supportsAttachments};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        http:Request request = new;
-        json jsonBody = payload.toJson();
-        request.setPayload(jsonBody, "application/json");
-        Event response = check self.clientEp->patch(resourcePath, request);
-        return response;
+        do {
+            resourcePath = resourcePath + check getPathForQueryParam(queryParam);
+            http:Request request = new;
+            json jsonBody = payload.toJson();
+            request.setPayload(jsonBody, "application/json");
+	        return check self.clientEp->patch(resourcePath, request);
+        } on fail var e {
+        	return error Error(e.message(), e.cause());
+        }
     }
 
     # Returns instances of the specified recurring event.
@@ -543,12 +591,15 @@ public isolated client class Client {
     # + timeMin - Lower bound (inclusive) for an event's end time to filter by. Optional. The default is not to filter by end time. Must be an RFC3339 timestamp with mandatory time zone offset.
     # + timeZone - Time zone used in the response. Optional. The default is the time zone of the calendar.
     # + return - Successful response 
-    resource isolated function get calendars/[string calendarId]/events/[string eventId]/instances("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), int? maxAttendees = (), int? maxResults = (), string? originalStart = (), string? pageToken = (), boolean? showDeleted = (), string? timeMax = (), string? timeMin = (), string? timeZone = ()) returns Events|error {
+    resource isolated function get calendars/[string calendarId]/events/[string eventId]/instances("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), int? maxAttendees = (), int? maxResults = (), string? originalStart = (), string? pageToken = (), boolean? showDeleted = (), string? timeMax = (), string? timeMin = (), string? timeZone = ()) returns Events|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/events/${getEncodedUri(eventId)}/instances`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "maxAttendees": maxAttendees, "maxResults": maxResults, "originalStart": originalStart, "pageToken": pageToken, "showDeleted": showDeleted, "timeMax": timeMax, "timeMin": timeMin, "timeZone": timeZone};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        Events response = check self.clientEp->get(resourcePath);
-        return response;
+        do {
+            resourcePath = resourcePath + check getPathForQueryParam(queryParam);
+	        return check self.clientEp->get(resourcePath);
+        } on fail var e {
+        	return error Error(e.message(), e.cause());
+        }
     }
 
     # Moves an event to another calendar, i.e. changes an event's organizer.
@@ -564,13 +615,16 @@ public isolated client class Client {
     # + destination - Calendar identifier of the target calendar where the event is to be moved to.
     # + sendUpdates - Guests who should receive notifications about the change of the event's organizer.
     # + return - Successful response 
-    resource isolated function post calendars/[string calendarId]/events/[string eventId]/move(string destination, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), "all"|"externalOnly"|"none"? sendUpdates = ()) returns Event|error {
+    resource isolated function post calendars/[string calendarId]/events/[string eventId]/move(string destination, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), "all"|"externalOnly"|"none"? sendUpdates = ()) returns Event|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/events/${getEncodedUri(eventId)}/move`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "destination": destination, "sendUpdates": sendUpdates};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        http:Request request = new;
-        Event response = check self.clientEp->post(resourcePath, request);
-        return response;
+        do {
+            resourcePath = resourcePath + check getPathForQueryParam(queryParam);
+            http:Request request = new;
+	        return check self.clientEp->post(resourcePath, request);
+        } on fail var e {
+        	return error Error(e.message(), e.cause());
+        }
     }
 
     # Returns the color definitions for calendars and events.
@@ -582,12 +636,15 @@ public isolated client class Client {
     # + prettyPrint - Returns response with indentations and line breaks.
     # + quotaUser - An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
     # + return - Successful response 
-    resource isolated function get colors("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns Colors|error {
+    resource isolated function get colors("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns Colors|Error {
         string resourcePath = string `/colors`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        Colors response = check self.clientEp->get(resourcePath);
-        return response;
+        do {
+            resourcePath = resourcePath + check getPathForQueryParam(queryParam);
+	        return check self.clientEp->get(resourcePath);
+        } on fail var e {
+        	return error Error(e.message(), e.cause());
+        }
     }
 
     # Returns free/busy information for a set of calendars.
@@ -600,15 +657,18 @@ public isolated client class Client {
     # + prettyPrint - Returns response with indentations and line breaks.
     # + quotaUser - An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
     # + return - Successful response 
-    resource isolated function post freeBusy(FreeBusyRequest payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns FreeBusyResponse|error {
+    resource isolated function post freeBusy(FreeBusyRequest payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns FreeBusyResponse|Error {
         string resourcePath = string `/freeBusy`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        http:Request request = new;
-        json jsonBody = payload.toJson();
-        request.setPayload(jsonBody, "application/json");
-        FreeBusyResponse response = check self.clientEp->post(resourcePath, request);
-        return response;
+        do {
+            resourcePath = resourcePath + check getPathForQueryParam(queryParam);
+            http:Request request = new;
+            json jsonBody = payload.toJson();
+            request.setPayload(jsonBody, "application/json");
+	        return check self.clientEp->post(resourcePath, request);
+        } on fail var e {
+        	return error Error(e.message(), e.cause());
+        }
     }
 
     # Returns the calendars on the user's calendar list.
@@ -630,12 +690,15 @@ public isolated client class Client {
     # Learn more about incremental synchronization.
     # Optional. The default is to return all entries.
     # + return - Successful response 
-    resource isolated function get users/me/calendarList("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), int? maxResults = (), "freeBusyReader"|"owner"|"reader"|"writer"? minAccessRole = (), string? pageToken = (), boolean? showDeleted = (), boolean? showHidden = (), string? syncToken = ()) returns CalendarList|error {
+    resource isolated function get users/me/calendarList("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), int? maxResults = (), "freeBusyReader"|"owner"|"reader"|"writer"? minAccessRole = (), string? pageToken = (), boolean? showDeleted = (), boolean? showHidden = (), string? syncToken = ()) returns CalendarList|Error {
         string resourcePath = string `/users/me/calendarList`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "maxResults": maxResults, "minAccessRole": minAccessRole, "pageToken": pageToken, "showDeleted": showDeleted, "showHidden": showHidden, "syncToken": syncToken};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        CalendarList response = check self.clientEp->get(resourcePath);
-        return response;
+        do {
+            resourcePath = resourcePath + check getPathForQueryParam(queryParam);
+	        return check self.clientEp->get(resourcePath);
+        } on fail var e {
+        	return error Error(e.message(), e.cause());
+        }
     }
 
     # Inserts an existing calendar into the user's calendar list.
@@ -649,15 +712,18 @@ public isolated client class Client {
     # + quotaUser - An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
     # + colorRgbFormat - Whether to use the foregroundColor and backgroundColor fields to write the calendar colors (RGB). If this feature is used, the index-based colorId field will be set to the best matching option automatically. Optional. The default is False.
     # + return - Successful response 
-    resource isolated function post users/me/calendarList(CalendarListEntry payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), boolean? colorRgbFormat = ()) returns CalendarListEntry|error {
+    resource isolated function post users/me/calendarList(CalendarListEntry payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), boolean? colorRgbFormat = ()) returns CalendarListEntry|Error {
         string resourcePath = string `/users/me/calendarList`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "colorRgbFormat": colorRgbFormat};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        http:Request request = new;
-        json jsonBody = payload.toJson();
-        request.setPayload(jsonBody, "application/json");
-        CalendarListEntry response = check self.clientEp->post(resourcePath, request);
-        return response;
+        do {
+            resourcePath = resourcePath + check getPathForQueryParam(queryParam);
+            http:Request request = new;
+            json jsonBody = payload.toJson();
+            request.setPayload(jsonBody, "application/json");
+	        return check self.clientEp->post(resourcePath, request);
+        } on fail var e {
+        	return error Error(e.message(), e.cause());
+        }
     }
 
     # Returns a calendar from the user's calendar list.
@@ -670,12 +736,15 @@ public isolated client class Client {
     # + quotaUser - An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
     # + return - Successful response 
-    resource isolated function get users/me/calendarList/[string calendarId]("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns CalendarListEntry|error {
+    resource isolated function get users/me/calendarList/[string calendarId]("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns CalendarListEntry|Error {
         string resourcePath = string `/users/me/calendarList/${getEncodedUri(calendarId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        CalendarListEntry response = check self.clientEp->get(resourcePath);
-        return response;
+        do {
+	        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
+            return check self.clientEp->get(resourcePath);
+        } on fail var e {
+            return error Error(e.message(), e.cause());
+        }
     }
 
     # Updates an existing calendar on the user's calendar list.
@@ -690,15 +759,18 @@ public isolated client class Client {
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
     # + colorRgbFormat - Whether to use the foregroundColor and backgroundColor fields to write the calendar colors (RGB). If this feature is used, the index-based colorId field will be set to the best matching option automatically. Optional. The default is False.
     # + return - Successful response 
-    resource isolated function put users/me/calendarList/[string calendarId](CalendarListEntry payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), boolean? colorRgbFormat = ()) returns CalendarListEntry|error {
+    resource isolated function put users/me/calendarList/[string calendarId](CalendarListEntry payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), boolean? colorRgbFormat = ()) returns CalendarListEntry|Error {
         string resourcePath = string `/users/me/calendarList/${getEncodedUri(calendarId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "colorRgbFormat": colorRgbFormat};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        http:Request request = new;
-        json jsonBody = payload.toJson();
-        request.setPayload(jsonBody, "application/json");
-        CalendarListEntry response = check self.clientEp->put(resourcePath, request);
-        return response;
+        do {
+            resourcePath = resourcePath + check getPathForQueryParam(queryParam);
+            http:Request request = new;
+            json jsonBody = payload.toJson();
+            request.setPayload(jsonBody, "application/json");
+	        return check self.clientEp->put(resourcePath, request);
+        } on fail var e {
+        	return error Error(e.message(), e.cause());
+        }
     }
 
     # Removes a calendar from the user's calendar list.
@@ -730,14 +802,17 @@ public isolated client class Client {
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
     # + colorRgbFormat - Whether to use the foregroundColor and backgroundColor fields to write the calendar colors (RGB). If this feature is used, the index-based colorId field will be set to the best matching option automatically. Optional. The default is False.
     # + return - Successful response 
-    resource isolated function patch users/me/calendarList/[string calendarId](CalendarListEntry payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), boolean? colorRgbFormat = ()) returns CalendarListEntry|error {
+    resource isolated function patch users/me/calendarList/[string calendarId](CalendarListEntry payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), boolean? colorRgbFormat = ()) returns CalendarListEntry|Error {
         string resourcePath = string `/users/me/calendarList/${getEncodedUri(calendarId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "colorRgbFormat": colorRgbFormat};
-        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        http:Request request = new;
-        json jsonBody = payload.toJson();
-        request.setPayload(jsonBody, "application/json");
-        CalendarListEntry response = check self.clientEp->patch(resourcePath, request);
-        return response;
+        do {
+            resourcePath = resourcePath + check getPathForQueryParam(queryParam);
+            http:Request request = new;
+            json jsonBody = payload.toJson();
+            request.setPayload(jsonBody, "application/json");
+	        return check self.clientEp->patch(resourcePath, request);
+        } on fail var e {
+        	return error Error(e.message(), e.cause());
+        }
     }
 }

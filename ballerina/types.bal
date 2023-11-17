@@ -459,7 +459,7 @@ public type AclRule_scope record {
 };
 
 # Represents the error type for Google Calendar APIs.
-public type Error record {
+public type ErrorDetails record {
     # Domain, or broad category, of the error.
     string domain?;
     # Specific reason for the error. Some of the possible values are:  
@@ -516,7 +516,7 @@ public type FreeBusyGroup record {
     # List of calendars' identifiers within a group.
     string[] calendars?;
     # Optional error(s) (if computation for the group failed).
-    Error[] errors?;
+    ErrorDetails[] errors?;
 };
 
 # Represents free/busy information for an individual calendar.
@@ -524,7 +524,7 @@ public type FreeBusyCalendar record {
     # List of time ranges during which this calendar should be regarded as busy.
     TimePeriod[] busy?;
     # Optional error(s) (if computation for the calendar failed).
-    Error[] errors?;
+    ErrorDetails[] errors?;
 };
 
 # Contains parameters for a request to retrieve free/busy information for a set of calendars and groups.
