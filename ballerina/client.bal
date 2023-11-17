@@ -63,7 +63,7 @@ public isolated client class Client {
     # + oauth_token - OAuth 2.0 token for the current user.
     # + prettyPrint - Returns response with indentations and line breaks.
     # + quotaUser - An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
-    # + return - Successful response 
+    # + return - A `calendar:Calendar` if successful, otherwise an `calendar:Error` 
     resource isolated function post calendars(Calendar payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns Calendar|Error {
         string resourcePath = string `/calendars`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
@@ -87,7 +87,7 @@ public isolated client class Client {
     # + prettyPrint - Returns response with indentations and line breaks.
     # + quotaUser - An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
-    # + return - Successful response
+    # + return - A `calendar:Calendar` if successful, otherwise an `calendar:Error` 
     resource isolated function get calendars/[string calendarId]("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns Calendar|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
@@ -109,7 +109,7 @@ public isolated client class Client {
     # + prettyPrint - Returns response with indentations and line breaks.
     # + quotaUser - An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
-    # + return - Successful response
+    # + return - A `calendar:Calendar` if successful, otherwise an `calendar:Error`
     resource isolated function put calendars/[string calendarId](Calendar payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns Calendar|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
@@ -133,7 +133,7 @@ public isolated client class Client {
     # + prettyPrint - Returns response with indentations and line breaks.
     # + quotaUser - An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
-    # + return - Successful response 
+    # + return - If successful `()`, otherwise an `calendar:Error`
     resource isolated function delete calendars/[string calendarId]("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns Error? {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
@@ -155,7 +155,7 @@ public isolated client class Client {
     # + prettyPrint - Returns response with indentations and line breaks.
     # + quotaUser - An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
-    # + return - Successful response 
+    # + return - A `calendar:Calendar` if successful, otherwise an `calendar:Error` 
     resource isolated function patch calendars/[string calendarId](Calendar payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns Calendar|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
@@ -186,7 +186,7 @@ public isolated client class Client {
     # If the syncToken expires, the server will respond with a 410 GONE response code and the client should clear its storage and perform a full synchronization without any syncToken.
     # Learn more about incremental synchronization.
     # Optional. The default is to return all entries.
-    # + return - Successful response 
+    # + return - A `calendar:Acl` if successful, otherwise an `calendar:Error` 
     resource isolated function get calendars/[string calendarId]/acl("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), int? maxResults = (), string? pageToken = (), boolean? showDeleted = (), string? syncToken = ()) returns Acl|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/acl`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "maxResults": maxResults, "pageToken": pageToken, "showDeleted": showDeleted, "syncToken": syncToken};
@@ -209,7 +209,7 @@ public isolated client class Client {
     # + quotaUser - An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
     # + sendNotifications - Whether to send notifications about the calendar sharing change. Optional. The default is True.
-    # + return - Successful response 
+    # + return - A `calendar:AclRule` if successful, otherwise an `calendar:Error` 
     resource isolated function post calendars/[string calendarId]/acl(AclRule payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), boolean? sendNotifications = ()) returns AclRule|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/acl`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "sendNotifications": sendNotifications};
@@ -234,7 +234,7 @@ public isolated client class Client {
     # + quotaUser - An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
     # + ruleId - ACL rule identifier.
-    # + return - Successful response 
+    # + return - A `calendar:AclRule` if successful, otherwise an `calendar:Error` 
     resource isolated function get calendars/[string calendarId]/acl/[string ruleId]("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns AclRule|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/acl/${getEncodedUri(ruleId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
@@ -258,7 +258,7 @@ public isolated client class Client {
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
     # + ruleId - ACL rule identifier.
     # + sendNotifications - Whether to send notifications about the calendar sharing change. Note that there are no notifications on access removal. Optional. The default is True.
-    # + return - Successful response 
+    # + return - A `calendar:AclRule` if successful, otherwise an `calendar:Error` 
     resource isolated function put calendars/[string calendarId]/acl/[string ruleId](AclRule payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), boolean? sendNotifications = ()) returns AclRule|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/acl/${getEncodedUri(ruleId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "sendNotifications": sendNotifications};
@@ -283,7 +283,7 @@ public isolated client class Client {
     # + quotaUser - An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
     # + ruleId - ACL rule identifier.
-    # + return - Successful response 
+    # + return - If successful `()`, otherwise an `calendar:Error` 
     resource isolated function delete calendars/[string calendarId]/acl/[string ruleId]("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns Error? {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/acl/${getEncodedUri(ruleId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
@@ -307,7 +307,7 @@ public isolated client class Client {
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
     # + ruleId - ACL rule identifier.
     # + sendNotifications - Whether to send notifications about the calendar sharing change. Note that there are no notifications on access removal. Optional. The default is True.
-    # + return - Successful response 
+    # + return - A `calendar:AclRule` if successful, otherwise an `calendar:Error`
     resource isolated function patch calendars/[string calendarId]/acl/[string ruleId](AclRule payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), boolean? sendNotifications = ()) returns AclRule|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/acl/${getEncodedUri(ruleId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "sendNotifications": sendNotifications};
@@ -331,7 +331,7 @@ public isolated client class Client {
     # + prettyPrint - Returns response with indentations and line breaks.
     # + quotaUser - An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
-    # + return - Successful response 
+    # + return - If successful `()`, otherwise an `calendar:Error` 
     resource isolated function post calendars/[string calendarId]/clear("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns Error? {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/clear`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
@@ -390,7 +390,7 @@ public isolated client class Client {
     # + timeMin - Lower bound (exclusive) for an event's end time to filter by. Optional. The default is not to filter by end time. Must be an RFC3339 timestamp with mandatory time zone offset, for example, 2011-06-03T10:00:00-07:00, 2011-06-03T10:00:00Z. Milliseconds may be provided but are ignored. If timeMax is set, timeMin must be smaller than timeMax.
     # + timeZone - Time zone used in the response. Optional. The default is the time zone of the calendar.
     # + updatedMin - Lower bound for an event's last modification time (as a RFC3339 timestamp) to filter by. When specified, entries deleted since this time will always be included regardless of showDeleted. Optional. The default is not to filter by last modification time.
-    # + return - Successful response 
+    # + return - A `calendar:Events` if successful, otherwise an `calendar:Error`
     resource isolated function get calendars/[string calendarId]/events("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), string[]? eventTypes = (), string? iCalUID = (), int? maxAttendees = (), int? maxResults = (), "startTime"|"updated"? orderBy = (), string? pageToken = (), string[]? privateExtendedProperty = (), string? q = (), string[]? sharedExtendedProperty = (), boolean? showDeleted = (), boolean? showHiddenInvitations = (), boolean? singleEvents = (), string? syncToken = (), string? timeMax = (), string? timeMin = (), string? timeZone = (), string? updatedMin = ()) returns Events|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/events`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "eventTypes": eventTypes, "iCalUID": iCalUID, "maxAttendees": maxAttendees, "maxResults": maxResults, "orderBy": orderBy, "pageToken": pageToken, "privateExtendedProperty": privateExtendedProperty, "q": q, "sharedExtendedProperty": sharedExtendedProperty, "showDeleted": showDeleted, "showHiddenInvitations": showHiddenInvitations, "singleEvents": singleEvents, "syncToken": syncToken, "timeMax": timeMax, "timeMin": timeMin, "timeZone": timeZone, "updatedMin": updatedMin};
@@ -417,7 +417,7 @@ public isolated client class Client {
     # + maxAttendees - The maximum number of attendees to include in the response. If there are more than the specified number of attendees, only the participant is returned. Optional.
     # + sendUpdates - Whether to send notifications about the creation of the new event. Note that some emails might still be sent. The default is false.
     # + supportsAttachments - Whether API client performing operation supports event attachments. Optional. The default is False.
-    # + return - Successful response 
+    # + return - A `calendar:Event` if successful, otherwise an `calendar:Error` 
     resource isolated function post calendars/[string calendarId]/events(Event payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), int? conferenceDataVersion = (), int? maxAttendees = (), "all"|"externalOnly"|"none"? sendUpdates = (), boolean? supportsAttachments = ()) returns Event|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/events`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "conferenceDataVersion": conferenceDataVersion, "maxAttendees": maxAttendees, "sendUpdates": sendUpdates, "supportsAttachments": supportsAttachments};
@@ -444,7 +444,7 @@ public isolated client class Client {
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
     # + conferenceDataVersion - Version number of conference data supported by the API client. Version 0 assumes no conference data support and ignores conference data in the event's body. Version 1 enables support for copying of ConferenceData as well as for creating new conferences using the createRequest field of conferenceData. The default is 0.
     # + supportsAttachments - Whether API client performing operation supports event attachments. Optional. The default is False.
-    # + return - Successful response 
+    # + return - A `calendar:Event` if successful, otherwise an `calendar:Error`
     resource isolated function post calendars/[string calendarId]/events/'import(Event payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), int? conferenceDataVersion = (), boolean? supportsAttachments = ()) returns Event|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/events/import`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "conferenceDataVersion": conferenceDataVersion, "supportsAttachments": supportsAttachments};
@@ -470,7 +470,7 @@ public isolated client class Client {
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
     # + text - The text describing the event to be created.
     # + sendUpdates - Guests who should receive notifications about the creation of the new event.
-    # + return - Successful response 
+    # + return - A `calendar:Event` if successful, otherwise an `calendar:Error` 
     resource isolated function post calendars/[string calendarId]/events/quickAdd(string text, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), "all"|"externalOnly"|"none"? sendUpdates = ()) returns Event|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/events/quickAdd`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "text": text, "sendUpdates": sendUpdates};
@@ -495,7 +495,7 @@ public isolated client class Client {
     # + eventId - Event identifier.
     # + maxAttendees - The maximum number of attendees to include in the response. If there are more than the specified number of attendees, only the participant is returned. Optional.
     # + timeZone - Time zone used in the response. Optional. The default is the time zone of the calendar.
-    # + return - Successful response 
+    # + return - A `calendar:Event` if successful, otherwise an `calendar:Error` 
     resource isolated function get calendars/[string calendarId]/events/[string eventId]("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), int? maxAttendees = (), string? timeZone = ()) returns Event|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/events/${getEncodedUri(eventId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "maxAttendees": maxAttendees, "timeZone": timeZone};
@@ -522,7 +522,7 @@ public isolated client class Client {
     # + maxAttendees - The maximum number of attendees to include in the response. If there are more than the specified number of attendees, only the participant is returned. Optional.
     # + sendUpdates - Guests who should receive notifications about the event update (for example, title changes, etc.).
     # + supportsAttachments - Whether API client performing operation supports event attachments. Optional. The default is False.
-    # + return - Successful response 
+    # + return - A `calendar:Event` if successful, otherwise an `calendar:Error` 
     resource isolated function put calendars/[string calendarId]/events/[string eventId](Event payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), int? conferenceDataVersion = (), int? maxAttendees = (), "all"|"externalOnly"|"none"? sendUpdates = (), boolean? supportsAttachments = ()) returns Event|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/events/${getEncodedUri(eventId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "conferenceDataVersion": conferenceDataVersion, "maxAttendees": maxAttendees, "sendUpdates": sendUpdates, "supportsAttachments": supportsAttachments};
@@ -575,7 +575,7 @@ public isolated client class Client {
     # + maxAttendees - The maximum number of attendees to include in the response. If there are more than the specified number of attendees, only the participant is returned. Optional.
     # + sendUpdates - Guests who should receive notifications about the event update (for example, title changes, etc.).
     # + supportsAttachments - Whether API client performing operation supports event attachments. Optional. The default is False.
-    # + return - Successful response 
+    # + return - A `calendar:Event` if successful, otherwise an `calendar:Error` 
     resource isolated function patch calendars/[string calendarId]/events/[string eventId](Event payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), int? conferenceDataVersion = (), int? maxAttendees = (), "all"|"externalOnly"|"none"? sendUpdates = (), boolean? supportsAttachments = ()) returns Event|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/events/${getEncodedUri(eventId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "conferenceDataVersion": conferenceDataVersion, "maxAttendees": maxAttendees, "sendUpdates": sendUpdates, "supportsAttachments": supportsAttachments};
@@ -608,7 +608,7 @@ public isolated client class Client {
     # + timeMax - Upper bound (exclusive) for an event's start time to filter by. Optional. The default is not to filter by start time. Must be an RFC3339 timestamp with mandatory time zone offset.
     # + timeMin - Lower bound (inclusive) for an event's end time to filter by. Optional. The default is not to filter by end time. Must be an RFC3339 timestamp with mandatory time zone offset.
     # + timeZone - Time zone used in the response. Optional. The default is the time zone of the calendar.
-    # + return - Successful response 
+    # + return - A `calendar:Events` if successful, otherwise an `calendar:Error` 
     resource isolated function get calendars/[string calendarId]/events/[string eventId]/instances("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), int? maxAttendees = (), int? maxResults = (), string? originalStart = (), string? pageToken = (), boolean? showDeleted = (), string? timeMax = (), string? timeMin = (), string? timeZone = ()) returns Events|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/events/${getEncodedUri(eventId)}/instances`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "maxAttendees": maxAttendees, "maxResults": maxResults, "originalStart": originalStart, "pageToken": pageToken, "showDeleted": showDeleted, "timeMax": timeMax, "timeMin": timeMin, "timeZone": timeZone};
@@ -632,7 +632,7 @@ public isolated client class Client {
     # + eventId - Event identifier.
     # + destination - Calendar identifier of the target calendar where the event is to be moved to.
     # + sendUpdates - Guests who should receive notifications about the change of the event's organizer.
-    # + return - Successful response 
+    # + return - A `calendar:Event` if successful, otherwise an `calendar:Error`
     resource isolated function post calendars/[string calendarId]/events/[string eventId]/move(string destination, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), "all"|"externalOnly"|"none"? sendUpdates = ()) returns Event|Error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/events/${getEncodedUri(eventId)}/move`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "destination": destination, "sendUpdates": sendUpdates};
@@ -653,7 +653,7 @@ public isolated client class Client {
     # + oauth_token - OAuth 2.0 token for the current user.
     # + prettyPrint - Returns response with indentations and line breaks.
     # + quotaUser - An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
-    # + return - Successful response 
+    # + return - A `calendar:Colors` if successful, otherwise an `calendar:Error`
     resource isolated function get colors("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns Colors|Error {
         string resourcePath = string `/colors`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
@@ -674,7 +674,7 @@ public isolated client class Client {
     # + oauth_token - OAuth 2.0 token for the current user.
     # + prettyPrint - Returns response with indentations and line breaks.
     # + quotaUser - An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
-    # + return - Successful response 
+    # + return - A `calendar:FreeBusyResponse` if successful, otherwise an `calendar:Error`
     resource isolated function post freeBusy(FreeBusyRequest payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns FreeBusyResponse|Error {
         string resourcePath = string `/freeBusy`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
@@ -707,7 +707,7 @@ public isolated client class Client {
     # If the syncToken expires, the server will respond with a 410 GONE response code and the client should clear its storage and perform a full synchronization without any syncToken.
     # Learn more about incremental synchronization.
     # Optional. The default is to return all entries.
-    # + return - Successful response 
+    # + return - A `calendar:CalendarList` if successful, otherwise an `calendar:Error` 
     resource isolated function get users/me/calendarList("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), int? maxResults = (), "freeBusyReader"|"owner"|"reader"|"writer"? minAccessRole = (), string? pageToken = (), boolean? showDeleted = (), boolean? showHidden = (), string? syncToken = ()) returns CalendarList|Error {
         string resourcePath = string `/users/me/calendarList`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "maxResults": maxResults, "minAccessRole": minAccessRole, "pageToken": pageToken, "showDeleted": showDeleted, "showHidden": showHidden, "syncToken": syncToken};
@@ -729,7 +729,7 @@ public isolated client class Client {
     # + prettyPrint - Returns response with indentations and line breaks.
     # + quotaUser - An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
     # + colorRgbFormat - Whether to use the foregroundColor and backgroundColor fields to write the calendar colors (RGB). If this feature is used, the index-based colorId field will be set to the best matching option automatically. Optional. The default is False.
-    # + return - Successful response 
+    # + return - A `calendar:CalendarListEntry` if successful, otherwise an `calendar:Error` 
     resource isolated function post users/me/calendarList(CalendarListEntry payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), boolean? colorRgbFormat = ()) returns CalendarListEntry|Error {
         string resourcePath = string `/users/me/calendarList`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "colorRgbFormat": colorRgbFormat};
@@ -753,7 +753,7 @@ public isolated client class Client {
     # + prettyPrint - Returns response with indentations and line breaks.
     # + quotaUser - An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
-    # + return - Successful response 
+    # + return - A `calendar:CalendarListEntry` if successful, otherwise an `calendar:Error`
     resource isolated function get users/me/calendarList/[string calendarId]("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns CalendarListEntry|Error {
         string resourcePath = string `/users/me/calendarList/${getEncodedUri(calendarId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
@@ -776,7 +776,7 @@ public isolated client class Client {
     # + quotaUser - An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
     # + colorRgbFormat - Whether to use the foregroundColor and backgroundColor fields to write the calendar colors (RGB). If this feature is used, the index-based colorId field will be set to the best matching option automatically. Optional. The default is False.
-    # + return - Successful response 
+    # + return - A `calendar:CalendarListEntry` if successful, otherwise an `calendar:Error`
     resource isolated function put users/me/calendarList/[string calendarId](CalendarListEntry payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), boolean? colorRgbFormat = ()) returns CalendarListEntry|Error {
         string resourcePath = string `/users/me/calendarList/${getEncodedUri(calendarId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "colorRgbFormat": colorRgbFormat};
@@ -800,7 +800,7 @@ public isolated client class Client {
     # + prettyPrint - Returns response with indentations and line breaks.
     # + quotaUser - An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
-    # + return - Successful response 
+    # + return - If successful `()`, otherwise an `calendar:Error` 
     resource isolated function delete users/me/calendarList/[string calendarId]("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns Error? {
         string resourcePath = string `/users/me/calendarList/${getEncodedUri(calendarId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
@@ -823,7 +823,7 @@ public isolated client class Client {
     # + quotaUser - An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
     # + colorRgbFormat - Whether to use the foregroundColor and backgroundColor fields to write the calendar colors (RGB). If this feature is used, the index-based colorId field will be set to the best matching option automatically. Optional. The default is False.
-    # + return - Successful response 
+    # + return - A `calendar:CalendarListEntry` if successful, otherwise an `calendar:Error`
     resource isolated function patch users/me/calendarList/[string calendarId](CalendarListEntry payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), boolean? colorRgbFormat = ()) returns CalendarListEntry|Error {
         string resourcePath = string `/users/me/calendarList/${getEncodedUri(calendarId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "colorRgbFormat": colorRgbFormat};
