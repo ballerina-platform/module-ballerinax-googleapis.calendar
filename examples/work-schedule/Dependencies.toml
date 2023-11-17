@@ -61,7 +61,7 @@ dependencies = [
 [[package]]
 org = "ballerina"
 name = "http"
-version = "2.10.3"
+version = "2.10.4"
 dependencies = [
 	{org = "ballerina", name = "auth"},
 	{org = "ballerina", name = "cache"},
@@ -291,7 +291,7 @@ dependencies = [
 [[package]]
 org = "ballerinax"
 name = "googleapis.calendar"
-version = "0.1.0"
+version = "4.0.0"
 dependencies = [
 	{org = "ballerina", name = "http"},
 	{org = "ballerina", name = "url"},
