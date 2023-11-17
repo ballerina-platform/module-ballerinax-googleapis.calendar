@@ -321,6 +321,8 @@ public type Settings record {
     string nextSyncToken?;
 };
 
+# Represents information about conferences associated with calendar events.
+#
 public type ConferenceData record {
     # The ID of the conference.
     # Can be used by developers to keep track of conferences, should not be displayed to users.
@@ -445,31 +447,6 @@ public type Calendar record {
     string summary?;
     # The time zone of the calendar. (Formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich".) Optional.
     string timeZone?;
-};
-
-# Represents data type to watch for changes in specified resources.
-#
-public type Channel record {
-    # The address where notifications are delivered for this channel.
-    string address?;
-    # Date and time of notification channel expiration, expressed as a Unix timestamp, in milliseconds. Optional.
-    string expiration?;
-    # A UUID or similar unique string that identifies this channel.
-    string id?;
-    # Identifies this as a notification channel used to watch for changes to a resource, which is "api#channel".
-    string kind?;
-    # Additional parameters controlling delivery channel behavior. Optional.
-    record {|string...;|} params?;
-    # A Boolean value to indicate whether payload is wanted. Optional.
-    boolean payload?;
-    # An opaque ID that identifies the resource being watched on this channel. Stable across different API versions.
-    string resourceId?;
-    # A version-specific identifier for the watched resource.
-    string resourceUri?;
-    # An arbitrary string delivered to the target address with each notification delivered over this channel. Optional.
-    string token?;
-    # The type of delivery mechanism used for this channel. Valid values are "web_hook" (or "webhook"). Both values refer to a channel where Http requests are used to deliver messages.
-    string 'type?;
 };
 
 # Defines and manages user-specific settings related to their calendar configurations.
