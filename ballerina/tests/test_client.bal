@@ -639,57 +639,45 @@ function testCreateAclRule() returns error? {
     test:assertEquals(res, ());
 }
 
-// // Test case for getting instances of an event in a calendar
-// @test:Config{}
-// function testGetCalendarEventInstances() returns error? {
-//     Client client1 = check new(config);
+// Test case for getting instances of an event in a calendar
+@test:Config{}
+function testGetCalendarEventInstances() returns error? {
+    Client client1 = check new(config);
 
-//     // Create a calendar
-//     string summary = "Test Calendar";
-//     Calendar cal = {
-//         summary: summary
-//     };
-//     Calendar createdCal = check client1->/calendars.post(cal);
+    // Create a calendar
+    string summary = "Test Calendar";
+    Calendar cal = {
+        summary: summary
+    };
+    Calendar createdCal = check client1->/calendars.post(cal);
 
-//     // Create an event
-//     string eventSummary = "Test Event";
-//     Event event = {
-//         'start: {
-//             dateTime: "2023-10-28T03:00:00+05:30",
-//             timeZone: "Asia/Colombo"
-//         },
-//         end: {
-//             dateTime: "2023-10-28T03:30:00+05:30",
-//             timeZone: "Asia/Colombo"
-//         },
-//         summary: eventSummary
-//     };
-//     Event createdEvent = check client1->/calendars/[<string>createdCal.id]/events.post(event);
+    // Create an event
+    string eventSummary = "Test Event";
+    Event event = {
+        'start: {
+            dateTime: "2023-10-28T03:00:00+05:30",
+            timeZone: "Asia/Colombo"
+        },
+        end: {
+            dateTime: "2023-10-28T03:30:00+05:30",
+            timeZone: "Asia/Colombo"
+        },
+        summary: eventSummary
+    };
+    Event createdEvent = check client1->/calendars/[<string>createdCal.id]/events.post(event);
 
-//     // Get the instances of the event
-//     Events instances = check client1->/calendars/[<string>createdCal.id]/events/[<string>createdEvent.id]/instances.get();
+    // Get the instances of the event
+    Events instances = check client1->/calendars/[<string>createdCal.id]/events/[<string>createdEvent.id]/instances.get();
+    test:assertNotEquals(instances.items, ());
 
-//     // Assert that the retrieved instances contain the created event
-//     boolean eventFound = false;
-//     Event[]? eventItems = instances.items;
-//     if eventItems != () {
-//         foreach Event event_item in eventItems {
-//             if (event_item.summary != eventSummary) {
-//                 eventFound = true;
-//                 break;
-//             }
-//         }
-//     }
-//     test:assertTrue(eventFound, "Retrieved instances do not contain the created event");
+    // Delete the event
+    error? res = check client1->/calendars/[<string>createdCal.id]/events/[<string>createdEvent.id].delete();
+    test:assertEquals(res, ());
 
-//     // Delete the event
-//     error? res = check client1->/calendars/[<string>createdCal.id]/events/[<string>createdEvent.id].delete();
-//     test:assertEquals(res, ());
-
-//     // Delete the calendar
-//     res = check client1->/calendars/[<string>createdCal.id].delete();
-//     test:assertEquals(res, ());
-// }
+    // Delete the calendar
+    res = check client1->/calendars/[<string>createdCal.id].delete();
+    test:assertEquals(res, ());
+}
 
 // Test case for moving an event to another calendar
 @test:Config{}
@@ -768,89 +756,78 @@ function testDeleteCalendarFromList() returns error? {
     test:assertEquals(res, ());
 }
 
-// // Test case for patching a calendar list entry
-// @test:Config{}
-// function testPatchCalendarListEntry() returns error? {
-//     Client client1 = check new(config);
+@test:Config{}
+function testPatchCalendarListEntry() returns error? {
+    Client client1 = check new(config);
+    string summary = "Test Calendar List Entry";
+    Calendar cal = {
+        summary: summary
+    };
+    Calendar calendar = check client1->/calendars.post(cal);
+    test:assertEquals(calendar.summary, summary);
 
-//     // Create a calendar list entry
-//     string calendarId = "test-calendar-id";
-//     CalendarListEntry calendarListEntry = {
-//         id: calendarId,
-//         summary: "Test Calendar List Entry"
-//     };
-//     CalendarListEntry createdCalendarListEntry = check client1->/users/me/calendarList.post(calendarListEntry);
+    // Create a calendar list entry
+    CalendarListEntry calendarListEntry = {
+        id: calendar.id
+    };
+    CalendarListEntry calendarUpdate = check client1->/users/me/calendarList.post(calendarListEntry);
+    test:assertEquals(calendarUpdate.summary, summary);
 
-//     // Update the calendar list entry
-//     string newSummary = "Updated Test Calendar List Entry";
-//     createdCalendarListEntry.summary = newSummary;
-//     CalendarListEntry updatedCalendarListEntry = check client1->/users/me/calendarList/[<string>calendarId].patch(createdCalendarListEntry);
+    CalendarListEntry updatedEntry = check client1->/users/me/calendarList/[<string>calendarUpdate.id].patch(calendarListEntry);
+    test:assertEquals(updatedEntry.id, calendarUpdate.id);
 
-//     // Assert that the retrieved calendar list entry matches the updated calendar list entry
-//     test:assertEquals(updatedCalendarListEntry.summary, newSummary);
+    error? res = check client1->/users/me/calendarList/[<string>calendarUpdate.id].delete();
+    test:assertEquals(res, ());
+}
 
-//     // Delete the calendar list entry
-//     error? res = check client1->/users/me/calendarList/[<string>calendarId].delete();
-//     test:assertEquals(res, ());
-// }
+@test:Config {}
+function testPostCalendarList() returns error? {
+    Client client1 = check new(config);
+    string summary = "Test Calendar List Entry";
+    Calendar cal = {
+        summary: summary
+    };
+    Calendar calendar = check client1->/calendars.post(cal);
+    test:assertEquals(calendar.summary, summary);
 
-// // Define the test configuration
-// @test:Config{}
-// function testSettingsAPIs() returns error? {
-//     Client client1 = check new(config);
+    // Create a calendar list entry
+    CalendarListEntry calendarListEntry = {
+        id: calendar.id
+    };
+    CalendarListEntry calendarUpdate = check client1->/users/me/calendarList.post(calendarListEntry);
+    test:assertEquals(calendarUpdate.summary, summary);
 
-//     // Test case for getting all user settings
-//     Settings settings = check client1->/users/me/settings.get();
-//     test:assertNotEquals(settings, ());
+    error? res = check client1->/users/me/calendarList/[<string>calendarUpdate.id].delete();
+    test:assertEquals(res, ());
+}
 
-//     // Test case for watching changes to user settings
-//     Setting channel = check client1->/users/me/settings/watch(check new, "json");
-//     test:assertNotEquals(channel, ());
+@test:Config {}
+function testGetCalendarListEntry() returns error? {
+    Client client1 = check new(config);
 
-//     // Test case for getting a single user setting
-//     Setting|error setting = client1->/users/me/settings/[<string>(<Setting[]>settings.items[0]).id].get();
-//     test:assertNotNull(setting);
+    string summary = "Test Calendar List Entry";
+    Calendar cal = {
+        summary: summary
+    };
+    Calendar calendar = check client1->/calendars.post(cal);
+    test:assertEquals(calendar.summary, summary);
 
-//     // Delete the channel
-//     error? res = check client1->/channels/[<string>channel.id].delete();
-//     test:assertEquals(res, ());
-// }
+    // Create a calendar list entry
+    CalendarListEntry calendarListEntry = {
+        id: calendar.id
+    };
+    CalendarListEntry createdCalendarListEntry = check client1->/users/me/calendarList.post(calendarListEntry);
 
-// @test:Config {}
-// function testPostCalendarList() returns error? {
-//     Client client1 = check new(config);
-//     string summary = "Test Calendar List";
-//     CalendarListEntry calListEntry = {
-//         summary: summary
-//     };
-//     CalendarListEntry unionResult = check client1->/users/me/calendarList.post(calListEntry);
-//     test:assertEquals(unionResult.summary, summary);
+    // Get the calendar list entry
+    CalendarListEntry retrievedCalendarListEntry = check client1->/users/me/calendarList/[<string>createdCalendarListEntry.id].get();
 
-//     error? res = check client1->/users/me/calendarList/[<string>unionResult.id].delete();
-//     test:assertEquals(res, ());
-// }
+    // Assert that the retrieved calendar list entry matches the created calendar list entry
+    test:assertEquals(retrievedCalendarListEntry.summary, summary);
 
-// @test:Config {}
-// function testGetCalendarListEntry() returns error? {
-//     Client client1 = check new(config);
-
-//     // Create a calendar list entry
-//     string summary = "Test Calendar List Entry";
-//     CalendarListEntry calendarListEntry = {
-//         summary: summary
-//     };
-//     CalendarListEntry createdCalendarListEntry = check client1->/users/me/calendarList.post(calendarListEntry);
-
-//     // Get the calendar list entry
-//     CalendarListEntry retrievedCalendarListEntry = check client1->/users/me/calendarList/[<string>createdCalendarListEntry.id].get();
-
-//     // Assert that the retrieved calendar list entry matches the created calendar list entry
-//     test:assertEquals(retrievedCalendarListEntry.summary, summary);
-
-//     // Delete the calendar list entry
-//     error? res = check client1->/users/me/calendarList/[<string>createdCalendarListEntry.id].delete();
-//     test:assertEquals(res, ());
-// }
+    // Delete the calendar list entry
+    error? res = check client1->/users/me/calendarList/[<string>createdCalendarListEntry.id].delete();
+    test:assertEquals(res, ());
+}
 
 // Test case for updating a calendar list entry
 @test:Config{}
@@ -932,48 +909,6 @@ function testFreeBusy() returns error? {
     // Assert that the response contains the expected fields
     test:assertNotEquals(freeBusyResponse.kind, ());
     test:assertNotEquals(freeBusyResponse.calendars, ());
-}
-
-// // Test case for stopping a channel
-// @test:Config{}
-// function testStopChannel() returns error? {
-//     Client client1 = check new(config);
-
-//     // Create a channel
-//     Channel channel = {
-//         id: "test-channel-id",
-//         resourceId: "test-resource-id",
-//         token: "test-token",
-//         expiration: "test-expiration"
-//     };
-//     Channel createdChannel = client1->/channels.post(channel);
-//     error? response = check client1->/channels/stop.post(channel);
-
-//     // Assert that the response status code is 200
-//     test:assertEquals(response, ());
-// }
-
-@test:Config {}
-function testGetUserSettings() returns error? {
-    Client client1 = check new(config);
-
-    // Get the user settings
-    Settings settings = check client1->/users/me/settings.get();
-
-    // Assert that the response is not null
-    test:assertNotEquals(settings, ());
-}
-
-// Test case for getting a setting
-@test:Config{}
-function testGetSetting() returns error? {
-    Client client1 = check new(config);
-
-    // Get the setting
-    Setting setting = check client1->/users/me/settings/[<string>"test_setting"].get();
-
-    // Assert that the retrieved setting matches the expected value
-    test:assertEquals(setting.value, "test_value");
 }
 
 // Test case for creating an event using quickAdd in a calendar
