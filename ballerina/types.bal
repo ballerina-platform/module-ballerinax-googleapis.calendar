@@ -82,7 +82,6 @@ public type OAuth2RefreshTokenGrantConfig record {|
 |};
 
 # Response data with free/busy information.
-#
 public type FreeBusyResponse record {
     # List of free/busy information for calendars.
     record {|FreeBusyCalendar...;|} calendars?;
@@ -115,7 +114,6 @@ public type ConferenceSolution record {
 };
 
 # Defines the date, time, and time zone information for events.
-#
 public type EventDateTime record {
     # The date, in the format "yyyy-mm-dd", if this is an all-day event.
     string date?;
@@ -126,7 +124,6 @@ public type EventDateTime record {
 };
 
 # Represents information for different methods of joining a conference or event.
-#
 public type EntryPoint record {
     # The access code to access the conference. The maximum length is 128 characters.
     # When creating new conference data, populate only the subset of {meetingCode, accessCode, passcode, password, pin} fields that match the terminology that the conference provider uses. Only the populated fields should be displayed.
@@ -177,7 +174,6 @@ public type EntryPoint record {
 };
 
 # Conveys information about the working location of a user during an event.
-#
 public type EventWorkingLocationProperties record {
     # If present, specifies that the user is working from a custom location.
     EventWorkingLocationProperties_customLocation customLocation?;
@@ -206,14 +202,12 @@ public type Event_organizer record {
 };
 
 # Identifies the target calendar or group for which free/busy information is requested.
-#
 public type FreeBusyRequestItem record {
     # The identifier of a calendar or a group.
     string id?;
 };
 
 # Represent calendar properties which allow users to manage and interact with their calendars effectively.
-#
 public type CalendarListEntry record {
     # The effective access role that the authenticated user has on the calendar. Read-only. Possible values are:  
     # - "freeBusyReader" - Provides read access to free/busy information. 
@@ -260,7 +254,6 @@ public type CalendarListEntry record {
 };
 
 # Reprsents event properties which allow users to access and manage calendar event.
-#
 public type Events record {
     # The user's access role for this calendar. Read-only. Possible values are:  
     # - "none" - The user has no access. 
@@ -292,7 +285,6 @@ public type Events record {
 };
 
 # Represents list of calendars associated with the user's account.
-#
 public type CalendarList record {
     # ETag of the collection.
     string etag?;
@@ -307,7 +299,6 @@ public type CalendarList record {
 };
 
 # Represents list of user settings associated with the user's account.
-#
 public type Settings record {
     # Etag of the collection.
     string etag?;
@@ -322,7 +313,6 @@ public type Settings record {
 };
 
 # Represents information about conferences associated with calendar events.
-#
 public type ConferenceData record {
     # The ID of the conference.
     # Can be used by developers to keep track of conferences, should not be displayed to users.
@@ -360,7 +350,6 @@ public type ColorDefinition record {
 };
 
 # Provides information about the current status of a conference create request.
-#
 public type ConferenceRequestStatus record {
     # The current status of the conference create request. Read-only.
     # The possible values are:  
@@ -371,7 +360,6 @@ public type ConferenceRequestStatus record {
 };
 
 # Allows users to define how and when to be reminded of upcoming events.
-#
 public type EventReminder record {
     # The method used by this reminder. Possible values are:  
     # - "email" - Reminders are sent via email. 
@@ -390,7 +378,6 @@ public type EventWorkingLocationProperties_customLocation record {
 };
 
 # Manages and describes attendees and their responses to calendar events.
-#
 public type EventAttendee record {
     # Number of additional guests. Optional. The default is 0.
     int:Signed32 additionalGuests?;
@@ -420,7 +407,6 @@ public type EventAttendee record {
 };
 
 # Defines and represents time intervals or periods.
-#
 public type TimePeriod record {
     # The (exclusive) end of the time period.
     string end?;
@@ -429,7 +415,6 @@ public type TimePeriod record {
 };
 
 # Defines and manages individual calendars.
-#
 public type Calendar record {
     # Represents properties related to conferencing options for the calendar
     ConferenceProperties conferenceProperties?;
@@ -450,7 +435,6 @@ public type Calendar record {
 };
 
 # Defines and manages user-specific settings related to their calendar configurations.
-#
 public type Setting record {
     # ETag of the resource.
     string etag?;
@@ -475,7 +459,6 @@ public type AclRule_scope record {
 };
 
 # Represents the error type for Google Calendar APIs.
-#
 public type Error record {
     # Domain, or broad category, of the error.
     string domain?;
@@ -488,7 +471,6 @@ public type Error record {
 };
 
 # Manages access control and permissions for calendars and events.
-#
 public type Acl record {
     # ETag of the collection.
     string etag?;
@@ -503,7 +485,6 @@ public type Acl record {
 };
 
 # Manages notification preferences of the calendars.
-#
 public type CalendarNotification record {
     # The method used to deliver the notification. The possible value is:  
     # - "email" - Notifications are sent via email.  
@@ -520,7 +501,6 @@ public type CalendarNotification record {
 };
 
 # Represents the request to create a conference within a calendar event.
-#
 public type CreateConferenceRequest record {
     # Specifies the key identifying the conference solution for this request.
     ConferenceSolutionKey conferenceSolutionKey?;
@@ -532,7 +512,6 @@ public type CreateConferenceRequest record {
 };
 
 # Provides information about free/busy schedules for a group of calendars.
-#
 public type FreeBusyGroup record {
     # List of calendars' identifiers within a group.
     string[] calendars?;
@@ -541,7 +520,6 @@ public type FreeBusyGroup record {
 };
 
 # Represents free/busy information for an individual calendar.
-#
 public type FreeBusyCalendar record {
     # List of time ranges during which this calendar should be regarded as busy.
     TimePeriod[] busy?;
@@ -550,7 +528,6 @@ public type FreeBusyCalendar record {
 };
 
 # Contains parameters for a request to retrieve free/busy information for a set of calendars and groups.
-#
 public type FreeBusyRequest record {
     # Maximal number of calendars for which FreeBusy information is to be provided. Optional. Maximum value is 50.
     int:Signed32 calendarExpansionMax?;
@@ -567,14 +544,12 @@ public type FreeBusyRequest record {
 };
 
 # This type is used for adding parameters that control the behavior of a conference.
-#
 public type ConferenceParametersAddOnParameters record {
     # Additional parameters controlling the behavior of the conference add-on.
     record {|string...;|} parameters?;
 };
 
 # Represents the key information for a conference solution.
-#
 public type ConferenceSolutionKey record {
     # The conference solution type.
     # If a client encounters an unfamiliar or empty type, it should still be able to display the entry points. However, it should disallow modifications.
@@ -587,7 +562,6 @@ public type ConferenceSolutionKey record {
 };
 
 # Contains information about an attachment associated with an event.
-#
 public type EventAttachment record {
     # ID of the attached file. Read-only.
     # For Google Drive files, this is the ID of the corresponding Files resource entry in the Drive API.
@@ -611,7 +585,6 @@ public type CalendarListEntry_notificationSettings record {
 };
 
 # Represents a global palette of calendar and event colors used in Google Calendar.
-#
 public type Colors record {
     # A global palette of calendar colors, mapping from the color ID to its definition. A calendarListEntry resource refers to one of these color IDs in its colorId field. Read-only.
     record {|ColorDefinition...;|} calendar?;
@@ -640,14 +613,12 @@ public type Event_source record {
 };
 
 # Represents parameters related to conference settings for events.
-#
 public type ConferenceParameters record {
     # Specify additional parameters for third-party conferencing solutions
     ConferenceParametersAddOnParameters addOnParameters?;
 };
 
 # Represents an event in Google Calendar
-#
 public type Event record {
     # Whether anyone can invite themselves to the event (deprecated). Optional. The default is False.
     boolean anyoneCanAddSelf?;
@@ -757,7 +728,6 @@ public type Event record {
 };
 
 # Specify the types of conference solutions supported for a calendar.
-#
 public type ConferenceProperties record {
     # The types of conference solutions that are supported for this calendar.
     # The possible values are:  
@@ -768,7 +738,6 @@ public type ConferenceProperties record {
 };
 
 # Defines access control rules for a calendar
-#
 public type AclRule record {
     # ETag of the resource.
     string etag?;

@@ -45,30 +45,21 @@ function testCreateAndDeleteCalendar() returns error? {
     test:assertEquals(res, ());
 }
 
-// Define the test configuration
 @test:Config{}
 function testGetCalendar() returns error? {
     Client client1 = check new(config);
 
-    // Create a calendar
     string summary = "Test Calendar";
     Calendar cal = {
         summary: summary
     };
     Calendar createdCal = check client1->/calendars.post(cal);
-
-    // Get the calendar
     Calendar retrievedCal = check client1->/calendars/[<string>createdCal.id].get();
-
-    // Assert that the retrieved calendar matches the created calendar
     test:assertEquals(retrievedCal.summary, summary);
-
-    // Delete the calendar
     error? res = check client1->/calendars/[<string>createdCal.id].delete();
     test:assertEquals(res, ());
 }
 
-// // Test case for updating a calendar
 @test:Config{}
 function testUpdateCalendar() returns error? {
     Client client1 = check new(config);
@@ -93,7 +84,6 @@ function testUpdateCalendar() returns error? {
     test:assertEquals(res, ());
 }
 
-// Test case for patching a calendar
 @test:Config{}
 function testPatchCalendar() returns error? {
     Client client1 = check new(config);
@@ -118,7 +108,6 @@ function testPatchCalendar() returns error? {
     test:assertEquals(res, ());
 }
 
-// Test case for getting the ACL of a calendar
 @test:Config{}
 function testGetCalendarAcl() returns error? {
     Client client1 = check new(config);
@@ -145,7 +134,6 @@ function testGetCalendarAcl() returns error? {
     test:assertEquals(res, ());
 }
 
-// Test case for getting the events of a calendar
 @test:Config{}
 function testGetCalendarEvents() returns error? {
     Client client1 = check new(config);
@@ -195,7 +183,6 @@ function testGetCalendarEvents() returns error? {
     test:assertEquals(res, ());
 }
 
-// Test case for getting a single event of a calendar
 @test:Config{}
 function testGetCalendarEvent() returns error? {
     Client client1 = check new(config);
@@ -237,7 +224,6 @@ function testGetCalendarEvent() returns error? {
     test:assertEquals(res, ());
 }
 
-// Test case for creating an event in a calendar
 @test:Config{}
 function testCreateCalendarEvent() returns error? {
     Client client1 = check new(config);
@@ -279,7 +265,6 @@ function testCreateCalendarEvent() returns error? {
     test:assertEquals(res, ());
 }
 
-// Test case for updating an event in a calendar
 @test:Config{}
 function testUpdateCalendarEvent() returns error? {
     Client client1 = check new(config);
@@ -323,7 +308,6 @@ function testUpdateCalendarEvent() returns error? {
     test:assertEquals(res, ());
 }
 
-// Test case for patching an event in a calendar
 @test:Config{}
 function testPatchCalendarEvent() returns error? {
     Client client1 = check new(config);
@@ -367,7 +351,6 @@ function testPatchCalendarEvent() returns error? {
     test:assertEquals(res, ());
 }
 
-// Test case for deleting an event from a calendar
 @test:Config{}
 function testDeleteCalendarEvent() returns error? {
     Client client1 = check new(config);
@@ -559,7 +542,6 @@ function testDeleteEvent() returns error? {
     test:assertEquals(res, ());
 }
 
-// Test case for posting the ACL of a calendar
 @test:Config{}
 function testPostCalendarAcl() returns error? {
     Client client1 = check new(config);
@@ -592,7 +574,6 @@ function testPostCalendarAcl() returns error? {
     test:assertEquals(delRes, ());
 }
 
-// Test case for creating an access control rule
 @test:Config{}
 function testCreateAclRule() returns error? {
     Client client1 = check new(config);
@@ -639,7 +620,6 @@ function testCreateAclRule() returns error? {
     test:assertEquals(res, ());
 }
 
-// Test case for getting instances of an event in a calendar
 @test:Config{}
 function testGetCalendarEventInstances() returns error? {
     Client client1 = check new(config);
@@ -679,7 +659,6 @@ function testGetCalendarEventInstances() returns error? {
     test:assertEquals(res, ());
 }
 
-// Test case for moving an event to another calendar
 @test:Config{}
 function testMoveCalendarEvent() returns error? {
     Client client1 = check new(config);
@@ -829,7 +808,6 @@ function testGetCalendarListEntry() returns error? {
     test:assertEquals(res, ());
 }
 
-// Test case for updating a calendar list entry
 @test:Config{}
 function testUpdateCalendarListEntry() returns error? {
     Client client1 = check new(config);
@@ -854,7 +832,6 @@ function testUpdateCalendarListEntry() returns error? {
     test:assertEquals(res, ());
 }
 
-// Test case for getting the calendar list of the authenticated user
 @test:Config{}
 function testGetCalendarList() returns error? {
     Client client1 = check new(config);
@@ -911,7 +888,6 @@ function testFreeBusy() returns error? {
     test:assertNotEquals(freeBusyResponse.calendars, ());
 }
 
-// Test case for creating an event using quickAdd in a calendar
 @test:Config{}
 function testCreateCalendarEventQuickAdd() returns error? {
     Client client1 = check new(config);
