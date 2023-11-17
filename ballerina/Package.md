@@ -7,7 +7,7 @@ The `ballerinax/googleapis.calendar` package offers APIs to connect and interact
 
 In order to use the `calendar` connector, you need to first create the Calendar credentials for the connector to interact with Calendar.
 
-1. **Create a Google Account**: Create a [Google account](https://accounts.google.com/signup/v2/webcreateaccount?utm_source=ga-ob-search&utm_medium=google-account&flowName=GlifWebSignIn&flowEntry=SignUp).
+1. **Create a Google Account**: Create a [Google Account](https://accounts.google.com/signup/v2/webcreateaccount?utm_source=ga-ob-search&utm_medium=google-account&flowName=GlifWebSignIn&flowEntry=SignUp).
 
 2. **Create a Google Cloud Platform project**: You need to create a new project on the Google Cloud Platform (GCP). Once the project is created, you can enable the Calendar API for this project.
 
@@ -64,7 +64,6 @@ The `calendar` connector provides practical examples illustrating usage in vario
 
 1. [Project Management](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/examples/project-management/main.bal)
     Efficiently manage a work schedule by interacting with the APIs for various tasks related to scheduling and organizing work-related events and meetings.
-
 2. [Work Schedule](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/examples/work-schedule/main.bal)
     Managing personal project schedule and collaborating with team members.
 
