@@ -24,43 +24,50 @@ configurable string refreshUrl = os:getEnv("REFRESH_URL");
 
 ConnectionConfig config = {
     auth: {
-        clientId: clientId,
-        clientSecret: clientSecret,
-        refreshToken: refreshToken,
-        refreshUrl: refreshUrl   
+        clientId,
+        clientSecret,
+        refreshToken,
+        refreshUrl
     }
 };
 
+function verifyAndReturnId(string? id) returns string|error {
+  if id is () {
+    return error("id is nil");
+  }
+  return id;
+}
+
 @test:Config {}
-function testCreateAndDeleteCalendar() returns Error? {
+function testCreateAndDeleteCalendar() returns error? {
     Client client1 = check new(config);
     string summary = "Test Calendar 1";
     Calendar cal = {
         summary: summary
     };
-    Calendar unionResult = check client1->/calendars.post(cal);
-    test:assertEquals(unionResult.summary, summary);
+    Calendar calendar = check client1->/calendars.post(cal);
+    test:assertEquals(calendar.summary, summary);
 
-    Error? res = check client1->/calendars/[<string>unionResult.id].delete();
-    test:assertEquals(res, ());
+    string id = check verifyAndReturnId(calendar.id);
+    check client1->/calendars/[id].delete();
 }
 
 @test:Config{}
-function testGetCalendar() returns Error?  {
+function testGetCalendar() returns error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {
         summary: summary
     };
     Calendar createdCal = check client1->/calendars.post(cal);
-    Calendar retrievedCal = check client1->/calendars/[<string>createdCal.id].get();
+    string id = check verifyAndReturnId(createdCal.id);
+    Calendar retrievedCal = check client1->/calendars/[id].get();
     test:assertEquals(retrievedCal.summary, summary);
-    Error? res = check client1->/calendars/[<string>createdCal.id].delete();
-    test:assertEquals(res, ());
+    check client1->/calendars/[id].delete();
 }
 
 @test:Config{}
-function testUpdateCalendar() returns Error?  {
+function testUpdateCalendar() returns error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {
@@ -69,14 +76,14 @@ function testUpdateCalendar() returns Error?  {
     Calendar createdCal = check client1->/calendars.post(cal);
     string newSummary = "Updated Test Calendar";
     createdCal.summary = newSummary;
-    Calendar updatedCal = check client1->/calendars/[<string>createdCal.id].put(createdCal);
+    string id = check verifyAndReturnId(createdCal.id);
+    Calendar updatedCal = check client1->/calendars/[id].put(createdCal);
     test:assertEquals(updatedCal.summary, newSummary);
-    Error? res = check client1->/calendars/[<string>createdCal.id].delete();
-    test:assertEquals(res, ());
+    check client1->/calendars/[id].delete();
 }
 
 @test:Config{}
-function testPatchCalendar() returns Error?  {
+function testPatchCalendar() returns error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {
@@ -85,31 +92,31 @@ function testPatchCalendar() returns Error?  {
     Calendar createdCal = check client1->/calendars.post(cal);
     string newSummary = "Patched Test Calendar";
     createdCal.summary = newSummary;
-    Calendar patchedCal = check client1->/calendars/[<string>createdCal.id].patch(createdCal);
+    string id = check verifyAndReturnId(createdCal.id);
+    Calendar patchedCal = check client1->/calendars/[id].patch(createdCal);
     test:assertEquals(patchedCal.summary, newSummary);
-    Error? res = check client1->/calendars/[<string>createdCal.id].delete();
-    test:assertEquals(res, ());
+    check client1->/calendars/[id].delete();
 }
 
 @test:Config{}
-function testGetCalendarAcl() returns Error?  {
+function testGetCalendarAcl() returns error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {
         summary: summary
     };
     Calendar createdCal = check client1->/calendars.post(cal);
-    Acl acl = check client1->/calendars/[<string>createdCal.id]/acl.get();
+    string id = check verifyAndReturnId(createdCal.id);
+    Acl acl = check client1->/calendars/[id]/acl.get();
     AclRule[]? aclRules = acl.items;
     if aclRules !is () {
         test:assertTrue(aclRules.length() > 0);
     }
-    Error? res = check client1->/calendars/[<string>createdCal.id].delete();
-    test:assertEquals(res, ());
+    check client1->/calendars/[id].delete();
 }
 
 @test:Config{}
-function testGetCalendarEvents() returns Error?  {
+function testGetCalendarEvents() returns error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {
@@ -128,17 +135,21 @@ function testGetCalendarEvents() returns Error?  {
         },
         summary: eventSummary
     };
-    Event createdEvent = check client1->/calendars/[<string>createdCal.id]/events.post(event);
+    string id = check verifyAndReturnId(createdCal.id);
+    Event createdEvent = check client1->/calendars/[id]/events.post(event);
     test:assertEquals(createdEvent.summary, eventSummary);
-    Events events = check client1->/calendars/[<string>createdCal.id]/events.get();
+    Events events = check client1->/calendars/[id]/events.get();
     Event[]? eventItems = events.items;
     test:assertNotEquals(eventItems, ());
-    Error? res = check client1->/calendars/[<string>createdCal.id].delete();
-    test:assertEquals(res, ());
+    string? eventId = createdEvent.id;
+    test:assertTrue(createdEvent.id is string);
+    if eventId is string {
+        check client1->/calendars/[id]/events/[eventId].delete();
+    }
 }
 
 @test:Config{}
-function testGetCalendarEvent() returns Error?  {
+function testGetCalendarEvent() returns error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {
@@ -157,17 +168,16 @@ function testGetCalendarEvent() returns Error?  {
         },
         summary: eventSummary
     };
-    Event createdEvent = check client1->/calendars/[<string>createdCal.id]/events.post(event);
-    Event retrievedEvent = check client1->/calendars/[<string>createdCal.id]/events/[<string>createdEvent.id].get();
+    string id = check verifyAndReturnId(createdCal.id);
+    Event createdEvent = check client1->/calendars/[id]/events.post(event);
+    string eventId = check verifyAndReturnId(createdEvent.id);
+    Event retrievedEvent = check client1->/calendars/[id]/events/[eventId].get();
     test:assertEquals(retrievedEvent.summary, eventSummary);
-    Error? res = check client1->/calendars/[<string>createdCal.id]/events/[<string>createdEvent.id].delete();
-    test:assertEquals(res, ());
-    res = check client1->/calendars/[<string>createdCal.id].delete();
-    test:assertEquals(res, ());
+    check client1->/calendars/[id]/events/[eventId].delete();
 }
 
 @test:Config{}
-function testCreateCalendarEvent() returns Error?  {
+function testCreateCalendarEvent() returns error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {
@@ -186,17 +196,17 @@ function testCreateCalendarEvent() returns Error?  {
         },
         summary: eventSummary
     };
-    Event createdEvent = check client1->/calendars/[<string>createdCal.id]/events.post(event);
-    Event retrievedEvent = check client1->/calendars/[<string>createdCal.id]/events/[<string>createdEvent.id].get();
+    string id = check verifyAndReturnId(createdCal.id);
+    Event createdEvent = check client1->/calendars/[id]/events.post(event);
+    string eventId = check verifyAndReturnId(createdEvent.id);
+    Event retrievedEvent = check client1->/calendars/[id]/events/[eventId].get();
     test:assertEquals(retrievedEvent.summary, eventSummary);
-    Error? res = check client1->/calendars/[<string>createdCal.id]/events/[<string>createdEvent.id].delete();
-    test:assertEquals(res, ());
-    res = check client1->/calendars/[<string>createdCal.id].delete();
-    test:assertEquals(res, ());
+    check client1->/calendars/[id]/events/[eventId].delete();
+    check client1->/calendars/[id].delete();
 }
 
 @test:Config{}
-function testUpdateCalendarEvent() returns Error?  {
+function testUpdateCalendarEvent() returns error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {
@@ -215,19 +225,19 @@ function testUpdateCalendarEvent() returns Error?  {
         },
         summary: eventSummary
     };
-    Event createdEvent = check client1->/calendars/[<string>createdCal.id]/events.post(event);
+    string id = check verifyAndReturnId(createdCal.id);
+    Event createdEvent = check client1->/calendars/[id]/events.post(event);
+    string eventId = check verifyAndReturnId(createdEvent.id);
     string newSummary = "Updated Test Event";
     createdEvent.summary = newSummary;
-    Event updatedEvent = check client1->/calendars/[<string>createdCal.id]/events/[<string>createdEvent.id].put(createdEvent);
+    Event updatedEvent = check client1->/calendars/[id]/events/[eventId].put(createdEvent);
     test:assertEquals(updatedEvent.summary, newSummary);
-    Error? res = check client1->/calendars/[<string>createdCal.id]/events/[<string>createdEvent.id].delete();
-    test:assertEquals(res, ());
-    res = check client1->/calendars/[<string>createdCal.id].delete();
-    test:assertEquals(res, ());
+    check client1->/calendars/[id]/events/[eventId].delete();
+    check client1->/calendars/[id].delete();
 }
 
 @test:Config{}
-function testPatchCalendarEvent() returns Error?  {
+function testPatchCalendarEvent() returns error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {
@@ -246,19 +256,19 @@ function testPatchCalendarEvent() returns Error?  {
         },
         summary: eventSummary
     };
-    Event createdEvent = check client1->/calendars/[<string>createdCal.id]/events.post(event);
+    string id = check verifyAndReturnId(createdCal.id);
+    Event createdEvent = check client1->/calendars/[id]/events.post(event);
     string newSummary = "Patched Test Event";
     createdEvent.summary = newSummary;
-    Event patchedEvent = check client1->/calendars/[<string>createdCal.id]/events/[<string>createdEvent.id].patch(createdEvent);
+    string eventId = check verifyAndReturnId(createdEvent.id);
+    Event patchedEvent = check client1->/calendars/[id]/events/[eventId].patch(createdEvent);
     test:assertEquals(patchedEvent.summary, newSummary);
-    Error? res = check client1->/calendars/[<string>createdCal.id]/events/[<string>createdEvent.id].delete();
-    test:assertEquals(res, ());
-    res = check client1->/calendars/[<string>createdCal.id].delete();
-    test:assertEquals(res, ());
+    check client1->/calendars/[id]/events/[eventId].delete();
+    check client1->/calendars/[id].delete();
 }
 
 @test:Config{}
-function testDeleteCalendarEvent() returns Error?  {
+function testDeleteCalendarEvent() returns error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {
@@ -277,15 +287,15 @@ function testDeleteCalendarEvent() returns Error?  {
         },
         summary: eventSummary
     };
-    Event createdEvent = check client1->/calendars/[<string>createdCal.id]/events.post(event);
-    Error? res = check client1->/calendars/[<string>createdCal.id]/events/[<string>createdEvent.id].delete();
-    test:assertEquals(res, ());
-    res = check client1->/calendars/[<string>createdCal.id].delete();
-    test:assertEquals(res, ());
+    string id = check verifyAndReturnId(createdCal.id);
+    Event createdEvent = check client1->/calendars/[id]/events.post(event);
+    string eventId = check verifyAndReturnId(createdEvent.id);
+    check client1->/calendars/[id]/events/[eventId].delete();
+    check client1->/calendars/[id].delete();
 }
 
 @test:Config {}
-function testCreateEvent() returns Error?  {
+function testCreateEvent() returns error?  {
     Client client1 = check new(config);
     string summary = "Test Meeting 110";
     Calendar cal = {
@@ -303,12 +313,14 @@ function testCreateEvent() returns Error?  {
         },
         "summary": summary
     };
-    Event unionResult = check client1->/calendars/[<string>createdCal.id]/events.post(payload = payload);
-    test:assertEquals(unionResult.summary, summary);
+    string id = check verifyAndReturnId(createdCal.id);
+    Event createdEvent = check client1->/calendars/[id]/events.post(payload = payload);
+    test:assertEquals(createdEvent.summary, summary);
+    check client1->/calendars/[id].delete();
 }
 
 @test:Config {}
-function testUpdateEvent() returns Error?  {
+function testUpdateEvent() returns error?  {
     Client client1 = check new(config);
     string summary = "Test Meeting 110";
     Calendar cal = {
@@ -326,20 +338,19 @@ function testUpdateEvent() returns Error?  {
         },
         "summary": summary
     };
-    Event createdEvent = check client1->/calendars/[<string>createdCal.id]/events.post(payload = payload);
-
+    string id = check verifyAndReturnId(createdCal.id);
+    Event createdEvent = check client1->/calendars/[id]/events.post(payload = payload);
     string newSummary = "Updated Test Meeting 110";
     createdEvent.summary = newSummary;
-    Event updatedEvent = check client1->/calendars/[<string>createdCal.id]/events/[<string>createdEvent.id].put(createdEvent);
+    string eventId = check verifyAndReturnId(createdEvent.id);
+    Event updatedEvent = check client1->/calendars/[id]/events/[eventId].put(createdEvent);
     test:assertEquals(updatedEvent.summary, newSummary);
     test:assertEquals(updatedEvent.summary, newSummary);
-
-    Error? res = check client1->/calendars/[<string>createdCal.id]/events/[<string>createdEvent.id].delete();
-    test:assertEquals(res, ());
+    check client1->/calendars/[id]/events/[eventId].delete();
 }
 
 @test:Config {}
-function testPatchEvent() returns Error?  {
+function testPatchEvent() returns error?  {
     Client client1 = check new(config);
     string summary = "Test Meeting 110";
     Calendar cal = {
@@ -357,17 +368,18 @@ function testPatchEvent() returns Error?  {
         },
         "summary": summary
     };
-    Event createdEvent = check client1->/calendars/[<string>createdCal.id]/events.post(payload = payload);
+    string id = check verifyAndReturnId(createdCal.id);
+    Event createdEvent = check client1->/calendars/[id]/events.post(payload = payload);
     string newSummary = "Patched Test Meeting 110";
     createdEvent.summary = newSummary;
-    Event patchedEvent = check client1->/calendars/[<string>createdCal.id]/events/[<string>createdEvent.id].patch(createdEvent);
+    string eventId = check verifyAndReturnId(createdEvent.id);
+    Event patchedEvent = check client1->/calendars/[id]/events/[eventId].patch(createdEvent);
     test:assertEquals(patchedEvent.summary, newSummary);
-    Error? res = check client1->/calendars/[<string>createdCal.id]/events/[<string>createdEvent.id].delete();
-    test:assertEquals(res, ());
+    check client1->/calendars/[id]/events/[eventId].delete();
 }
 
 @test:Config {}
-function testGetEvent() returns Error?  {
+function testGetEvent() returns error?  {
     Client client1 = check new(config);
     string summary = "Test Meeting 110";
     Calendar cal = {
@@ -385,15 +397,16 @@ function testGetEvent() returns Error?  {
         },
         "summary": summary
     };
-    Event createdEvent = check client1->/calendars/[<string>createdCal.id]/events.post(payload = payload);
-    Event retrievedEvent = check client1->/calendars/[<string>createdCal.id]/events/[<string>createdEvent.id].get();
+    string id = check verifyAndReturnId(createdCal.id);
+    Event createdEvent = check client1->/calendars/[id]/events.post(payload = payload);
+    string eventId = check verifyAndReturnId(createdEvent.id);
+    Event retrievedEvent = check client1->/calendars/[id]/events/[eventId].get();
     test:assertEquals(retrievedEvent.summary, summary);
-    Error? res = check client1->/calendars/[<string>createdCal.id]/events/[<string>createdEvent.id].delete();
-    test:assertEquals(res, ());
+    check client1->/calendars/[id]/events/[eventId].delete();
 }
 
 @test:Config {}
-function testDeleteEvent() returns Error?  {
+function testDeleteEvent() returns error?  {
     Client client1 = check new(config);
     string summary = "Test Meeting 110";
     Calendar cal = {
@@ -411,9 +424,10 @@ function testDeleteEvent() returns Error?  {
         },
         "summary": summary
     };
-    Event createdEvent = check client1->/calendars/[<string>createdCal.id]/events.post(payload = payload);
-    Error? res = check client1->/calendars/[<string>createdCal.id]/events/[<string>createdEvent.id].delete();
-    test:assertEquals(res, ());
+    string id = check verifyAndReturnId(createdCal.id);
+    Event createdEvent = check client1->/calendars/[id]/events.post(payload = payload);
+    string eventId = check verifyAndReturnId(createdEvent.id);
+    check client1->/calendars/[id]/events/[eventId].delete();
 }
 
 @test:Config{}
@@ -431,15 +445,18 @@ function testPostCalendarAcl() returns error?  {
             value: "user@example.com"
         }
     };
-    AclRule res = check client1->/calendars/[<string>createdCal.id]/acl.post(check acl.cloneWithType(AclRule));
+    string id = check verifyAndReturnId(createdCal.id);
+    AclRule res = check client1->/calendars/[id]/acl.post(check acl.cloneWithType(AclRule));
     test:assertEquals(res.role, check acl.role);
-    test:assertEquals((<AclRule_scope>res.scope).value, check acl.scope.value);
-    Error?  delRes = check client1->/calendars/[<string>createdCal.id].delete();
-    test:assertEquals(delRes, ());
+    AclRule_scope? scope = res.scope;
+    if scope is AclRule_scope {
+        test:assertEquals(scope.value, check acl.scope.value);
+        check client1->/calendars/[id].delete();
+    }
 }
 
 @test:Config{}
-function testCreateAclRule() returns Error?  {
+function testCreateAclRule() returns error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {
@@ -453,8 +470,9 @@ function testCreateAclRule() returns Error?  {
             value: "testuser@gmail.com"
         }
     };
-    AclRule createdAclRule = check client1->/calendars/[<string>createdCal.id]/acl.post(aclRule);
-    Acl acl = check client1->/calendars/[<string>createdCal.id]/acl.get();
+    string id = check verifyAndReturnId(createdCal.id);
+    AclRule createdAclRule = check client1->/calendars/[id]/acl.post(aclRule);
+    Acl acl = check client1->/calendars/[id]/acl.get();
     boolean aclRuleFound = false;
     AclRule[]? aclItems = acl.items;
     if aclItems != () {
@@ -466,14 +484,13 @@ function testCreateAclRule() returns Error?  {
         }
     }
     test:assertTrue(aclRuleFound, "Retrieved ACL does not contain the created ACL rule");
-    Error? res = check client1->/calendars/[<string>createdCal.id]/acl/[<string>createdAclRule.id].delete();
-    test:assertEquals(res, ());
-    res = check client1->/calendars/[<string>createdCal.id].delete();
-    test:assertEquals(res, ());
+    string aclRuleId = check verifyAndReturnId(createdAclRule.id);
+    check client1->/calendars/[id]/acl/[aclRuleId].delete();
+    check client1->/calendars/[id].delete();
 }
 
 @test:Config{}
-function testGetCalendarEventInstances() returns Error?  {
+function testGetCalendarEventInstances() returns error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {
@@ -492,17 +509,17 @@ function testGetCalendarEventInstances() returns Error?  {
         },
         summary: eventSummary
     };
-    Event createdEvent = check client1->/calendars/[<string>createdCal.id]/events.post(event);
-    Events instances = check client1->/calendars/[<string>createdCal.id]/events/[<string>createdEvent.id]/instances.get();
+    string id = check verifyAndReturnId(createdCal.id);
+    Event createdEvent = check client1->/calendars/[id]/events.post(event);
+    string eventId = check verifyAndReturnId(createdEvent.id);
+    Events instances = check client1->/calendars/[id]/events/[eventId]/instances.get();
     test:assertNotEquals(instances.items, ());
-    Error? res = check client1->/calendars/[<string>createdCal.id]/events/[<string>createdEvent.id].delete();
-    test:assertEquals(res, ());
-    res = check client1->/calendars/[<string>createdCal.id].delete();
-    test:assertEquals(res, ());
+    check client1->/calendars/[id]/events/[eventId].delete();
+    check client1->/calendars/[id].delete();
 }
 
 @test:Config{}
-function testMoveCalendarEvent() returns Error?  {
+function testMoveCalendarEvent() returns error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {
@@ -526,36 +543,34 @@ function testMoveCalendarEvent() returns Error?  {
         },
         summary: eventSummary
     };
-    Event createdEvent = check client1->/calendars/[<string>createdCal.id]/events.post(event);
-    Event moveEvent = check client1->/calendars/[<string>createdCal.id]/events/[<string>createdEvent.id]/move.post(<string>createdCal2.id);
+    string calId = check verifyAndReturnId(createdCal.id);
+    Event createdEvent = check client1->/calendars/[calId]/events.post(event);
+    string eventId = check verifyAndReturnId(createdEvent.id);
+    string calId2 = check verifyAndReturnId(createdCal2.id);
+    Event moveEvent = check client1->/calendars/[calId]/events/[eventId]/move.post(calId2);
     test:assertEquals(moveEvent.summary, eventSummary);
-    Error? res = check client1->/calendars/[<string>createdCal2.id]/events/[<string>createdEvent.id].delete();
-    test:assertEquals(res, ());
-    res = check client1->/calendars/[<string>createdCal2.id].delete();
-    test:assertEquals(res, ());
-    res = check client1->/calendars/[<string>createdCal.id].delete();
-    test:assertEquals(res, ());
+    check client1->/calendars/[calId2]/events/[eventId].delete();
+    check client1->/calendars/[calId2].delete();
+    check client1->/calendars/[calId].delete();
 }
 
 @test:Config {}
-function testDeleteCalendarFromList() returns Error?  {
+function testDeleteCalendarFromList() returns error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {
         summary: summary
     };
-
     Calendar createdCalendar = check client1->/calendars.post(cal);
     CalendarListEntry response = check client1->/users/me/calendarList.post({id: createdCalendar.id});
     test:assertEquals(response.id, createdCalendar.id);
-    Error? res = check client1->/users/me/calendarList/[<string>createdCalendar.id].delete();
-    test:assertEquals(res, ());
-    res = check client1->/calendars/[<string>createdCalendar.id].delete();
-    test:assertEquals(res, ());
+    string id = check verifyAndReturnId(createdCalendar.id);
+    check client1->/users/me/calendarList/[id].delete();
+    check client1->/calendars/[id].delete();
 }
 
 @test:Config{}
-function testPatchCalendarListEntry() returns Error?  {
+function testPatchCalendarListEntry() returns error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar List Entry";
     Calendar cal = {
@@ -568,16 +583,14 @@ function testPatchCalendarListEntry() returns Error?  {
     };
     CalendarListEntry calendarUpdate = check client1->/users/me/calendarList.post(calendarListEntry);
     test:assertEquals(calendarUpdate.summary, summary);
-
-    CalendarListEntry updatedEntry = check client1->/users/me/calendarList/[<string>calendarUpdate.id].patch(calendarListEntry);
+    string updateId = check verifyAndReturnId(calendarUpdate.id);
+    CalendarListEntry updatedEntry = check client1->/users/me/calendarList/[updateId].patch(calendarListEntry);
     test:assertEquals(updatedEntry.id, calendarUpdate.id);
-
-    Error? res = check client1->/users/me/calendarList/[<string>calendarUpdate.id].delete();
-    test:assertEquals(res, ());
+    check client1->/users/me/calendarList/[updateId].delete();
 }
 
 @test:Config {}
-function testPostCalendarList() returns Error?  {
+function testPostCalendarList() returns error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar List Entry";
     Calendar cal = {
@@ -590,13 +603,12 @@ function testPostCalendarList() returns Error?  {
     };
     CalendarListEntry calendarUpdate = check client1->/users/me/calendarList.post(calendarListEntry);
     test:assertEquals(calendarUpdate.summary, summary);
-
-    Error? res = check client1->/users/me/calendarList/[<string>calendarUpdate.id].delete();
-    test:assertEquals(res, ());
+    string updateId = check verifyAndReturnId(calendarUpdate.id);
+    check client1->/users/me/calendarList/[updateId].delete();
 }
 
 @test:Config {}
-function testGetCalendarListEntry() returns Error?  {
+function testGetCalendarListEntry() returns error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar List Entry";
     Calendar cal = {
@@ -608,14 +620,14 @@ function testGetCalendarListEntry() returns Error?  {
         id: calendar.id
     };
     CalendarListEntry createdCalendarListEntry = check client1->/users/me/calendarList.post(calendarListEntry);
-    CalendarListEntry retrievedCalendarListEntry = check client1->/users/me/calendarList/[<string>createdCalendarListEntry.id].get();
+    string id = check verifyAndReturnId(createdCalendarListEntry.id);
+    CalendarListEntry retrievedCalendarListEntry = check client1->/users/me/calendarList/[id].get();
     test:assertEquals(retrievedCalendarListEntry.summary, summary);
-    Error? res = check client1->/users/me/calendarList/[<string>createdCalendarListEntry.id].delete();
-    test:assertEquals(res, ());
+    check client1->/users/me/calendarList/[id].delete();
 }
 
 @test:Config{}
-function testUpdateCalendarListEntry() returns Error?  {
+function testUpdateCalendarListEntry() returns error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar List Entry";
     Calendar cal = {
@@ -623,33 +635,28 @@ function testUpdateCalendarListEntry() returns Error?  {
     };
     Calendar calendar = check client1->/calendars.post(cal);
     test:assertEquals(calendar.summary, summary);
-
     CalendarListEntry calendarListEntry = {
         id: calendar.id
     };
     CalendarListEntry calendarUpdate = check client1->/users/me/calendarList.post(calendarListEntry);
     test:assertEquals(calendarUpdate.summary, summary);
-
-    CalendarListEntry updatedEntry = check client1->/users/me/calendarList/[<string>calendarUpdate.id].put(calendarListEntry);
+    string updateId = check verifyAndReturnId(calendarUpdate.id);
+    CalendarListEntry updatedEntry = check client1->/users/me/calendarList/[updateId].put(calendarListEntry);
     test:assertEquals(updatedEntry.id, calendarUpdate.id);
-
-    Error? res = check client1->/users/me/calendarList/[<string>calendarUpdate.id].delete();
-    test:assertEquals(res, ());
+    check client1->/users/me/calendarList/[updateId].delete();
 }
 
 @test:Config{}
-function testGetCalendarList() returns Error?  {
+function testGetCalendarList() returns error?  {
     Client client1 = check new(config);
     CalendarList calendarList = check client1->/users/me/calendarList.get();
     test:assertNotEquals(calendarList, ());
     CalendarListEntry[]? calendarListEntries = calendarList.items;
-    if calendarListEntries !is () {
-        test:assertTrue(calendarListEntries.length() > 0);
-    }
+    test:assertTrue(calendarListEntries is () || calendarListEntries.length() > 0);
 }
 
 @test:Config {}
-function testGetColors() returns Error?  {
+function testGetColors() returns error?  {
     Client client1 = check new(config);
     Colors colors = check client1->/colors.get();
     test:assertNotEquals(colors.calendar, ());
@@ -658,7 +665,7 @@ function testGetColors() returns Error?  {
 }
 
 @test:Config {}
-function testFreeBusy() returns Error?  {
+function testFreeBusy() returns error?  {
     Client client1 = check new(config);
     FreeBusyRequest freeBusyRequest = {
         timeMin: "2022-01-01T00:00:00Z",
@@ -676,7 +683,7 @@ function testFreeBusy() returns Error?  {
 }
 
 @test:Config{}
-function testCreateCalendarEventQuickAdd() returns Error?  {
+function testCreateCalendarEventQuickAdd() returns error?  {
     Client client1 = check new(config);
     string summary = "Test Calendar";
     Calendar cal = {
@@ -684,10 +691,10 @@ function testCreateCalendarEventQuickAdd() returns Error?  {
     };
     Calendar createdCal = check client1->/calendars.post(cal);
     string eventText = "Event created using quickAdd";
-    Event createdEvent = check client1->/calendars/[<string>createdCal.id]/events/quickAdd.post(eventText);
+    string id = check verifyAndReturnId(createdCal.id);
+    Event createdEvent = check client1->/calendars/[id]/events/quickAdd.post(eventText);
     test:assertEquals(createdEvent.summary, eventText);
-    Error? res = check client1->/calendars/[<string>createdCal.id]/events/[<string>createdEvent.id].delete();
-    test:assertEquals(res, ());
-    res = check client1->/calendars/[<string>createdCal.id].delete();
-    test:assertEquals(res, ());
+    string eventId = check verifyAndReturnId(createdEvent.id);
+    check client1->/calendars/[id]/events/[eventId].delete();
+    check client1->/calendars/[id].delete();
 }
