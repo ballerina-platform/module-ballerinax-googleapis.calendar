@@ -54,3 +54,6 @@ target/
 
 # Ignore Gradle build output directory
 build
+
+# Ignore Docker env file
+docker.env

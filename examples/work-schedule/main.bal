@@ -26,10 +26,10 @@ configurable string refreshUrl = os:getEnv("REFRESH_URL");
 public function main() returns error? {
     calendar:Client calendarClient = check new ({
         auth: {
-            clientId: clientId,
-            clientSecret: clientSecret,
-            refreshToken: refreshToken,
-            refreshUrl: refreshUrl
+            clientId,
+            clientSecret,
+            refreshToken,
+            refreshUrl
         }
     });
 

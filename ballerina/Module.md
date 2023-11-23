@@ -1,83 +1,58 @@
-## Overview
+# Overview
 
 The Google Calendar Connector provides the capability to manage events and calendar operations. It also provides the capability to support service account authorization that can provide delegated domain-wide access to the GSuite domain and support admins to do operations on behalf of the domain users.
 
 This module supports [Google Calendar API V3](https://developers.google.com/calendar/api).
 
-## Prerequisites
+## Set up Calendar API
+
+To utilize the Calendar connector, you must have access to the Calendar REST API through a [Google Cloud Platform (GCP)](https://console.cloud.google.com/) account and a project under it. If you do not have a GCP account, you can sign up for one [here](https://cloud.google.com/).
+
+### Step 1: Create a Google Cloud Platform Project
 
 In order to use the `calendar` connector, you need to first create the Calendar credentials for the connector to interact with Calendar.
 
-1. **Create a Google Account**: Create a [Google Account](https://accounts.google.com/signup/v2/webcreateaccount?utm_source=ga-ob-search&utm_medium=google-account&flowName=GlifWebSignIn&flowEntry=SignUp).
+1. Open the [GCP Console](https://console.cloud.google.com/).
+2. Click on the project drop-down and either select an existing project or create a new one for which you want to add an API key.
 
-2. **Create a Google Cloud Platform project**: You need to create a new project on the Google Cloud Platform (GCP). Once the project is created, you can enable the Calendar API for this project.
+    ![GCP Console](resources/gcp-console-project-view.png)
 
-3. **Create OAuth client ID**: In the GCP console, you need to create credentials for the OAuth client ID. This process involves setting up the OAuth consent screen and creating the credentials for the OAuth client ID.
+3. Navigate to the **Library** and enable the Calendar API.
 
-4. **Get the access token and refresh token**: You need to generate an access token and a refresh token. The Oauth playground can be used to easily exchange the authorization code for the tokens.
+    ![Enable Calendar API](resources/enable-calendar-api.png)
 
-For detailed steps including the necessary links, go to the [Setup Guide](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/docs/setup/setup.md).
+### Step 2: Create OAuth Client ID
 
-## Quickstart
+1. Navigate to the **Credentials** tab in your Google Cloud Platform console.
 
-To use the Google Calendar connector in your Ballerina application, update the .bal file as follows:
+2. Click  **Create credentials** and from the dropdown menu, select **OAuth client ID**.
 
-### Step 1: Import connector
-Import the `ballerinax/googleapis.calendar` module into the Ballerina project.
-```ballerina
-import ballerinax/googleapis.calendar;
-```
+    ![Create Credentials](resources/create-credentials.png)
 
-### Step 2: Create a new connector instance
-Create a `calendar:ConnectionConfig` with the OAuth2.0 tokens obtained and initialize the connector with it.
+3. You will be directed to the **OAuth consent** screen, in which you need to fill in the necessary information below.
 
-```ballerina
-calendar:ConnectionConfig config = {
-    auth: {
-        clientId: <CLIENT_ID>,
-        clientSecret: <CLIENT_SECRET>
-        refreshToken: <REFRESH_TOKEN>,
-        refreshUrl: <REFRESH_URL>,
-    }
-};
+    | Field                     | Value |
+    | ------------------------- | ----- |
+    | Application type          | Web Application |
+    | Name                      | CalendarConnector  |
+    | Authorized redirect URIs  | <https://developers.google.com/oauthplayground> |
 
-calendar:Client calendarClient = check new(config);
-```
+    After filling in these details, click **Create**.
 
-### Step 3: Invoke connector operation
+    **Note**: Save the provided Client ID and Client secret.
 
-1. Now you can use the operations available within the connector. Note that they are in the form of remote operations.  
-Following is an example on how to create quick event using the connector.
+### Step 3: Get the access token and refresh token
 
-```ballerina
-string calendarId = "primary";
-string title = "Sample Event";
+**Note**: It is recommended to use the OAuth 2.0 playground to obtain the tokens.
 
-public function main() returns error? {
-    calendar:Event response = check calendarClient->quickAddEvent(calendarId, title);
-}
-``` 
-2. Use `bal run` command to compile and run the Ballerina program.
+1. Configure the OAuth playground with the OAuth client ID and client secret.
 
-## Examples
+    ![OAuth Playground](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/ballerina/resources/oauth-playground.png)
 
-The `calendar` connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/examples), covering use cases like creating calendar, scheduling meeting events, and adding reminders.
+2. Authorize the Calendar APIs.
 
-1. [Project Management](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/examples/project-management/main.bal)
-    This example shows how to use Google calendar APIs to efficiently manage work schedule of a person. It interacts with the API for various tasks related to scheduling and organizing work-related events and meetings.
-2. [Work Schedule](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/examples/work-schedule/main.bal)
-    This example shows how to use Google calendar APIs to managing personal project schedule and collaborating with team members.
+    ![Authorize APIs](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/ballerina/resources/authorize-calendar-apis.png)
 
-For comprehensive information about the connector's functionality, configuration, and usage in Ballerina programs, refer to the `calendar` connector's reference guide in [Ballerina Central](https://central.ballerina.io/ballerinax/googleapis.calendar/latest).
+3. Exchange the authorization code for tokens.
 
-## Set up Calendar API
-
-To use the `calendar` connector, create Calendar credentials to interact with Calendar.
-
-1. **Create a Google Cloud Platform project**: Create a new project on [Google Cloud Platform (GCP)](https://console.cloud.google.com/getting-started?pli=1). Enable the Calendar API for this project.
-
-2. **Create OAuth client ID**: In the GCP console, create credentials for the OAuth client ID by setting up the OAuth consent screen.
-
-3. **Get the access token and refresh token**: Generate an access token and a refresh token using the OAuth playground.
-
-For detailed steps, including necessary links, refer to the [Setup Guide](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/docs/setup/setup.md).
+    ![Exchange Tokens](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/ballerina/resources/exchange-tokens.png)
