@@ -56,3 +56,56 @@ In order to use the `calendar` connector, you need to first create the Calendar 
 3. Exchange the authorization code for tokens.
 
     ![Exchange Tokens](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/ballerina/resources/exchange-tokens.png)
+
+## Samples
+
+This sample demonstrates a scenario of creating a secondary calendar and adding a new event to it using the Ballerina Google Calendar connector.
+
+### Step 1: Import the package
+
+Import the `ballerinax/googleapis.calendar` package into your Ballerina project.
+
+```ballerina
+import ballerinax/googleapis.calendar;
+```
+
+### Step 2: Instantiate a new connector
+
+Create a `calendar:ConnectionConfig` with the obtained OAuth2.0 tokens and initialize the connector with it.
+
+```ballerina
+configurable string clientId= ?;
+configurable string clientSecret = ?;
+configurable string refreshToken= ?;
+configurable string refreshUrl = ?;
+
+calendar:Client calendarClient = check new ({
+   auth: {
+      clientId,
+      clientSecret,
+      refreshToken,
+      refreshUrl
+   }
+});
+```
+
+### Step 3: Invoke the connector operation
+
+You can now utilize the operations available within the connector.
+
+   ```ballerina
+   public function main() returns error? {
+      calendar:Client calendarClient = ...//
+
+      // create a calendar
+      calendar:Calendar calendar = check calendarClient->/calendars.post({
+         summary: "Work Schedule"
+      });
+
+      // quick add new event
+      string eventTitle = "Sample Event";
+      calendar:Event event = check calendarClient->/calendars/[calendarId]/events/quickAdd.post(eventTitle);
+   }
+   ```
+
+You can find more samples [here](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/examples).
