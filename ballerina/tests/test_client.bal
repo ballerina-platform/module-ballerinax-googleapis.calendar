@@ -477,7 +477,7 @@ function testCreateAclRule() returns error?  {
     AclRule[]? aclItems = acl.items;
     if aclItems != () {
         foreach AclRule acl_item in aclItems {
-            if (acl_item.id == createdAclRule.id) {
+            if acl_item.id == createdAclRule.id {
                 aclRuleFound = true;
                 break;
             }
