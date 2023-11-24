@@ -320,6 +320,45 @@ function testCreateEvent() returns error?  {
 }
 
 @test:Config {}
+function testImportEvent() returns error?  {
+    Client client1 = check new(config);
+    string summary = "Test Meeting 110";
+    Calendar cal = {
+        summary: summary
+    };
+    Calendar createdCal = check client1->/calendars.post(cal);
+    Event payload = {
+        "start": {
+            "dateTime": "2023-10-19T03:00:00+05:30",
+            "timeZone": "Asia/Colombo"
+        },
+        "end": {
+            "dateTime": "2023-10-19T03:30:00+05:30",
+            "timeZone": "Asia/Colombo"
+        },
+        "summary": summary
+    };
+    string id = check verifyAndReturnId(createdCal.id);
+    Event createdEvent = check client1->/calendars/[id]/events.post(payload = payload);
+    test:assertEquals(createdEvent.summary, summary);
+    payload = {
+        "iCalUID": id,
+        "start": {
+            "dateTime": "2023-10-19T03:00:00+05:30",
+            "timeZone": "Asia/Colombo"
+        },
+        "end": {
+            "dateTime": "2023-10-19T03:30:00+05:30",
+            "timeZone": "Asia/Colombo"
+        },
+        "summary": summary
+    };
+    Event importedEvent = check client1->/calendars/[id]/events/'import.post(payload);
+    test:assertEquals(importedEvent.summary, summary);
+    check client1->/calendars/[id].delete();
+}
+
+@test:Config {}
 function testUpdateEvent() returns error?  {
     Client client1 = check new(config);
     string summary = "Test Meeting 110";
@@ -485,6 +524,95 @@ function testCreateAclRule() returns error?  {
     }
     test:assertTrue(aclRuleFound, "Retrieved ACL does not contain the created ACL rule");
     string aclRuleId = check verifyAndReturnId(createdAclRule.id);
+    check client1->/calendars/[id]/acl/[aclRuleId].delete();
+    check client1->/calendars/[id].delete();
+}
+
+@test:Config{}
+function testGetAclRule() returns error? {
+    Client client1 = check new(config);
+    string summary = "Test Calendar";
+    Calendar cal = {
+        summary: summary
+    };
+    Calendar createdCal = check client1->/calendars.post(cal);
+    AclRule aclRule = {
+        role: "reader",
+        scope: {
+            'type: "user",
+            value: "testuser@gmail.com"
+        }
+    };
+    string id = check verifyAndReturnId(createdCal.id);
+    AclRule createdAclRule = check client1->/calendars/[id]/acl.post(aclRule);
+    test:assertEquals(createdAclRule.role, aclRule.role);
+    string aclRuleId = check verifyAndReturnId(createdAclRule.id);
+    AclRule getAclRule = check client1->/calendars/[id]/acl/[aclRuleId].get();
+    test:assertEquals(getAclRule.role, aclRule.role);
+    check client1->/calendars/[id]/acl/[aclRuleId].delete();
+    check client1->/calendars/[id].delete();  
+}
+
+@test:Config{}
+function testUpdateAclRule() returns error? {
+    Client client1 = check new(config);
+    string summary = "Test Calendar";
+    Calendar cal = {
+        summary: summary
+    };
+    Calendar createdCal = check client1->/calendars.post(cal);
+    AclRule aclRule = {
+        role: "reader",
+        scope: {
+            'type: "user",
+            value: "testuser@gmail.com"
+        }
+    };
+    string id = check verifyAndReturnId(createdCal.id);
+    AclRule createdAclRule = check client1->/calendars/[id]/acl.post(aclRule);
+    test:assertEquals(createdAclRule.role, aclRule.role);
+    string aclRuleId = check verifyAndReturnId(createdAclRule.id);
+    aclRule = {
+        role: "writer",
+        scope: {
+            'type: "user",
+            value: "testuser@gmail.com"
+        }
+    };
+    AclRule updateAclRule = check client1->/calendars/[id]/acl/[aclRuleId].put(aclRule);
+    test:assertEquals(updateAclRule.role, aclRule.role);
+    check client1->/calendars/[id]/acl/[aclRuleId].delete();
+    check client1->/calendars/[id].delete();  
+}
+
+@test:Config{}
+function testPatchAclRule() returns error? {
+    Client client1 = check new(config);
+    string summary = "Test Calendar";
+    Calendar cal = {
+        summary: summary
+    };
+    Calendar createdCal = check client1->/calendars.post(cal);
+    AclRule aclRule = {
+        role: "reader",
+        scope: {
+            'type: "user",
+            value: "testuser@gmail.com"
+        }
+    };
+    string id = check verifyAndReturnId(createdCal.id);
+    AclRule createdAclRule = check client1->/calendars/[id]/acl.post(aclRule);
+    test:assertEquals(createdAclRule.role, aclRule.role);
+    string aclRuleId = check verifyAndReturnId(createdAclRule.id);
+    aclRule = {
+        role: "writer",
+        scope: {
+            'type: "user",
+            value: "testuser@gmail.com"
+        }
+    };
+    AclRule updateAclRule = check client1->/calendars/[id]/acl/[aclRuleId].patch(aclRule);
+    test:assertEquals(updateAclRule.role, aclRule.role);
     check client1->/calendars/[id]/acl/[aclRuleId].delete();
     check client1->/calendars/[id].delete();
 }
