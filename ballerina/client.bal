@@ -548,7 +548,7 @@ public isolated client class Client {
     # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword.
     # + eventId - Event identifier.
     # + sendUpdates - Guests who should receive notifications about the deletion of the event.
-    # + return - Successful response 
+    # + return - if successful `()`, otherwise an `calendar:Error`
     resource isolated function delete calendars/[string calendarId]/events/[string eventId]("json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = (), "all"|"externalOnly"|"none"? sendUpdates = ()) returns Error? {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/events/${getEncodedUri(eventId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "sendUpdates": sendUpdates};
