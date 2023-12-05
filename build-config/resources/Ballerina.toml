@@ -2,7 +2,7 @@
 distribution = "2201.8.0"
 org = "ballerinax"
 name = "googleapis.calendar"
-version = "4.0.0"
+version = "@toml.version@"
 license = ["Apache-2.0"]
 authors = ["Ballerina"]
 keywords = ["Productivity/Calendars", "Cost/Free", "Vendor/Google", "Collaboration", "Enterprise IT", "Management"]
