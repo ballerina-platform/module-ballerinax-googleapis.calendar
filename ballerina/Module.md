@@ -103,19 +103,19 @@ calendar:Client calendarClient = check new ({
 
 You can now utilize the operations available within the connector.
 
-   ```ballerina
-   public function main() returns error? {
-      calendar:Client calendarClient = ...//
+```ballerina
+public function main() returns error? {
+    calendar:Client calendarClient = ...//
 
-      // create a calendar
-      calendar:Calendar calendar = check calendarClient->/calendars.post({
-         summary: "Work Schedule"
-      });
+    // create a calendar
+    calendar:Calendar calendar = check calendarClient->/calendars.post({
+        summary: "Work Schedule"
+    });
 
-      // quick add new event
-      string eventTitle = "Sample Event";
-      calendar:Event event = check calendarClient->/calendars/[calendarId]/events/quickAdd.post(eventTitle);
-   }
-   ```
+    // quick add new event
+    string eventTitle = "Sample Event";
+    calendar:Event event = check calendarClient->/calendars/[calendarId]/events/quickAdd.post(eventTitle);
+}
+```
 
 You can find more samples [here](https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/examples).
