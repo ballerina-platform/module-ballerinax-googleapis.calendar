@@ -100,7 +100,7 @@ Create a `calendar:ConnectionConfig` with the obtained OAuth2.0 tokens and initi
 ```ballerina
 configurable string clientId = ?;
 configurable string clientSecret = ?;
-configurable string refreshToken= ?;
+configurable string refreshToken = ?;
 configurable string refreshUrl = ?;
 
 calendar:Client calendarClient = check new ({
