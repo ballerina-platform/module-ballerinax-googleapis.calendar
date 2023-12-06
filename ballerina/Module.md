@@ -13,21 +13,22 @@ To utilize the Calendar connector, you must have access to the Calendar REST API
 In order to use the `calendar` connector, you need to first create the Calendar credentials for the connector to interact with Calendar.
 
 1. Open the [Google Cloud Platform Console](https://console.cloud.google.com/).
+
 2. Click on the project drop-down menu and either select an existing project or create a new one for which you want to add an API key.
 
-    ![GCP Console](https://www.github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/ballerina/resources/gcp-console-project-view.png)
+    ![GCP Console](https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-googleapis.calendar/main/ballerina/resources/gcp-console-project-view.png)
 
 ### Step 2: Enable Calendar API
 
 1. Navigate to the **Library** and enable the Calendar API.
 
-    ![Enable Calendar API](https://www.github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/ballerina/resources/enable-calendar-api.png)
+    ![Enable Calendar API](https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-googleapis.calendar/main/ballerina/resources/enable-calendar-api.png)
 
 ### Step 3: Configure OAuth Consent
 
 1. Click on the **OAuth consent screen** tab in the Google Cloud Platform console.
 
-    ![Consent Screen](https://www.github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/ballerina/resources/setup/resources/consent-screen.png)
+    ![Consent Screen](https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-googleapis.calendar/main/ballerina/resources/consent-screen.png)
 
 2. Provide a name for the consent application and save your changes.
 
@@ -37,7 +38,7 @@ In order to use the `calendar` connector, you need to first create the Calendar 
 
 2. Click  **Create credentials** and from the dropdown menu, select **OAuth client ID**.
 
-    ![Create Credentials](https://www.github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/ballerina/resources/create-credentials.png)
+    ![Create Credentials](https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-googleapis.calendar/main/ballerina/resources/create-credentials.png)
 
 3. You will be directed to the **OAuth consent** screen, in which you need to fill in the necessary information below.
 
@@ -57,15 +58,15 @@ In order to use the `calendar` connector, you need to first create the Calendar 
 
 1. Configure the OAuth playground with the OAuth client ID and client secret.
 
-    ![OAuth Playground](https://www.github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/ballerina/resources/oauth-playground.png)
+    ![OAuth Playground](https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-googleapis.calendar/main/ballerina/resources/oauth-playground.png)
 
 2. Authorize the Calendar APIs.
 
-    ![Authorize APIs](https://www.github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/ballerina/resources/authorize-calendar-apis.png)
+    ![Authorize APIs](https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-googleapis.calendar/main/ballerina/resources/authorize-calendar-apis.png)
 
 3. Exchange the authorization code for tokens.
 
-    ![Exchange Tokens](https://www.github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/ballerina/resources/exchange-tokens.png)
+    ![Exchange Tokens](https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-googleapis.calendar/main/ballerina/resources/exchange-tokens.png)
 
 ## Samples
 
