@@ -63,7 +63,7 @@ In order to use the `calendar` connector, you need to first create the Calendar 
 
 4. After filling in these details, click **Create**.
 
-5. Make sure to save the provided Client ID and Client secret.
+5. Make sure to save the provided **Client ID** and **Client secret**.
 
 ### Step 5: Get the Access and Refresh Tokens
 
@@ -98,7 +98,7 @@ import ballerinax/googleapis.calendar;
 Create a `calendar:ConnectionConfig` with the obtained OAuth2.0 tokens and initialize the connector with it.
 
 ```ballerina
-configurable string clientId= ?;
+configurable string clientId = ?;
 configurable string clientSecret = ?;
 configurable string refreshToken= ?;
 configurable string refreshUrl = ?;
