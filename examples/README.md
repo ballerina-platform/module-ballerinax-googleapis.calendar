@@ -247,8 +247,6 @@ calendar:Event designReview = check calendarClient->createEvent(<string>projectC
     },
     summary: "Design Review"
 });
-
-// More tasks scheduled...
 ```
 
 ### Step 5: Collaborate with Team
@@ -275,8 +273,6 @@ calendar:Event updatedCodingSession = check calendarClient->updateEvent(<string>
         }
     ]
 });
-
-// Similar updates for other events...
 ```
 
 ### Step 6: Set Project Milestone Reminders
@@ -321,8 +317,6 @@ calendar:Events projectEvents = check calendarClient->getEvents(<string>projectC
     'orderBy': "startTime",
     'singleEvents': true
 });
-
-// Analyze project events for progress monitoring...
 ```
 
 This scenario illustrates how Alex, a software developer, utilizes the Google Calendar API in Ballerina for effective personal project management and collaboration with his team.
