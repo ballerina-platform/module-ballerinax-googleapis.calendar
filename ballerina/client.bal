@@ -63,7 +63,7 @@ public isolated client class Client {
     # + oauth_token - OAuth 2.0 token for the current user.
     # + prettyPrint - Returns response with indentations and line breaks.
     # + quotaUser - An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
-    # + return - A `calendar:Calendar` if successful, otherwise an `calendar:Error` 
+    # + return - A `calendar:Calendar` if successful, otherwise an `calendar:Error`
     resource isolated function post calendars(Calendar payload, "json"? alt = (), string? fields = (), string? 'key = (), string? oauth_token = (), boolean? prettyPrint = (), string? quotaUser = ()) returns Calendar|Error {
         string resourcePath = string `/calendars`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
