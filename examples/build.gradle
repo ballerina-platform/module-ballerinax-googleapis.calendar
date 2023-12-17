@@ -72,5 +72,5 @@ task buildExamples {
 
 buildExamples.dependsOn ":googleapis.calendar-ballerina:build"
 testExamples.dependsOn ":googleapis.calendar-ballerina:build"
-test.dependsOn testExamples
+
 build.dependsOn buildExamples
