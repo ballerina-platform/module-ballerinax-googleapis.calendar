@@ -17,7 +17,7 @@ The Google Calendar Connector provides the capability to manage events and calen
 
 This module supports [Google Calendar API V3](https://developers.google.com/calendar/api).
 
-## Set up
+## Set up Guide
 
 To utilize the Calendar connector, you must have access to the Calendar REST API through a [Google Cloud Platform (GCP)](https://console.cloud.google.com/) account and a project under it. If you do not have a GCP account, you can sign up for one [here](https://cloud.google.com/).
 
