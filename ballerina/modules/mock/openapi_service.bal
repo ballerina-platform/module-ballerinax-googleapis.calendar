@@ -230,6 +230,7 @@ service /calendar/v3 on ep0 {
     resource function post calendars/[string calendarId]/events/quickAdd("json"? alt, string? fields, string? 'key, string? oauth_token, boolean? prettyPrint, string? quotaUser, string text, "all"|"externalOnly"|"none"? sendUpdates) returns OkEvent {
         OkEvent okEvent = {
             body: {
+                id: "default-event-id",
                 summary: text
             }
         };
