@@ -9,7 +9,7 @@
 [Google Calendar](https://developers.google.com/calendar) is a time-management and scheduling calendar service developed by Google. It lets users to organize their schedule and share events with others.This connector provides the capability to programmatically manage events and calendars.
 For more information about configuration and operations, go to the module.
 
-- [googleapis.calendar](calendar/Module.md) - Perform Google Calendar related operations programmatically
+- [googleapis.gcalendar](calendar/Module.md) - Perform Google Calendar related operations programmatically
 
 ## Overview
 
@@ -87,15 +87,15 @@ This sample demonstrates a scenario of creating a secondary calendar and adding 
 
 ### Step 1: Import the package
 
-Import the `ballerinax/googleapis.calendar` package into your Ballerina project.
+Import the `ballerinax/googleapis.gcalendar` package into your Ballerina project.
 
 ```ballerina
-import ballerinax/googleapis.calendar;
+import ballerinax/googleapis.gcalendar;
 ```
 
 ### Step 2: Instantiate a new connector
 
-Create a `calendar:ConnectionConfig` with the obtained OAuth2.0 tokens and initialize the connector with it.
+Create a `gcalendar:ConnectionConfig` with the obtained OAuth2.0 tokens and initialize the connector with it.
 
 ```ballerina
 configurable string clientId = ?;
@@ -103,7 +103,7 @@ configurable string clientSecret = ?;
 configurable string refreshToken = ?;
 configurable string refreshUrl = ?;
 
-calendar:Client calendarClient = check new ({
+gcalendar:Client calendarClient = check new ({
    auth: {
       clientId,
       clientSecret,
@@ -119,16 +119,16 @@ You can now utilize the operations available within the connector.
 
 ```ballerina
 public function main() returns error? {
-    calendar:Client calendarClient = ...//
+   gcalendar:Client calendarClient = ...//
 
-    // create a calendar
-    calendar:Calendar calendar = check calendarClient->/calendars.post({
-        summary: "Work Schedule"
-    });
+   // create a calendar
+   gcalendar:Calendar calendar = check calendarClient->/calendars.post({
+      summary: "Work Schedule"
+   });
 
-    // quick add new event
-    string eventTitle = "Sample Event";
-    calendar:Event event = check calendarClient->/calendars/[calendarId]/events/quickAdd.post(eventTitle);
+   // quick add new event
+   string eventTitle = "Sample Event";
+   gcalendar:Event event = check calendarClient->/calendars/[calendarId]/events/quickAdd.post(eventTitle);
 }
 ```
 

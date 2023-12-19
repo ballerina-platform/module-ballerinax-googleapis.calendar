@@ -82,7 +82,7 @@ import ballerinax/googleapis.gcalendar;
 
 ### Step 2: Instantiate a new connector
 
-Create a `calendar:ConnectionConfig` with the obtained OAuth2.0 tokens and initialize the connector with it.
+Create a `gcalendar:ConnectionConfig` with the obtained OAuth2.0 tokens and initialize the connector with it.
 
 ```ballerina
 configurable string clientId = ?;
@@ -90,7 +90,7 @@ configurable string clientSecret = ?;
 configurable string refreshToken = ?;
 configurable string refreshUrl = ?;
 
-calendar:Client calendarClient = check new ({
+gcalendar:Client calendarClient = check new ({
    auth: {
       clientId,
       clientSecret,
@@ -106,16 +106,16 @@ You can now utilize the operations available within the connector.
 
 ```ballerina
 public function main() returns error? {
-    calendar:Client calendarClient = ...//
+    gcalendar:Client calendarClient = ...//
 
     // create a calendar
-    calendar:Calendar calendar = check calendarClient->/calendars.post({
+    gcalendar:Calendar calendar = check calendarClient->/calendars.post({
         summary: "Work Schedule"
     });
 
     // quick add new event
     string eventTitle = "Sample Event";
-    calendar:Event event = check calendarClient->/calendars/[calendarId]/events/quickAdd.post(eventTitle);
+    gcalendar:Event event = check calendarClient->/calendars/[calendarId]/events/quickAdd.post(eventTitle);
 }
 ```
 
