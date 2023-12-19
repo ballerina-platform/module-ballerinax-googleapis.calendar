@@ -24,7 +24,7 @@ plugins {
 
 description = 'Calendar - Ballerina'
 
-def packageName = "googleapis.calendar"
+def packageName = "googleapis.gcalendar"
 def packageOrg = "ballerinax"
 def tomlVersion = stripBallerinaExtensionVersion("${project.version}")
 def ballerinaTomlFilePlaceHolder = new File("${project.rootDir}/build-config/resources/Ballerina.toml")

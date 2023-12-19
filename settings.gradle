@@ -30,13 +30,13 @@ plugins {
     id "com.gradle.enterprise" version "3.2"
 }
 
-rootProject.name = 'module-ballerinax-googleapis.calendar'
+rootProject.name = 'module-ballerinax-googleapis.gcalendar'
 
-include ':googleapis.calendar-ballerina'
-include ':googleapis.calendar-examples'
+include ':googleapis.gcalendar-ballerina'
+include ':googleapis.gcalendar-examples'
 
-project(':googleapis.calendar-ballerina').projectDir = file("ballerina")
-project(':googleapis.calendar-examples').projectDir = file("examples")
+project(':googleapis.gcalendar-ballerina').projectDir = file("ballerina")
+project(':googleapis.gcalendar-examples').projectDir = file("examples")
 
 gradleEnterprise {
     buildScan {

@@ -28,7 +28,7 @@ service /calendar/v3 on ep0 {
                 },
                 description: "calendar description",
                 etag: "\"Syw9JucVAl83XRddaXunDD-xXrY\"",
-                id: "b8f24cd945da8adf629e1e680d3a423c197354709c50563e90bbaf9a5a911684@group.calendar.google.com",
+                id: "b8f24cd945da8adf629e1e680d3a423c197354709c50563e90bbaf9a5a911684@group.gcalendar.google.com",
                 kind: "calendar#calendar",
                 location: "Sri Lanka",
                 summary: payload.summary,

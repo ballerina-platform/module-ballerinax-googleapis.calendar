@@ -74,10 +74,10 @@ This sample demonstrates a scenario of creating a secondary calendar and adding 
 
 ### Step 1: Import the package
 
-Import the `ballerinax/googleapis.calendar` package into your Ballerina project.
+Import the `ballerinax/googleapis.gcalendar` package into your Ballerina project.
 
 ```ballerina
-import ballerinax/googleapis.calendar;
+import ballerinax/googleapis.gcalendar;
 ```
 
 ### Step 2: Instantiate a new connector
