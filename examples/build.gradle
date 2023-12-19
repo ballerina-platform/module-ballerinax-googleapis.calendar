@@ -46,7 +46,7 @@ task testExamples {
 
 task buildExamples {
     gradle.taskGraph.whenReady { graph ->
-        if (graph.hasTask(":googleapis.calendar-examples:test")) {
+        if (graph.hasTask(":googleapis.gcalendar-examples:test")) {
             buildExamples.enabled = false
         } else {
             testExamples.enabled = false
@@ -70,7 +70,7 @@ task buildExamples {
     }
 }
 
-buildExamples.dependsOn ":googleapis.calendar-ballerina:build"
-testExamples.dependsOn ":googleapis.calendar-ballerina:build"
+buildExamples.dependsOn ":googleapis.gcalendar-ballerina:build"
+testExamples.dependsOn ":googleapis.gcalendar-ballerina:build"
 
 build.dependsOn buildExamples

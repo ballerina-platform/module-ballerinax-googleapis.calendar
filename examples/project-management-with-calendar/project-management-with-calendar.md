@@ -4,18 +4,18 @@ Let's explore how Alex, a software developer, leverages the Google Calendar API 
 
 ## Step 1: Import Google Calendar Connector
 
-Alex begins by importing the `ballerinax/googleapis.calendar` module into his Ballerina project.
+Alex begins by importing the `ballerinax/googleapis.gcalendar` module into his Ballerina project.
 
 ```ballerina
-import ballerinax/googleapis.calendar;
+import ballerinax/googleapis.gcalendar;
 ```
 
 ## Step 2: Create a Connector Instance
 
-Next, Alex creates a `calendar:ConnectionConfig` with his OAuth2.0 tokens and initializes the connector.
+Next, Alex creates a `gcalendar:ConnectionConfig` with his OAuth2.0 tokens and initializes the connector.
 
 ```ballerina
-calendar:ConnectionConfig config = {
+gcalendar:ConnectionConfig config = {
     auth: {
         clientId: <CLIENT_ID>,
         clientSecret: <CLIENT_SECRET>,
@@ -24,7 +24,7 @@ calendar:ConnectionConfig config = {
     }
 };
 
-calendar:Client calendarClient = check new(config);
+gcalendar:Client calendarClient = check new(config);
 ```
 
 ## Step 3: Create a Project Calendar
@@ -32,7 +32,7 @@ calendar:Client calendarClient = check new(config);
 To keep his project events organized, Alex's application creates a dedicated calendar with a descriptive title.
 
 ```ballerina
-calendar:Calendar projectCalendar = check calendarClient->createCalendar({
+gcalendar:Calendar projectCalendar = check calendarClient->createCalendar({
     summary: "Software Project - Alex"
 });
 ```
@@ -42,7 +42,7 @@ calendar:Calendar projectCalendar = check calendarClient->createCalendar({
 Alex schedules various project-related tasks using the Google Calendar API. This includes coding sessions, design reviews, and testing phases.
 
 ```ballerina
-calendar:Event codingSession = check calendarClient->createEvent(<string>projectCalendar.id, {
+gcalendar:Event codingSession = check calendarClient->createEvent(<string>projectCalendar.id, {
     'start: {
         dateTime: "2023-10-20T10:00:00+00:00",
         timeZone: "UTC"
@@ -54,7 +54,7 @@ calendar:Event codingSession = check calendarClient->createEvent(<string>project
     summary: "Code Review"
 });
 
-calendar:Event designReview = check calendarClient->createEvent(<string>projectCalendar.id, {
+gcalendar:Event designReview = check calendarClient->createEvent(<string>projectCalendar.id, {
     'start: {
         dateTime: "2023-10-25T14:00:00+00:00",
         timeZone: "UTC"
@@ -72,7 +72,7 @@ calendar:Event designReview = check calendarClient->createEvent(<string>projectC
 Alex invites team members to project events by utilizing the Google Calendar API. This ensures that everyone involved is aware of and aligned on project milestones.
 
 ```ballerina
-calendar:Event updatedCodingSession = check calendarClient->updateEvent(<string>projectCalendar.id, <string>codingSession.id, {
+gcalendar:Event updatedCodingSession = check calendarClient->updateEvent(<string>projectCalendar.id, <string>codingSession.id, {
     'start: {
         dateTime: "2023-10-20T10:00:00+00:00",
         timeZone: "UTC"
@@ -98,7 +98,7 @@ calendar:Event updatedCodingSession = check calendarClient->updateEvent(<string>
 To stay on top of project deadlines, Alex sets reminders for important milestones using the Google Calendar API.
 
 ```ballerina
-calendar:Event milestoneEvent = check calendarClient->createEvent(<string>projectCalendar.id, {
+gcalendar:Event milestoneEvent = check calendarClient->createEvent(<string>projectCalendar.id, {
     'start: {
         dateTime: "2023-11-15T09:00:00+00:00",
         timeZone: "UTC"
@@ -129,7 +129,7 @@ calendar:Event milestoneEvent = check calendarClient->createEvent(<string>projec
 Alex regularly retrieves and analyzes project events using the Google Calendar API to monitor progress and make data-driven decisions.
 
 ```ballerina
-calendar:Events projectEvents = check calendarClient->getEvents(<string>projectCalendar.id, {
+gcalendar:Events projectEvents = check calendarClient->getEvents(<string>projectCalendar.id, {
     'timeMin': "2023-10-01T00:00:00Z",
     'timeMax': "2023-12-31T23:59:59Z",
     'orderBy': "startTime",
