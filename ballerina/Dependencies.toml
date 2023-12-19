@@ -33,7 +33,7 @@ dependencies = [
 [[package]]
 org = "ballerina"
 name = "constraint"
-version = "1.4.0"
+version = "1.5.0"
 dependencies = [
 	{org = "ballerina", name = "jballerina.java"}
 ]
@@ -41,7 +41,7 @@ dependencies = [
 [[package]]
 org = "ballerina"
 name = "crypto"
-version = "2.5.0"
+version = "2.6.1"
 dependencies = [
 	{org = "ballerina", name = "jballerina.java"},
 	{org = "ballerina", name = "time"}
@@ -313,7 +313,7 @@ modules = [
 
 [[package]]
 org = "ballerinax"
-name = "googleapis.calendar"
+name = "googleapis.gcalendar"
 version = "4.0.0"
 dependencies = [
 	{org = "ballerina", name = "http"},
@@ -324,7 +324,7 @@ dependencies = [
 	{org = "ballerinai", name = "observe"}
 ]
 modules = [
-	{org = "ballerinax", packageName = "googleapis.calendar", moduleName = "googleapis.calendar"},
-	{org = "ballerinax", packageName = "googleapis.calendar", moduleName = "googleapis.calendar.mock"}
+	{org = "ballerinax", packageName = "googleapis.gcalendar", moduleName = "googleapis.gcalendar"},
+	{org = "ballerinax", packageName = "googleapis.gcalendar", moduleName = "googleapis.gcalendar.mock"}
 ]
 
