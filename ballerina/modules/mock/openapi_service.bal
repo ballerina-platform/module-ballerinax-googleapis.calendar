@@ -16,9 +16,7 @@
 
 import ballerina/http;
 
-listener http:Listener ep0 = new (9090, config = {host: "localhost"});
-
-service /calendar/v3 on ep0 {
+service /calendar/v3 on new http:Listener(9090) {
 
     resource function post calendars("json"? alt, string? fields, string? 'key, string? oauth_token, boolean? prettyPrint, string? quotaUser, @http:Payload Calendar payload) returns OkCalendar {
         OkCalendar okCalendar = {
