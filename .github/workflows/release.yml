@@ -12,5 +12,5 @@ jobs:
     uses: ballerina-platform/ballerina-standard-library/.github/workflows/release-package-connector-template.yml@main
     secrets: inherit
     with:
-      package-name: googleapis.calendar
+      package-name: googleapis.gcalendar
       package-org: ballerinax

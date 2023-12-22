@@ -14,7 +14,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerinax/googleapis.calendar.mock as _;
+import ballerinax/googleapis.gcalendar.mock as _;
 import ballerina/os;
 import ballerina/test;
 

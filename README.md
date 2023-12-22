@@ -9,7 +9,7 @@
 [Google Calendar](https://developers.google.com/calendar) is a time-management and scheduling calendar service developed by Google. It lets users to organize their schedule and share events with others.This connector provides the capability to programmatically manage events and calendars.
 For more information about configuration and operations, go to the module.
 
-- [googleapis.calendar](calendar/Module.md) - Perform Google Calendar related operations programmatically
+- [googleapis.gcalendar](calendar/Module.md) - Perform Google Calendar related operations programmatically
 
 ## Overview
 
@@ -23,7 +23,7 @@ To utilize the Calendar connector, you must have access to the Calendar REST API
 
 ### Step 1: Create a Google Cloud Platform Project
 
-In order to use the `calendar` connector, you need to first create the Calendar credentials for the connector to interact with Calendar.
+In order to use the Google Calendar connector, you need to first create the Calendar credentials for the connector to interact with Calendar.
 
 1. Open the [Google Cloud Platform Console](https://console.cloud.google.com/).
 
@@ -87,15 +87,15 @@ This sample demonstrates a scenario of creating a secondary calendar and adding 
 
 ### Step 1: Import the package
 
-Import the `ballerinax/googleapis.calendar` package into your Ballerina project.
+Import the `ballerinax/googleapis.gcalendar` package into your Ballerina project.
 
 ```ballerina
-import ballerinax/googleapis.calendar;
+import ballerinax/googleapis.gcalendar;
 ```
 
 ### Step 2: Instantiate a new connector
 
-Create a `calendar:ConnectionConfig` with the obtained OAuth2.0 tokens and initialize the connector with it.
+Create a `gcalendar:ConnectionConfig` with the obtained OAuth2.0 tokens and initialize the connector with it.
 
 ```ballerina
 configurable string clientId = ?;
@@ -103,7 +103,7 @@ configurable string clientSecret = ?;
 configurable string refreshToken = ?;
 configurable string refreshUrl = ?;
 
-calendar:Client calendarClient = check new ({
+gcalendar:Client calendarClient = check new ({
    auth: {
       clientId,
       clientSecret,
@@ -119,29 +119,29 @@ You can now utilize the operations available within the connector.
 
 ```ballerina
 public function main() returns error? {
-    calendar:Client calendarClient = ...//
+   gcalendar:Client calendarClient = ...//
 
-    // create a calendar
-    calendar:Calendar calendar = check calendarClient->/calendars.post({
-        summary: "Work Schedule"
-    });
+   // create a calendar
+   gcalendar:Calendar calendar = check calendarClient->/calendars.post({
+      summary: "Work Schedule"
+   });
 
-    // quick add new event
-    string eventTitle = "Sample Event";
-    calendar:Event event = check calendarClient->/calendars/[calendarId]/events/quickAdd.post(eventTitle);
+   // quick add new event
+   string eventTitle = "Sample Event";
+   gcalendar:Event event = check calendarClient->/calendars/[calendarId]/events/quickAdd.post(eventTitle);
 }
 ```
 
 ## Examples
 
-The `calendar` connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/examples), covering use cases like creating calendar, scheduling meeting events, and adding reminders.
+The Google calendar connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/examples), covering use cases like creating calendar, scheduling meeting events, and adding reminders.
 
 1. [Project Management With Calendar API](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/examples/project-management-with-calendar/main.bal)
     This example shows how to use Google calendar APIs to efficiently manage work schedule of a person. It interacts with the API for various tasks related to scheduling and organizing work-related events and meetings.
 2. [Work Schedule Management With Calendar API](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/examples/work-schedule-management-with-calendar/main.bal)
     This example shows how to use Google calendar APIs to manage personal project schedule and collaborate with team members.
 
-For comprehensive information about the connector's functionality, configuration, and usage in Ballerina programs, refer to the `calendar` connector's reference guide in [Ballerina Central](https://central.ballerina.io/ballerinax/googleapis.calendar/latest).
+For comprehensive information about the connector's functionality, configuration, and usage in Ballerina programs, refer to the Google Calendar connector's reference guide in [Ballerina Central](https://central.ballerina.io/ballerinax/googleapis.calendar/latest).
 
 ## Issues and projects
 
@@ -173,7 +173,7 @@ This repository only contains the source code for the package.
    export packagePAT=<GitHub Personal Access Token>
     ```
 
-To utilize the `calendar` connector in your Ballerina application, modify the `.bal` file as follows:
+To utilize the Google Calendar connector in your Ballerina application, modify the `.bal` file as follows:
 
 ### Build options
 

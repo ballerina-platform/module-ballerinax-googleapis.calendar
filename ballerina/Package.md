@@ -10,7 +10,7 @@ To utilize the Calendar connector, you must have access to the Calendar REST API
 
 ### Step 1: Create a Google Cloud Platform Project
 
-In order to use the `calendar` connector, you need to first create the Calendar credentials for the connector to interact with Calendar.
+In order to use the Google Calendar connector, you need to first create the Calendar credentials for the connector to interact with Calendar.
 
 1. Open the [Google Cloud Platform Console](https://console.cloud.google.com/).
 
@@ -74,15 +74,15 @@ This sample demonstrates a scenario of creating a secondary calendar and adding 
 
 ### Step 1: Import the package
 
-Import the `ballerinax/googleapis.calendar` package into your Ballerina project.
+Import the `ballerinax/googleapis.gcalendar` package into your Ballerina project.
 
 ```ballerina
-import ballerinax/googleapis.calendar;
+import ballerinax/googleapis.gcalendar;
 ```
 
 ### Step 2: Instantiate a new connector
 
-Create a `calendar:ConnectionConfig` with the obtained OAuth2.0 tokens and initialize the connector with it.
+Create a `gcalendar:ConnectionConfig` with the obtained OAuth2.0 tokens and initialize the connector with it.
 
 ```ballerina
 configurable string clientId = ?;
@@ -90,7 +90,7 @@ configurable string clientSecret = ?;
 configurable string refreshToken = ?;
 configurable string refreshUrl = ?;
 
-calendar:Client calendarClient = check new ({
+gcalendar:Client calendarClient = check new ({
    auth: {
       clientId,
       clientSecret,
@@ -106,26 +106,26 @@ You can now utilize the operations available within the connector.
 
 ```ballerina
 public function main() returns error? {
-    calendar:Client calendarClient = ...//
+    gcalendar:Client calendarClient = ...//
 
     // create a calendar
-    calendar:Calendar calendar = check calendarClient->/calendars.post({
+    gcalendar:Calendar calendar = check calendarClient->/calendars.post({
         summary: "Work Schedule"
     });
 
     // quick add new event
     string eventTitle = "Sample Event";
-    calendar:Event event = check calendarClient->/calendars/[calendarId]/events/quickAdd.post(eventTitle);
+    gcalendar:Event event = check calendarClient->/calendars/[calendarId]/events/quickAdd.post(eventTitle);
 }
 ```
 
 ## Examples
 
-The `calendar` connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/examples), covering use cases like creating calendar, scheduling meeting events, and adding reminders.
+The Google Calendar connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/examples), covering use cases like creating calendar, scheduling meeting events, and adding reminders.
 
 1. [Project Management With Calendar API](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/examples/project-management-with-calendar/main.bal)
     This example shows how to use Google calendar APIs to efficiently manage work schedule of a person. It interacts with the API for various tasks related to scheduling and organizing work-related events and meetings.
 2. [Work Schedule Management With Calendar API](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/examples/work-schedule-management-with-calendar/main.bal)
     This example shows how to use Google calendar APIs to managing personal project schedule and collaborating with team members.
 
-For comprehensive information about the connector's functionality, configuration, and usage in Ballerina programs, refer to the `calendar` connector's reference guide in [Ballerina Central](https://central.ballerina.io/ballerinax/googleapis.calendar/latest).
+For comprehensive information about the connector's functionality, configuration, and usage in Ballerina programs, refer to the Google Calendar connector's reference guide in [Ballerina Central](https://central.ballerina.io/ballerinax/googleapis.calendar/latest).
