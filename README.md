@@ -23,7 +23,7 @@ To utilize the Calendar connector, you must have access to the Calendar REST API
 
 ### Step 1: Create a Google Cloud Platform Project
 
-In order to use the `calendar` connector, you need to first create the Calendar credentials for the connector to interact with Calendar.
+In order to use the Google Calendar connector, you need to first create the Calendar credentials for the connector to interact with Calendar.
 
 1. Open the [Google Cloud Platform Console](https://console.cloud.google.com/).
 
@@ -134,14 +134,14 @@ public function main() returns error? {
 
 ## Examples
 
-The `calendar` connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/examples), covering use cases like creating calendar, scheduling meeting events, and adding reminders.
+The Google calendar connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/examples), covering use cases like creating calendar, scheduling meeting events, and adding reminders.
 
 1. [Project Management With Calendar API](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/examples/project-management-with-calendar/main.bal)
     This example shows how to use Google calendar APIs to efficiently manage work schedule of a person. It interacts with the API for various tasks related to scheduling and organizing work-related events and meetings.
 2. [Work Schedule Management With Calendar API](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/tree/main/examples/work-schedule-management-with-calendar/main.bal)
     This example shows how to use Google calendar APIs to manage personal project schedule and collaborate with team members.
 
-For comprehensive information about the connector's functionality, configuration, and usage in Ballerina programs, refer to the `calendar` connector's reference guide in [Ballerina Central](https://central.ballerina.io/ballerinax/googleapis.calendar/latest).
+For comprehensive information about the connector's functionality, configuration, and usage in Ballerina programs, refer to the Google Calendar connector's reference guide in [Ballerina Central](https://central.ballerina.io/ballerinax/googleapis.calendar/latest).
 
 ## Issues and projects
 
@@ -173,7 +173,7 @@ This repository only contains the source code for the package.
    export packagePAT=<GitHub Personal Access Token>
     ```
 
-To utilize the `calendar` connector in your Ballerina application, modify the `.bal` file as follows:
+To utilize the Google Calendar connector in your Ballerina application, modify the `.bal` file as follows:
 
 ### Build options
 
