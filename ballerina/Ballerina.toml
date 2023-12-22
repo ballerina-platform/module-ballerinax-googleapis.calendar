@@ -2,7 +2,6 @@
 distribution = "2201.8.0"
 org = "ballerinax"
 name = "googleapis.calendar"
-export=["googleapis.calendar"]
 version = "4.0.0"
 license = ["Apache-2.0"]
 authors = ["Ballerina"]
