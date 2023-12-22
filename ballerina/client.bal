@@ -49,7 +49,7 @@ public isolated client class Client {
             http:Client httpEp = check new (serviceUrl, httpClientConfig);
             self.clientEp = httpEp;
         } on fail var e {
-        	return error Error(e.message(), e.cause());
+            return error Error(e.message(), e.cause());
         }
         return;
     }
@@ -72,9 +72,9 @@ public isolated client class Client {
             http:Request request = new;
             json jsonBody = payload.toJson();
             request.setPayload(jsonBody, "application/json");
-	        return check self.clientEp->post(resourcePath, request);
+            return check self.clientEp->post(resourcePath, request);
         } on fail var e {
-        	return error Error(e.message(), e.cause());
+            return error Error(e.message(), e.cause());
         }
     }
 
@@ -93,9 +93,9 @@ public isolated client class Client {
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
         do {
             resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-	        return check self.clientEp->get(resourcePath);
+            return check self.clientEp->get(resourcePath);
         } on fail var e {
-            return error Error(e.message(), e.cause());                
+            return error Error(e.message(), e.cause());
         }
     }
 
@@ -118,9 +118,9 @@ public isolated client class Client {
             http:Request request = new;
             json jsonBody = payload.toJson();
             request.setPayload(jsonBody, "application/json");
-	        return check self.clientEp->put(resourcePath, request);
+            return check self.clientEp->put(resourcePath, request);
         } on fail var e {
-        	return error Error(e.message(), e.cause());
+            return error Error(e.message(), e.cause());
         }
     }
 
@@ -139,9 +139,9 @@ public isolated client class Client {
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
         do {
             resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-	        return check self.clientEp->delete(resourcePath);
+            return check self.clientEp->delete(resourcePath);
         } on fail var e {
-        	return error Error(e.message(), e.cause());
+            return error Error(e.message(), e.cause());
         }
     }
 
@@ -164,9 +164,9 @@ public isolated client class Client {
             http:Request request = new;
             json jsonBody = payload.toJson();
             request.setPayload(jsonBody, "application/json");
-	        return check self.clientEp->patch(resourcePath, request);
+            return check self.clientEp->patch(resourcePath, request);
         } on fail var e {
-        	return error Error(e.message(), e.cause());
+            return error Error(e.message(), e.cause());
         }
     }
 
@@ -192,9 +192,9 @@ public isolated client class Client {
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "maxResults": maxResults, "pageToken": pageToken, "showDeleted": showDeleted, "syncToken": syncToken};
         do {
             resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-	        return check self.clientEp->get(resourcePath);
+            return check self.clientEp->get(resourcePath);
         } on fail var e {
-        	return error Error(e.message(), e.cause());
+            return error Error(e.message(), e.cause());
         }
     }
 
@@ -218,9 +218,9 @@ public isolated client class Client {
             http:Request request = new;
             json jsonBody = payload.toJson();
             request.setPayload(jsonBody, "application/json");
-	        return check self.clientEp->post(resourcePath, request);
+            return check self.clientEp->post(resourcePath, request);
         } on fail var e {
-        	return error Error(e.message(), e.cause());
+            return error Error(e.message(), e.cause());
         }
     }
 
@@ -240,9 +240,9 @@ public isolated client class Client {
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
         do {
             resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-	        return check self.clientEp->get(resourcePath);
+            return check self.clientEp->get(resourcePath);
         } on fail var e {
-        	return error Error(e.message(), e.cause());
+            return error Error(e.message(), e.cause());
         }
     }
 
@@ -267,9 +267,9 @@ public isolated client class Client {
             http:Request request = new;
             json jsonBody = payload.toJson();
             request.setPayload(jsonBody, "application/json");
-	        return check self.clientEp->put(resourcePath, request);
+            return check self.clientEp->put(resourcePath, request);
         } on fail var e {
-        	return error Error(e.message(), e.cause());
+            return error Error(e.message(), e.cause());
         }
     }
 
@@ -289,9 +289,9 @@ public isolated client class Client {
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
         do {
             resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-	        return check self.clientEp->delete(resourcePath);
+            return check self.clientEp->delete(resourcePath);
         } on fail var e {
-        	return error Error(e.message(), e.cause());
+            return error Error(e.message(), e.cause());
         }
     }
 
@@ -316,9 +316,9 @@ public isolated client class Client {
             http:Request request = new;
             json jsonBody = payload.toJson();
             request.setPayload(jsonBody, "application/json");
-	        return check self.clientEp->patch(resourcePath, request);
+            return check self.clientEp->patch(resourcePath, request);
         } on fail var e {
-        	return error Error(e.message(), e.cause());
+            return error Error(e.message(), e.cause());
         }
     }
 
@@ -338,9 +338,9 @@ public isolated client class Client {
         do {
             resourcePath = resourcePath + check getPathForQueryParam(queryParam);
             http:Request request = new;
-	        return check self.clientEp->post(resourcePath, request);
+            return check self.clientEp->post(resourcePath, request);
         } on fail var e {
-        	return error Error(e.message(), e.cause());
+            return error Error(e.message(), e.cause());
         }
     }
 
@@ -397,9 +397,9 @@ public isolated client class Client {
         map<Encoding> queryParamEncoding = {"eventTypes": {style: FORM, explode: true}, "privateExtendedProperty": {style: FORM, explode: true}, "sharedExtendedProperty": {style: FORM, explode: true}};
         do {
             resourcePath = resourcePath + check getPathForQueryParam(queryParam, queryParamEncoding);
-	        return check self.clientEp->get(resourcePath);
+            return check self.clientEp->get(resourcePath);
         } on fail var e {
-        	return error Error(e.message(), e.cause());
+            return error Error(e.message(), e.cause());
         }
     }
 
@@ -426,9 +426,9 @@ public isolated client class Client {
             http:Request request = new;
             json jsonBody = payload.toJson();
             request.setPayload(jsonBody, "application/json");
-	        return check self.clientEp->post(resourcePath, request);
+            return check self.clientEp->post(resourcePath, request);
         } on fail var e {
-        	return error Error(e.message(), e.cause());
+            return error Error(e.message(), e.cause());
         }
     }
 
@@ -453,9 +453,9 @@ public isolated client class Client {
             http:Request request = new;
             json jsonBody = payload.toJson();
             request.setPayload(jsonBody, "application/json");
-	        return check self.clientEp->post(resourcePath, request);
+            return check self.clientEp->post(resourcePath, request);
         } on fail var e {
-        	return error Error(e.message(), e.cause());
+            return error Error(e.message(), e.cause());
         }
     }
 
@@ -477,9 +477,9 @@ public isolated client class Client {
         do {
             resourcePath = resourcePath + check getPathForQueryParam(queryParam);
             http:Request request = new;
-	        return check self.clientEp->post(resourcePath, request);
+            return check self.clientEp->post(resourcePath, request);
         } on fail var e {
-        	return error Error(e.message(), e.cause());
+            return error Error(e.message(), e.cause());
         }
     }
 
@@ -501,9 +501,9 @@ public isolated client class Client {
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "maxAttendees": maxAttendees, "timeZone": timeZone};
         do {
             resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-	        return check self.clientEp->get(resourcePath);
+            return check self.clientEp->get(resourcePath);
         } on fail var e {
-        	return error Error(e.message(), e.cause());
+            return error Error(e.message(), e.cause());
         }
     }
 
@@ -531,9 +531,9 @@ public isolated client class Client {
             http:Request request = new;
             json jsonBody = payload.toJson();
             request.setPayload(jsonBody, "application/json");
-	        return check self.clientEp->put(resourcePath, request);
+            return check self.clientEp->put(resourcePath, request);
         } on fail var e {
-        	return error Error(e.message(), e.cause());
+            return error Error(e.message(), e.cause());
         }
     }
 
@@ -554,9 +554,9 @@ public isolated client class Client {
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "sendUpdates": sendUpdates};
         do {
             resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-	        return check self.clientEp->delete(resourcePath);
+            return check self.clientEp->delete(resourcePath);
         } on fail var e {
-        	return error Error(e.message(), e.cause());
+            return error Error(e.message(), e.cause());
         }
     }
 
@@ -584,9 +584,9 @@ public isolated client class Client {
             http:Request request = new;
             json jsonBody = payload.toJson();
             request.setPayload(jsonBody, "application/json");
-	        return check self.clientEp->patch(resourcePath, request);
+            return check self.clientEp->patch(resourcePath, request);
         } on fail var e {
-        	return error Error(e.message(), e.cause());
+            return error Error(e.message(), e.cause());
         }
     }
 
@@ -614,9 +614,9 @@ public isolated client class Client {
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "maxAttendees": maxAttendees, "maxResults": maxResults, "originalStart": originalStart, "pageToken": pageToken, "showDeleted": showDeleted, "timeMax": timeMax, "timeMin": timeMin, "timeZone": timeZone};
         do {
             resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-	        return check self.clientEp->get(resourcePath);
+            return check self.clientEp->get(resourcePath);
         } on fail var e {
-        	return error Error(e.message(), e.cause());
+            return error Error(e.message(), e.cause());
         }
     }
 
@@ -639,9 +639,9 @@ public isolated client class Client {
         do {
             resourcePath = resourcePath + check getPathForQueryParam(queryParam);
             http:Request request = new;
-	        return check self.clientEp->post(resourcePath, request);
+            return check self.clientEp->post(resourcePath, request);
         } on fail var e {
-        	return error Error(e.message(), e.cause());
+            return error Error(e.message(), e.cause());
         }
     }
 
@@ -659,9 +659,9 @@ public isolated client class Client {
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
         do {
             resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-	        return check self.clientEp->get(resourcePath);
+            return check self.clientEp->get(resourcePath);
         } on fail var e {
-        	return error Error(e.message(), e.cause());
+            return error Error(e.message(), e.cause());
         }
     }
 
@@ -683,9 +683,9 @@ public isolated client class Client {
             http:Request request = new;
             json jsonBody = payload.toJson();
             request.setPayload(jsonBody, "application/json");
-	        return check self.clientEp->post(resourcePath, request);
+            return check self.clientEp->post(resourcePath, request);
         } on fail var e {
-        	return error Error(e.message(), e.cause());
+            return error Error(e.message(), e.cause());
         }
     }
 
@@ -713,9 +713,9 @@ public isolated client class Client {
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser, "maxResults": maxResults, "minAccessRole": minAccessRole, "pageToken": pageToken, "showDeleted": showDeleted, "showHidden": showHidden, "syncToken": syncToken};
         do {
             resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-	        return check self.clientEp->get(resourcePath);
+            return check self.clientEp->get(resourcePath);
         } on fail var e {
-        	return error Error(e.message(), e.cause());
+            return error Error(e.message(), e.cause());
         }
     }
 
@@ -738,9 +738,9 @@ public isolated client class Client {
             http:Request request = new;
             json jsonBody = payload.toJson();
             request.setPayload(jsonBody, "application/json");
-	        return check self.clientEp->post(resourcePath, request);
+            return check self.clientEp->post(resourcePath, request);
         } on fail var e {
-        	return error Error(e.message(), e.cause());
+            return error Error(e.message(), e.cause());
         }
     }
 
@@ -758,7 +758,7 @@ public isolated client class Client {
         string resourcePath = string `/users/me/calendarList/${getEncodedUri(calendarId)}`;
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
         do {
-	        resourcePath = resourcePath + check getPathForQueryParam(queryParam);
+            resourcePath = resourcePath + check getPathForQueryParam(queryParam);
             return check self.clientEp->get(resourcePath);
         } on fail var e {
             return error Error(e.message(), e.cause());
@@ -785,9 +785,9 @@ public isolated client class Client {
             http:Request request = new;
             json jsonBody = payload.toJson();
             request.setPayload(jsonBody, "application/json");
-	        return check self.clientEp->put(resourcePath, request);
+            return check self.clientEp->put(resourcePath, request);
         } on fail var e {
-        	return error Error(e.message(), e.cause());
+            return error Error(e.message(), e.cause());
         }
     }
 
@@ -806,9 +806,9 @@ public isolated client class Client {
         map<anydata> queryParam = {"alt": alt, "fields": fields, "key": 'key, "oauth_token": oauth_token, "prettyPrint": prettyPrint, "quotaUser": quotaUser};
         do {
             resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-	        return check self.clientEp->delete(resourcePath);
+            return check self.clientEp->delete(resourcePath);
         } on fail var e {
-        	return error Error(e.message(), e.cause());
+            return error Error(e.message(), e.cause());
         }
     }
 
@@ -832,9 +832,9 @@ public isolated client class Client {
             http:Request request = new;
             json jsonBody = payload.toJson();
             request.setPayload(jsonBody, "application/json");
-	        return check self.clientEp->patch(resourcePath, request);
+            return check self.clientEp->patch(resourcePath, request);
         } on fail var e {
-        	return error Error(e.message(), e.cause());
+            return error Error(e.message(), e.cause());
         }
     }
 }
