@@ -29,19 +29,19 @@ In order to use the Google Calendar connector, you need to first create the Cale
 
 2. Click on the project drop-down menu and either select an existing project or create a new one for which you want to add an API key.
 
-   <img src=<https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-googleapis.calendar/main/ballerina/resources/gcp-console-project-view.png> alt="GCP Console Project View" width="50%">
+   <img src=https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-googleapis.calendar/main/ballerina/resources/gcp-console-project-view.png alt="GCP Console Project View" width="50%">
 
 ### Step 2: Enable Calendar API
 
 1. Navigate to the **Library** and enable the Calendar API.
 
-   <img src=<https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-googleapis.calendar/main/ballerina/resources/enable-calendar-api.png> alt="Enable Calendar API" width="50%">
+   <img src=https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-googleapis.calendar/main/ballerina/resources/enable-calendar-api.png alt="Enable Calendar API" width="50%">
 
 ### Step 3: Configure OAuth Consent
 
 1. Click on the **OAuth consent screen** tab in the Google Cloud Platform console.
 
-    <img src=<https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-googleapis.calendar/main/ballerina/resources/consent-screen.png> alt="Consent Screen" width="50%">
+    <img src=https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-googleapis.calendar/main/ballerina/resources/consent-screen.png alt="Consent Screen" width="50%">
 
 2. Provide a name for the consent application and save your changes.
 
@@ -51,7 +51,7 @@ In order to use the Google Calendar connector, you need to first create the Cale
 
 2. Click  **Create credentials** and from the dropdown menu, select **OAuth client ID**.
 
-   <img src=<https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-googleapis.calendar/main/ballerina/resources/create-credentials.png> alt="Create Credentials" width="50%">
+   <img src=https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-googleapis.calendar/main/ballerina/resources/create-credentials.png alt="Create Credentials" width="50%">
 
 3. You will be directed to the **OAuth consent** screen, in which you need to fill in the necessary information below.
 
@@ -71,15 +71,15 @@ In order to use the Google Calendar connector, you need to first create the Cale
 
 1. Configure the OAuth playground with the OAuth client ID and client secret.
 
-   <img src=<https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-googleapis.calendar/main/ballerina/resources/oauth-playground.png> alt="OAuth Playground" width="50%">
+   <img src=https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-googleapis.calendar/main/ballerina/resources/oauth-playground.png alt="OAuth Playground" width="50%">
 
 2. Authorize the Calendar APIs.
 
-    <img src=<https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-googleapis.calendar/main/ballerina/resources/authorize-calendar-apis.png> alt="Authorize APIs" width="50%">
+    <img src=https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-googleapis.calendar/main/ballerina/resources/authorize-calendar-apis.png alt="Authorize APIs" width="50%">
 
 3. Exchange the authorization code for tokens.
 
-   <img src=<https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-googleapis.calendar/main/ballerina/resources/exchange-tokens.png> alt="Exchange Tokens" width="50%">
+   <img src=https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-googleapis.calendar/main/ballerina/resources/exchange-tokens.png alt="Exchange Tokens" width="50%">
 
 ## Quickstart
 
@@ -203,19 +203,19 @@ Execute the commands below to build from the source.
    ./gradlew clean build -Pdebug=<port>
    ```
 
-6. To debug with Ballerina language:
+5. To debug with Ballerina language:
 
    ```bash
    ./gradlew clean build -PbalJavaDebug=<port>
    ```
 
-7. Publish the generated artifacts to the local Ballerina central repository:
+6. Publish the generated artifacts to the local Ballerina central repository:
 
    ```bash
    ./gradlew clean build -PpublishToLocalCentral=true
    ```
 
-8. Publish the generated artifacts to the Ballerina central repository:
+7. Publish the generated artifacts to the Ballerina central repository:
 
    ```bash
    ./gradlew clean build -PpublishToCentral=true
