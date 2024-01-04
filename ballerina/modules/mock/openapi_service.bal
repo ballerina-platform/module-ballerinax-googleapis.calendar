@@ -90,9 +90,15 @@ service /calendar/v3 on new http:Listener(9090) {
     }
 
     resource function get calendars/[string calendarId]/acl("json"? alt, string? fields, string? 'key, string? oauth_token, boolean? prettyPrint, string? quotaUser, int? maxResults, string? pageToken, boolean? showDeleted, string? syncToken) returns Acl {
+        AclRule aclRule = {
+            etag: "default-etag",
+            id: calendarId
+        };
         Acl acl = {
             etag: "\"Syw9JucVAl83XRddaXunDD-xXrY\"",
-            items: [],
+            items: [
+                aclRule
+            ],
             kind: "calendar#acl",
             nextPageToken: "",
             nextSyncToken: ""
@@ -203,7 +209,7 @@ service /calendar/v3 on new http:Listener(9090) {
             kind: "calendar#events",
             nextPageToken: "",
             nextSyncToken: "",
-            summary: "Calendar Summary",
+            summary: "Test Event",
             timeZone: "GMT",
             updated: "2022-01-01T00:00:00Z"
         };
@@ -297,7 +303,8 @@ service /calendar/v3 on new http:Listener(9090) {
             creator: {
                 displayName: "creator display name",
                 email: ""
-            }
+            },
+            summary: "Test Event"
         };
         return event;
     }
@@ -357,7 +364,7 @@ service /calendar/v3 on new http:Listener(9090) {
             kind: "calendar#events",
             nextPageToken: "",
             nextSyncToken: "",
-            summary: "Calendar Summary",
+            summary: "Test Event",
             timeZone: "GMT",
             updated: "2022-01-01T00:00:00Z"
         };
@@ -367,6 +374,7 @@ service /calendar/v3 on new http:Listener(9090) {
     resource function post calendars/[string calendarId]/events/[string eventId]/move("json"? alt, string? fields, string? 'key, string? oauth_token, boolean? prettyPrint, string? quotaUser, string destination, "all"|"externalOnly"|"none"? sendUpdates) returns OkEvent {
         OkEvent okEvent = {
             body: {
+                summary: "Test Event",
                 iCalUID: destination,
                 id: eventId
             }

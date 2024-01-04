@@ -20,7 +20,7 @@ import ballerina/test;
 
 configurable boolean isTestOnLiveServer = os:getEnv("IS_TEST_ON_LIVE_SERVER") == "true";
 
-Client calendarClientForMockServer = test:mock(Client);
+Client calendarClient = test:mock(Client);
 
 configurable string mockClientId = ?;
 configurable string mockClientSecret = ?;
@@ -30,7 +30,7 @@ configurable string mockRefreshUrl = ?;
 @test:BeforeSuite
 function initializeClientsForCalendarServer () returns error? {
     if isTestOnLiveServer {
-        calendarClientForMockServer = check new({
+        calendarClient = check new({
             auth: {
                 clientId: os:getEnv("CLIENT_ID"),
                 clientSecret: os:getEnv("CLIENT_SECRET"),
@@ -39,7 +39,7 @@ function initializeClientsForCalendarServer () returns error? {
             }
         });
     } else {
-        calendarClientForMockServer = check new (
+        calendarClient = check new (
             {
                 timeout: 100000,
                 auth: {
@@ -61,117 +61,85 @@ function verifyAndReturnId(string? id) returns string|error {
     return id;
 }
 
-@test:Config {
-    groups: ["mock", "live"]
-}
+@test:Config {}
 function testCreateAndDeleteCalendar() returns error? {
     string summary = "Test Calendar 1";
     Calendar cal = {
         summary: summary
     };
-    Calendar calendar = check calendarClientForMockServer->/calendars.post(cal);
+    Calendar calendar = check calendarClient->/calendars.post(cal);
     test:assertEquals(calendar.summary, summary);
 
     string id = check verifyAndReturnId(calendar.id);
-    check calendarClientForMockServer->/calendars/[id].delete();
+    check calendarClient->/calendars/[id].delete();
 }
 
-@test:Config {
-    groups: ["mock"]
-}
-function testGetCalendar() returns error? {
-    string id = "default-calendar-id";
-    Calendar retrievedCal = check calendarClientForMockServer->/calendars/[id].get();
-    test:assertEquals(retrievedCal.id, id);
-}
-
-@test:Config {
-    groups: ["live"]
-}
+@test:Config {}
 function testCalendarGet() returns error? {
-    string summary = "Test Calendar";
+    string summary = "calendar summary";
     Calendar cal = {
         summary: summary
     };
-    Calendar createdCal = check calendarClientForMockServer->/calendars.post(cal);
+    Calendar createdCal = check calendarClient->/calendars.post(cal);
     string id = check verifyAndReturnId(createdCal.id);
-    Calendar retrievedCal = check calendarClientForMockServer->/calendars/[id].get();
+    Calendar retrievedCal = check calendarClient->/calendars/[id].get();
     test:assertEquals(retrievedCal.summary, summary);
-    check calendarClientForMockServer->/calendars/[id].delete();
+    check calendarClient->/calendars/[id].delete();
 }
 
-@test:Config {
-    groups: ["mock"]
-}
+@test:Config {}
 function testCalendarUpdate() returns error? {
-    
     string summary = "Test Calendar";
     Calendar cal = {
         summary: summary
     };
-    Calendar createdCal = check calendarClientForMockServer->/calendars.post(cal);
+    Calendar createdCal = check calendarClient->/calendars.post(cal);
     string newSummary = "Updated Test Calendar";
     createdCal.summary = newSummary;
     string id = check verifyAndReturnId(createdCal.id);
-    Calendar updatedCal = check calendarClientForMockServer->/calendars/[id].put(createdCal);
+    Calendar updatedCal = check calendarClient->/calendars/[id].put(createdCal);
     test:assertEquals(updatedCal.summary, newSummary);
-    check calendarClientForMockServer->/calendars/[id].delete();
+    check calendarClient->/calendars/[id].delete();
 }
 
-@test:Config {
-    groups: ["mock", "live"]
-}
+@test:Config {}
 function testCalendarPatch() returns error? {
-    
     string summary = "Test Calendar";
     Calendar cal = {
         summary: summary
     };
-    Calendar createdCal = check calendarClientForMockServer->/calendars.post(cal);
+    Calendar createdCal = check calendarClient->/calendars.post(cal);
     string newSummary = "Patched Test Calendar";
     createdCal.summary = newSummary;
     string id = check verifyAndReturnId(createdCal.id);
-    Calendar patchedCal = check calendarClientForMockServer->/calendars/[id].patch(createdCal);
+    Calendar patchedCal = check calendarClient->/calendars/[id].patch(createdCal);
     test:assertEquals(patchedCal.summary, newSummary);
-    check calendarClientForMockServer->/calendars/[id].delete();
+    check calendarClient->/calendars/[id].delete();
 }
 
-@test:Config {
-    groups: ["mock"]
-}
-function testGetCalendarAcl() returns error? {
-    string aclId = "default-acl-id";
-    Acl acl = check calendarClientForMockServer->/calendars/[aclId]/acl.get();
-    test:assertEquals(acl.kind, "calendar#acl");
-}
-
-@test:Config {
-    groups: ["live"]
-}
+@test:Config {}
 function testCalendarAclGet() returns error? {
     string summary = "Test Calendar";
     Calendar cal = {
         summary: summary
     };
-    Calendar createdCal = check calendarClientForMockServer->/calendars.post(cal);
+    Calendar createdCal = check calendarClient->/calendars.post(cal);
     string id = check verifyAndReturnId(createdCal.id);
-    Acl acl = check calendarClientForMockServer->/calendars/[id]/acl.get();
+    Acl acl = check calendarClient->/calendars/[id]/acl.get();
     AclRule[]? aclRules = acl.items;
     if aclRules !is () {
         test:assertTrue(aclRules.length() > 0);
     }
-    check calendarClientForMockServer->/calendars/[id].delete();
+    check calendarClient->/calendars/[id].delete();
 }
 
-@test:Config {
-    groups: ["mock", "live"]
-}
+@test:Config {}
 function testCalendarEventsGet() returns error? {
     string summary = "Test Calendar";
     Calendar cal = {
         summary: summary
     };
-    Calendar createdCal = check calendarClientForMockServer->/calendars.post(cal);
+    Calendar createdCal = check calendarClient->/calendars.post(cal);
     string eventSummary = "Test Event";
     Event event = {
         'start: {
@@ -185,37 +153,25 @@ function testCalendarEventsGet() returns error? {
         summary: eventSummary
     };
     string id = check verifyAndReturnId(createdCal.id);
-    Event createdEvent = check calendarClientForMockServer->/calendars/[id]/events.post(event);
+    Event createdEvent = check calendarClient->/calendars/[id]/events.post(event);
     test:assertEquals(createdEvent.summary, eventSummary);
-    Events events = check calendarClientForMockServer->/calendars/[id]/events.get();
+    Events events = check calendarClient->/calendars/[id]/events.get();
     Event[]? eventItems = events.items;
     test:assertNotEquals(eventItems, ());
     string? eventId = createdEvent.id;
     test:assertTrue(createdEvent.id is string);
     if eventId is string {
-        check calendarClientForMockServer->/calendars/[id]/events/[eventId].delete();
+        check calendarClient->/calendars/[id]/events/[eventId].delete();
     }
 }
 
-@test:Config {
-    groups: ["mock"]
-}
-function testGetCalendarEvent() returns error? {
-    string id = "default-calendar-id";
-    string eventId = "default-event-id";
-    Event retrievedEvent = check calendarClientForMockServer->/calendars/[id]/events/[eventId].get();
-    test:assertEquals(retrievedEvent.id, eventId);
-}
-
-@test:Config {
-    groups: ["live"]
-}
+@test:Config {}
 function testCalendarEventGet() returns error? {
     string summary = "Test Calendar";
     Calendar cal = {
         summary: summary
     };
-    Calendar createdCal = check calendarClientForMockServer->/calendars.post(cal);
+    Calendar createdCal = check calendarClient->/calendars.post(cal);
     string eventSummary = "Test Event";
     Event event = {
         'start: {
@@ -229,42 +185,20 @@ function testCalendarEventGet() returns error? {
         summary: eventSummary
     };
     string id = check verifyAndReturnId(createdCal.id);
-    Event createdEvent = check calendarClientForMockServer->/calendars/[id]/events.post(event);
+    Event createdEvent = check calendarClient->/calendars/[id]/events.post(event);
     string eventId = check verifyAndReturnId(createdEvent.id);
-    Event retrievedEvent = check calendarClientForMockServer->/calendars/[id]/events/[eventId].get();
+    Event retrievedEvent = check calendarClient->/calendars/[id]/events/[eventId].get();
     test:assertEquals(retrievedEvent.summary, eventSummary);
-    check calendarClientForMockServer->/calendars/[id]/events/[eventId].delete();
+    check calendarClient->/calendars/[id]/events/[eventId].delete();
 }
 
-@test:Config {
-    groups: ["mock"]
-}
-function testCreateCalendarEvent() returns error? {
-    Event event = {
-        'start: {
-            dateTime: "2023-10-28T03:00:00+05:30",
-            timeZone: "Asia/Colombo"
-        },
-        end: {
-            dateTime: "2023-10-28T03:30:00+05:30",
-            timeZone: "Asia/Colombo"
-        },
-        summary: "Test Event"
-    };
-    string id = "default-calendar-id";
-    Event createdEvent = check calendarClientForMockServer->/calendars/[id]/events.post(event);
-    test:assertEquals(createdEvent.id, id);
-}
-
-@test:Config {
-    groups: ["live"]
-}
+@test:Config {}
 function testCalendarEventCreate() returns error? {
     string summary = "Test Calendar";
     Calendar cal = {
         summary: summary
     };
-    Calendar createdCal = check calendarClientForMockServer->/calendars.post(cal);
+    Calendar createdCal = check calendarClient->/calendars.post(cal);
     string eventSummary = "Test Event";
     Event event = {
         'start: {
@@ -278,24 +212,22 @@ function testCalendarEventCreate() returns error? {
         summary: eventSummary
     };
     string id = check verifyAndReturnId(createdCal.id);
-    Event createdEvent = check calendarClientForMockServer->/calendars/[id]/events.post(event);
+    Event createdEvent = check calendarClient->/calendars/[id]/events.post(event);
     string eventId = check verifyAndReturnId(createdEvent.id);
-    Event retrievedEvent = check calendarClientForMockServer->/calendars/[id]/events/[eventId].get();
+    Event retrievedEvent = check calendarClient->/calendars/[id]/events/[eventId].get();
     test:assertEquals(retrievedEvent.summary, eventSummary);
-    check calendarClientForMockServer->/calendars/[id]/events/[eventId].delete();
-    check calendarClientForMockServer->/calendars/[id].delete();
+    check calendarClient->/calendars/[id]/events/[eventId].delete();
+    check calendarClient->/calendars/[id].delete();
 }
 
-@test:Config {
-    groups: ["mock", "live"]
-}
+@test:Config {}
 function testCalendarEventUpdate() returns error? {
     
     string summary = "Test Calendar";
     Calendar cal = {
         summary: summary
     };
-    Calendar createdCal = check calendarClientForMockServer->/calendars.post(cal);
+    Calendar createdCal = check calendarClient->/calendars.post(cal);
     string eventSummary = "Test Event";
     Event event = {
         'start: {
@@ -309,26 +241,24 @@ function testCalendarEventUpdate() returns error? {
         summary: eventSummary
     };
     string id = check verifyAndReturnId(createdCal.id);
-    Event createdEvent = check calendarClientForMockServer->/calendars/[id]/events.post(event);
+    Event createdEvent = check calendarClient->/calendars/[id]/events.post(event);
     string eventId = check verifyAndReturnId(createdEvent.id);
     string newSummary = "Updated Test Event";
     createdEvent.summary = newSummary;
-    Event updatedEvent = check calendarClientForMockServer->/calendars/[id]/events/[eventId].put(createdEvent);
+    Event updatedEvent = check calendarClient->/calendars/[id]/events/[eventId].put(createdEvent);
     test:assertEquals(updatedEvent.summary, newSummary);
-    check calendarClientForMockServer->/calendars/[id]/events/[eventId].delete();
-    check calendarClientForMockServer->/calendars/[id].delete();
+    check calendarClient->/calendars/[id]/events/[eventId].delete();
+    check calendarClient->/calendars/[id].delete();
 }
 
-@test:Config {
-    groups: ["mock", "live"]
-}
+@test:Config {}
 function testCalendarEventPatch() returns error? {
     
     string summary = "Test Calendar";
     Calendar cal = {
         summary: summary
     };
-    Calendar createdCal = check calendarClientForMockServer->/calendars.post(cal);
+    Calendar createdCal = check calendarClient->/calendars.post(cal);
     string eventSummary = "Test Event";
     Event event = {
         'start: {
@@ -342,26 +272,24 @@ function testCalendarEventPatch() returns error? {
         summary: eventSummary
     };
     string id = check verifyAndReturnId(createdCal.id);
-    Event createdEvent = check calendarClientForMockServer->/calendars/[id]/events.post(event);
+    Event createdEvent = check calendarClient->/calendars/[id]/events.post(event);
     string newSummary = "Patched Test Event";
     createdEvent.summary = newSummary;
     string eventId = check verifyAndReturnId(createdEvent.id);
-    Event patchedEvent = check calendarClientForMockServer->/calendars/[id]/events/[eventId].patch(createdEvent);
+    Event patchedEvent = check calendarClient->/calendars/[id]/events/[eventId].patch(createdEvent);
     test:assertEquals(patchedEvent.summary, newSummary);
-    check calendarClientForMockServer->/calendars/[id]/events/[eventId].delete();
-    check calendarClientForMockServer->/calendars/[id].delete();
+    check calendarClient->/calendars/[id]/events/[eventId].delete();
+    check calendarClient->/calendars/[id].delete();
 }
 
-@test:Config {
-    groups: ["mock", "live"]
-}
+@test:Config {}
 function testCalendarEventDelete() returns error? {
     
     string summary = "Test Calendar";
     Calendar cal = {
         summary: summary
     };
-    Calendar createdCal = check calendarClientForMockServer->/calendars.post(cal);
+    Calendar createdCal = check calendarClient->/calendars.post(cal);
     string eventSummary = "Test Event";
     Event event = {
         'start: {
@@ -375,22 +303,20 @@ function testCalendarEventDelete() returns error? {
         summary: eventSummary
     };
     string id = check verifyAndReturnId(createdCal.id);
-    Event createdEvent = check calendarClientForMockServer->/calendars/[id]/events.post(event);
+    Event createdEvent = check calendarClient->/calendars/[id]/events.post(event);
     string eventId = check verifyAndReturnId(createdEvent.id);
-    check calendarClientForMockServer->/calendars/[id]/events/[eventId].delete();
-    check calendarClientForMockServer->/calendars/[id].delete();
+    check calendarClient->/calendars/[id]/events/[eventId].delete();
+    check calendarClient->/calendars/[id].delete();
 }
 
-@test:Config {
-    groups: ["mock", "live"]
-}
+@test:Config {}
 function testEventCreate() returns error? {
     
     string summary = "Test Meeting 110";
     Calendar cal = {
         summary: summary
     };
-    Calendar createdCal = check calendarClientForMockServer->/calendars.post(cal);
+    Calendar createdCal = check calendarClient->/calendars.post(cal);
     Event payload = {
         "start": {
             "dateTime": "2023-10-19T03:00:00+05:30",
@@ -403,21 +329,19 @@ function testEventCreate() returns error? {
         "summary": summary
     };
     string id = check verifyAndReturnId(createdCal.id);
-    Event createdEvent = check calendarClientForMockServer->/calendars/[id]/events.post(payload = payload);
+    Event createdEvent = check calendarClient->/calendars/[id]/events.post(payload = payload);
     test:assertEquals(createdEvent.summary, summary);
-    check calendarClientForMockServer->/calendars/[id].delete();
+    check calendarClient->/calendars/[id].delete();
 }
 
-@test:Config {
-    groups: ["mock", "live"]
-}
+@test:Config {}
 function testEventImport() returns error? {
     
     string summary = "Test Meeting 110";
     Calendar cal = {
         summary: summary
     };
-    Calendar createdCal = check calendarClientForMockServer->/calendars.post(cal);
+    Calendar createdCal = check calendarClient->/calendars.post(cal);
     Event payload = {
         "start": {
             "dateTime": "2023-10-19T03:00:00+05:30",
@@ -430,7 +354,7 @@ function testEventImport() returns error? {
         "summary": summary
     };
     string id = check verifyAndReturnId(createdCal.id);
-    Event createdEvent = check calendarClientForMockServer->/calendars/[id]/events.post(payload = payload);
+    Event createdEvent = check calendarClient->/calendars/[id]/events.post(payload = payload);
     test:assertEquals(createdEvent.summary, summary);
     payload = {
         "iCalUID": id,
@@ -444,21 +368,19 @@ function testEventImport() returns error? {
         },
         "summary": summary
     };
-    Event importedEvent = check calendarClientForMockServer->/calendars/[id]/events/'import.post(payload);
+    Event importedEvent = check calendarClient->/calendars/[id]/events/'import.post(payload);
     test:assertEquals(importedEvent.summary, summary);
-    check calendarClientForMockServer->/calendars/[id].delete();
+    check calendarClient->/calendars/[id].delete();
 }
 
-@test:Config {
-    groups: ["mock", "live"]
-}
+@test:Config {}
 function testEventUpdate() returns error? {
     
     string summary = "Test Meeting 110";
     Calendar cal = {
         summary: summary
     };
-    Calendar createdCal = check calendarClientForMockServer->/calendars.post(cal);
+    Calendar createdCal = check calendarClient->/calendars.post(cal);
     Event payload = {
         "start": {
             "dateTime": "2023-10-19T03:00:00+05:30",
@@ -471,26 +393,24 @@ function testEventUpdate() returns error? {
         "summary": summary
     };
     string id = check verifyAndReturnId(createdCal.id);
-    Event createdEvent = check calendarClientForMockServer->/calendars/[id]/events.post(payload = payload);
+    Event createdEvent = check calendarClient->/calendars/[id]/events.post(payload = payload);
     string newSummary = "Updated Test Meeting 110";
     createdEvent.summary = newSummary;
     string eventId = check verifyAndReturnId(createdEvent.id);
-    Event updatedEvent = check calendarClientForMockServer->/calendars/[id]/events/[eventId].put(createdEvent);
+    Event updatedEvent = check calendarClient->/calendars/[id]/events/[eventId].put(createdEvent);
     test:assertEquals(updatedEvent.summary, newSummary);
     test:assertEquals(updatedEvent.summary, newSummary);
-    check calendarClientForMockServer->/calendars/[id]/events/[eventId].delete();
+    check calendarClient->/calendars/[id]/events/[eventId].delete();
 }
 
-@test:Config {
-    groups: ["mock", "live"]
-}
+@test:Config {}
 function testEventPatch() returns error? {
     
     string summary = "Test Meeting 110";
     Calendar cal = {
         summary: summary
     };
-    Calendar createdCal = check calendarClientForMockServer->/calendars.post(cal);
+    Calendar createdCal = check calendarClient->/calendars.post(cal);
     Event payload = {
         "start": {
             "dateTime": "2023-10-19T03:00:00+05:30",
@@ -503,25 +423,22 @@ function testEventPatch() returns error? {
         "summary": summary
     };
     string id = check verifyAndReturnId(createdCal.id);
-    Event createdEvent = check calendarClientForMockServer->/calendars/[id]/events.post(payload = payload);
+    Event createdEvent = check calendarClient->/calendars/[id]/events.post(payload = payload);
     string newSummary = "Patched Test Meeting 110";
     createdEvent.summary = newSummary;
     string eventId = check verifyAndReturnId(createdEvent.id);
-    Event patchedEvent = check calendarClientForMockServer->/calendars/[id]/events/[eventId].patch(createdEvent);
+    Event patchedEvent = check calendarClient->/calendars/[id]/events/[eventId].patch(createdEvent);
     test:assertEquals(patchedEvent.summary, newSummary);
-    check calendarClientForMockServer->/calendars/[id]/events/[eventId].delete();
+    check calendarClient->/calendars/[id]/events/[eventId].delete();
 }
 
-@test:Config {
-    groups: ["live"]
-}
+@test:Config {}
 function testEventGet() returns error? {
-    
-    string summary = "Test Meeting 110";
+    string summary = "Test Event";
     Calendar cal = {
         summary: summary
     };
-    Calendar createdCal = check calendarClientForMockServer->/calendars.post(cal);
+    Calendar createdCal = check calendarClient->/calendars.post(cal);
     Event payload = {
         "start": {
             "dateTime": "2023-10-19T03:00:00+05:30",
@@ -534,33 +451,21 @@ function testEventGet() returns error? {
         "summary": summary
     };
     string id = check verifyAndReturnId(createdCal.id);
-    Event createdEvent = check calendarClientForMockServer->/calendars/[id]/events.post(payload = payload);
+    Event createdEvent = check calendarClient->/calendars/[id]/events.post(payload = payload);
     string eventId = check verifyAndReturnId(createdEvent.id);
-    Event retrievedEvent = check calendarClientForMockServer->/calendars/[id]/events/[eventId].get();
+    Event retrievedEvent = check calendarClient->/calendars/[id]/events/[eventId].get();
     test:assertEquals(retrievedEvent.summary, summary);
-    check calendarClientForMockServer->/calendars/[id]/events/[eventId].delete();
+    check calendarClient->/calendars/[id]/events/[eventId].delete();
 }
 
-@test:Config {
-    groups: ["mock"]
-}
-function testGetEvent() returns error? {
-    string id = "default-calendar-id";
-    string eventId = "default-event-id";
-    Event retrievedEvent = check calendarClientForMockServer->/calendars/[id]/events/[eventId].get();
-    test:assertEquals(retrievedEvent.id, eventId);
-}
-
-@test:Config {
-    groups: ["mock", "live"]
-}
+@test:Config {}
 function testEventDelete() returns error? {
     
     string summary = "Test Meeting 110";
     Calendar cal = {
         summary: summary
     };
-    Calendar createdCal = check calendarClientForMockServer->/calendars.post(cal);
+    Calendar createdCal = check calendarClient->/calendars.post(cal);
     Event payload = {
         "start": {
             "dateTime": "2023-10-19T03:00:00+05:30",
@@ -573,21 +478,19 @@ function testEventDelete() returns error? {
         "summary": summary
     };
     string id = check verifyAndReturnId(createdCal.id);
-    Event createdEvent = check calendarClientForMockServer->/calendars/[id]/events.post(payload = payload);
+    Event createdEvent = check calendarClient->/calendars/[id]/events.post(payload = payload);
     string eventId = check verifyAndReturnId(createdEvent.id);
-    check calendarClientForMockServer->/calendars/[id]/events/[eventId].delete();
+    check calendarClient->/calendars/[id]/events/[eventId].delete();
 }
 
-@test:Config {
-    groups: ["mock", "live"]
-}
+@test:Config {}
 function testPostCalendarAcl() returns error? {
     
     string summary = "Test Calendar";
     Calendar cal = {
         summary: summary
     };
-    Calendar createdCal = check calendarClientForMockServer->/calendars.post(cal);
+    Calendar createdCal = check calendarClient->/calendars.post(cal);
     json acl = {
         role: "owner",
         scope: {
@@ -596,34 +499,33 @@ function testPostCalendarAcl() returns error? {
         }
     };
     string id = check verifyAndReturnId(createdCal.id);
-    AclRule res = check calendarClientForMockServer->/calendars/[id]/acl.post(check acl.cloneWithType(AclRule));
+    AclRule res = check calendarClient->/calendars/[id]/acl.post(check acl.cloneWithType(AclRule));
     test:assertEquals(res.role, check acl.role);
     AclRule_scope? scope = res.scope;
     if scope is AclRule_scope {
         test:assertEquals(scope.value, check acl.scope.value);
-        check calendarClientForMockServer->/calendars/[id].delete();
+        check calendarClient->/calendars/[id].delete();
     }
 }
 
-@test:Config {
-    groups: ["live"]
-}
+@test:Config {}
 function testAclRuleCreate() returns error? {
     string summary = "Test Calendar";
     Calendar cal = {
         summary: summary
     };
-    Calendar createdCal = check calendarClientForMockServer->/calendars.post(cal);
+    Calendar createdCal = check calendarClient->/calendars.post(cal);
+    string id = check verifyAndReturnId(createdCal.id);
     AclRule aclRule = {
+        id: id,
         role: "reader",
         scope: {
             'type: "user",
             value: "testuser@gmail.com"
         }
     };
-    string id = check verifyAndReturnId(createdCal.id);
-    AclRule createdAclRule = check calendarClientForMockServer->/calendars/[id]/acl.post(aclRule);
-    Acl acl = check calendarClientForMockServer->/calendars/[id]/acl.get();
+    AclRule createdAclRule = check calendarClient->/calendars/[id]/acl.post(aclRule);
+    Acl acl = check calendarClient->/calendars/[id]/acl.get();
     boolean aclRuleFound = false;
     AclRule[]? aclItems = acl.items;
     if aclItems != () {
@@ -636,65 +538,53 @@ function testAclRuleCreate() returns error? {
     }
     test:assertTrue(aclRuleFound, "Retrieved ACL does not contain the created ACL rule");
     string aclRuleId = check verifyAndReturnId(createdAclRule.id);
-    check calendarClientForMockServer->/calendars/[id]/acl/[aclRuleId].delete();
-    check calendarClientForMockServer->/calendars/[id].delete();
+    check calendarClient->/calendars/[id]/acl/[aclRuleId].delete();
+    check calendarClient->/calendars/[id].delete();
 }
 
-@test:Config {
-    groups: ["mock"]
-}
-function testGetAclRule() returns error? {
-    string id = "default-calendar-id";
-    string aclRuleId = "default-calendar-id";
-    AclRule getAclRule = check calendarClientForMockServer->/calendars/[id]/acl/[aclRuleId].get();
-    test:assertEquals(getAclRule.id, aclRuleId);
-}
-
-@test:Config {
-    groups: ["live"]
-}
+@test:Config {}
 function testAclRuleGet() returns error? {
     string summary = "Test Calendar";
     Calendar cal = {
         summary: summary
     };
-    Calendar createdCal = check calendarClientForMockServer->/calendars.post(cal);
+    Calendar createdCal = check calendarClient->/calendars.post(cal);
+    string id = check verifyAndReturnId(createdCal.id);
     AclRule aclRule = {
+        id: id,
         role: "reader",
         scope: {
             'type: "user",
             value: "testuser@gmail.com"
         }
     };
-    string id = check verifyAndReturnId(createdCal.id);
-    AclRule createdAclRule = check calendarClientForMockServer->/calendars/[id]/acl.post(aclRule);
+    AclRule createdAclRule = check calendarClient->/calendars/[id]/acl.post(aclRule);
     test:assertEquals(createdAclRule.role, aclRule.role);
     string aclRuleId = check verifyAndReturnId(createdAclRule.id);
-    AclRule getAclRule = check calendarClientForMockServer->/calendars/[id]/acl/[aclRuleId].get();
+    AclRule getAclRule = check calendarClient->/calendars/[id]/acl/[aclRuleId].get();
     test:assertEquals(getAclRule.role, aclRule.role);
-    check calendarClientForMockServer->/calendars/[id]/acl/[aclRuleId].delete();
-    check calendarClientForMockServer->/calendars/[id].delete();
+    check calendarClient->/calendars/[id]/acl/[aclRuleId].delete();
+    check calendarClient->/calendars/[id].delete();
 }
 
-@test:Config {
-    groups: ["live"]
-}
+@test:Config {}
 function testAclRuleUpdate() returns error? {
     
     string summary = "Test Calendar";
     Calendar cal = {
         summary: summary
     };
-    Calendar createdCal = check calendarClientForMockServer->/calendars.post(cal);
+    Calendar createdCal = check calendarClient->/calendars.post(cal);
+    string id = check verifyAndReturnId(createdCal.id);
     AclRule aclRule = {
+        id: id,
         role: "reader",
         scope: {
             'type: "user",
             value: "testuser@gmail.com"
         }
     };
-    string id = check verifyAndReturnId(createdCal.id);
-    AclRule createdAclRule = check calendarClientForMockServer->/calendars/[id]/acl.post(aclRule);
+    AclRule createdAclRule = check calendarClient->/calendars/[id]/acl.post(aclRule);
     test:assertEquals(createdAclRule.role, aclRule.role);
     string aclRuleId = check verifyAndReturnId(createdAclRule.id);
     aclRule = {
@@ -704,74 +594,30 @@ function testAclRuleUpdate() returns error? {
             value: "testuser@gmail.com"
         }
     };
-    AclRule updateAclRule = check calendarClientForMockServer->/calendars/[id]/acl/[aclRuleId].put(aclRule);
+    AclRule updateAclRule = check calendarClient->/calendars/[id]/acl/[aclRuleId].put(aclRule);
     test:assertEquals(updateAclRule.role, aclRule.role);
-    check calendarClientForMockServer->/calendars/[id]/acl/[aclRuleId].delete();
-    check calendarClientForMockServer->/calendars/[id].delete();
+    check calendarClient->/calendars/[id]/acl/[aclRuleId].delete();
+    check calendarClient->/calendars/[id].delete();
 }
 
-@test:Config {
-    groups: ["live"]
-}
-function testUpdateAclRule() returns error? {
-    AclRule aclRule = {
-        role: "reader",
-        scope: {
-            'type: "user",
-            value: "testuser@gmail.com"
-        }
-    };
-    string id = "default-calendar-id";
-    string aclRuleId = "default-acl-id";
-    aclRule = {
-        role: "writer",
-        scope: {
-            'type: "user",
-            value: "testuser@gmail.com"
-        }
-    };
-    AclRule updateAclRule = check calendarClientForMockServer->/calendars/[id]/acl/[aclRuleId].put(aclRule);
-    test:assertEquals(updateAclRule.role, aclRule.role);
-}
-
-@test:Config {
-    groups: ["mock"]
-}
-function testPatchAclRule() returns error? {
-    string role = "reader";
-    AclRule aclRule = {
-        role: "reader",
-        scope: {
-            'type: "user",
-            value: "testuser@gmail.com"
-        }
-    };
-    string id = "default-calendar-id";
-    string aclRuleId = "default-acl-id";
-    aclRule.role = role;
-    AclRule updateAclRule = check calendarClientForMockServer->/calendars/[id]/acl/[aclRuleId].patch(aclRule);
-    test:assertEquals(updateAclRule.role, role);
-}
-
-@test:Config {
-    groups: ["live"]
-}
+@test:Config {}
 function testAclRulePatch() returns error? {
     
     string summary = "Test Calendar";
     Calendar cal = {
         summary: summary
     };
-    Calendar createdCal = check calendarClientForMockServer->/calendars.post(cal);
+    Calendar createdCal = check calendarClient->/calendars.post(cal);
+    string id = check verifyAndReturnId(createdCal.id);
     AclRule aclRule = {
+        id: id,
         role: "reader",
         scope: {
             'type: "user",
             value: "testuser@gmail.com"
         }
     };
-    string id = check verifyAndReturnId(createdCal.id);
-    AclRule createdAclRule = check calendarClientForMockServer->/calendars/[id]/acl.post(aclRule);
+    AclRule createdAclRule = check calendarClient->/calendars/[id]/acl.post(aclRule);
     test:assertEquals(createdAclRule.role, aclRule.role);
     string aclRuleId = check verifyAndReturnId(createdAclRule.id);
     aclRule = {
@@ -781,22 +627,20 @@ function testAclRulePatch() returns error? {
             value: "testuser@gmail.com"
         }
     };
-    AclRule updateAclRule = check calendarClientForMockServer->/calendars/[id]/acl/[aclRuleId].patch(aclRule);
+    AclRule updateAclRule = check calendarClient->/calendars/[id]/acl/[aclRuleId].patch(aclRule);
     test:assertEquals(updateAclRule.role, aclRule.role);
-    check calendarClientForMockServer->/calendars/[id]/acl/[aclRuleId].delete();
-    check calendarClientForMockServer->/calendars/[id].delete();
+    check calendarClient->/calendars/[id]/acl/[aclRuleId].delete();
+    check calendarClient->/calendars/[id].delete();
 }
 
-@test:Config {
-    groups: ["mock", "live"]
-}
+@test:Config {}
 function testCalendarEventInstancesGet() returns error? {
     
     string summary = "Test Calendar";
     Calendar cal = {
         summary: summary
     };
-    Calendar createdCal = check calendarClientForMockServer->/calendars.post(cal);
+    Calendar createdCal = check calendarClient->/calendars.post(cal);
     string eventSummary = "Test Event";
     Event event = {
         'start: {
@@ -810,39 +654,26 @@ function testCalendarEventInstancesGet() returns error? {
         summary: eventSummary
     };
     string id = check verifyAndReturnId(createdCal.id);
-    Event createdEvent = check calendarClientForMockServer->/calendars/[id]/events.post(event);
+    Event createdEvent = check calendarClient->/calendars/[id]/events.post(event);
     string eventId = check verifyAndReturnId(createdEvent.id);
-    Events instances = check calendarClientForMockServer->/calendars/[id]/events/[eventId]/instances.get();
+    Events instances = check calendarClient->/calendars/[id]/events/[eventId]/instances.get();
     test:assertNotEquals(instances.items, ());
-    check calendarClientForMockServer->/calendars/[id]/events/[eventId].delete();
-    check calendarClientForMockServer->/calendars/[id].delete();
+    check calendarClient->/calendars/[id]/events/[eventId].delete();
+    check calendarClient->/calendars/[id].delete();
 }
 
-@test:Config {
-    groups: ["mock"]
-}
-function testMoveCalendarEvent() returns error? {
-    string calId = "default-calendar-id";
-    string calId2 = "default-calendar-id2";
-    string eventId = "default-event-id";
-    Event moveEvent = check calendarClientForMockServer->/calendars/[calId]/events/[eventId]/move.post(calId2);
-    test:assertEquals(moveEvent.iCalUID, calId2);
-}
-
-@test:Config {
-    groups: ["live"]
-}
+@test:Config {}
 function testCalendarEventMove() returns error? {
     string summary = "Test Calendar";
     Calendar cal = {
         summary: summary
     };
-    Calendar createdCal = check calendarClientForMockServer->/calendars.post(cal);
+    Calendar createdCal = check calendarClient->/calendars.post(cal);
     string summary2 = "Test Calendar 2";
     Calendar cal2 = {
         summary: summary2
     };
-    Calendar createdCal2 = check calendarClientForMockServer->/calendars.post(cal2);
+    Calendar createdCal2 = check calendarClient->/calendars.post(cal2);
     string eventSummary = "Test Event";
     Event event = {
         'start: {
@@ -856,166 +687,127 @@ function testCalendarEventMove() returns error? {
         summary: eventSummary
     };
     string calId = check verifyAndReturnId(createdCal.id);
-    Event createdEvent = check calendarClientForMockServer->/calendars/[calId]/events.post(event);
+    Event createdEvent = check calendarClient->/calendars/[calId]/events.post(event);
     string eventId = check verifyAndReturnId(createdEvent.id);
     string calId2 = check verifyAndReturnId(createdCal2.id);
-    Event moveEvent = check calendarClientForMockServer->/calendars/[calId]/events/[eventId]/move.post(calId2);
+    Event moveEvent = check calendarClient->/calendars/[calId]/events/[eventId]/move.post(calId2);
     test:assertEquals(moveEvent.summary, eventSummary);
-    check calendarClientForMockServer->/calendars/[calId2]/events/[eventId].delete();
-    check calendarClientForMockServer->/calendars/[calId2].delete();
-    check calendarClientForMockServer->/calendars/[calId].delete();
+    check calendarClient->/calendars/[calId2]/events/[eventId].delete();
+    check calendarClient->/calendars/[calId2].delete();
+    check calendarClient->/calendars/[calId].delete();
 }
 
-@test:Config {
-    groups: ["mock", "live"]
-}
+@test:Config {}
 function testCalendarFromListDelete() returns error? {
     
     string summary = "Test Calendar";
     Calendar cal = {
         summary: summary
     };
-    Calendar createdCalendar = check calendarClientForMockServer->/calendars.post(cal);
-    CalendarListEntry response = check calendarClientForMockServer->/users/me/calendarList.post({id: createdCalendar.id});
+    Calendar createdCalendar = check calendarClient->/calendars.post(cal);
+    CalendarListEntry response = check calendarClient->/users/me/calendarList.post({id: createdCalendar.id});
     test:assertEquals(response.id, createdCalendar.id);
     string id = check verifyAndReturnId(createdCalendar.id);
-    check calendarClientForMockServer->/users/me/calendarList/[id].delete();
-    check calendarClientForMockServer->/calendars/[id].delete();
+    check calendarClient->/users/me/calendarList/[id].delete();
+    check calendarClient->/calendars/[id].delete();
 }
 
-@test:Config {
-    groups: ["live"]
-}
+@test:Config {}
 function testCalendarListEntryPatch() returns error? {
     
     string summary = "Test Calendar List Entry";
     Calendar cal = {
         summary: summary
     };
-    Calendar calendar = check calendarClientForMockServer->/calendars.post(cal);
+    Calendar calendar = check calendarClient->/calendars.post(cal);
     test:assertEquals(calendar.summary, summary);
     CalendarListEntry calendarListEntry = {
+        summary: summary,
         id: calendar.id
     };
-    CalendarListEntry calendarUpdate = check calendarClientForMockServer->/users/me/calendarList.post(calendarListEntry);
+    CalendarListEntry calendarUpdate = check calendarClient->/users/me/calendarList.post(calendarListEntry);
     test:assertEquals(calendarUpdate.summary, summary);
     string updateId = check verifyAndReturnId(calendarUpdate.id);
-    CalendarListEntry updatedEntry = check calendarClientForMockServer->/users/me/calendarList/[updateId].patch(calendarListEntry);
+    CalendarListEntry updatedEntry = check calendarClient->/users/me/calendarList/[updateId].patch(calendarListEntry);
     test:assertEquals(updatedEntry.id, calendarUpdate.id);
-    check calendarClientForMockServer->/users/me/calendarList/[updateId].delete();
+    check calendarClient->/users/me/calendarList/[updateId].delete();
 }
 
-@test:Config {
-    groups: ["mock"]
-}
-function testCreateCalendarList() returns error? {
-    string id = "default-calendar-id";
-    CalendarListEntry calendarListEntry = {
-        id: id
-    };
-    CalendarListEntry calendarUpdate = check calendarClientForMockServer->/users/me/calendarList.post(calendarListEntry);
-    test:assertEquals(calendarUpdate.id, id);
-}
-
-@test:Config {
-    groups: ["live"]
-}
+@test:Config {}
 function testPostCalendarList() returns error? {
     string summary = "Test Calendar List Entry";
     Calendar cal = {
         summary: summary
     };
-    Calendar calendar = check calendarClientForMockServer->/calendars.post(cal);
+    Calendar calendar = check calendarClient->/calendars.post(cal);
     test:assertEquals(calendar.summary, summary);
     CalendarListEntry calendarListEntry = {
+        summary: summary,
         id: calendar.id
     };
-    CalendarListEntry calendarUpdate = check calendarClientForMockServer->/users/me/calendarList.post(calendarListEntry);
+    CalendarListEntry calendarUpdate = check calendarClient->/users/me/calendarList.post(calendarListEntry);
     test:assertEquals(calendarUpdate.summary, summary);
     string updateId = check verifyAndReturnId(calendarUpdate.id);
-    check calendarClientForMockServer->/users/me/calendarList/[updateId].delete();
+    check calendarClient->/users/me/calendarList/[updateId].delete();
 }
 
-@test:Config {
-    groups: ["live"]
-}
+@test:Config {}
 function testCalendarListEntryGet() returns error? {
-    string summary = "Test Calendar List Entry";
+    string summary = "Calendar Summary";
     Calendar cal = {
         summary: summary
     };
-    Calendar calendar = check calendarClientForMockServer->/calendars.post(cal);
+    Calendar calendar = check calendarClient->/calendars.post(cal);
     test:assertEquals(calendar.summary, summary);
     CalendarListEntry calendarListEntry = {
         id: calendar.id
     };
-    CalendarListEntry createdCalendarListEntry = check calendarClientForMockServer->/users/me/calendarList.post(calendarListEntry);
+    CalendarListEntry createdCalendarListEntry = check calendarClient->/users/me/calendarList.post(calendarListEntry);
     string id = check verifyAndReturnId(createdCalendarListEntry.id);
-    CalendarListEntry retrievedCalendarListEntry = check calendarClientForMockServer->/users/me/calendarList/[id].get();
+    CalendarListEntry retrievedCalendarListEntry = check calendarClient->/users/me/calendarList/[id].get();
     test:assertEquals(retrievedCalendarListEntry.summary, summary);
-    check calendarClientForMockServer->/users/me/calendarList/[id].delete();
+    check calendarClient->/users/me/calendarList/[id].delete();
 }
 
-@test:Config {
-    groups: ["mock"]
-}
-function testUpdateCalendarListEntry() returns error? {
-    string id = "default-calendar-id";
-    string updateId = "default-calendar-id2";
-    CalendarListEntry calendarListEntry = {
-        id: id
-    };
-    calendarListEntry.id = updateId;
-    CalendarListEntry updatedEntry = check calendarClientForMockServer->/users/me/calendarList/[id].put(calendarListEntry);
-    test:assertEquals(updatedEntry.id, updateId);
-}
-
-@test:Config {
-    groups: ["live"]
-}
+@test:Config {}
 function testCalendarListEntryUpdate() returns error? {
     string summary = "Test Calendar List Entry";
     Calendar cal = {
         summary: summary
     };
-    Calendar calendar = check calendarClientForMockServer->/calendars.post(cal);
+    Calendar calendar = check calendarClient->/calendars.post(cal);
     test:assertEquals(calendar.summary, summary);
     CalendarListEntry calendarListEntry = {
+        summary: summary,
         id: calendar.id
     };
-    CalendarListEntry calendarUpdate = check calendarClientForMockServer->/users/me/calendarList.post(calendarListEntry);
+    CalendarListEntry calendarUpdate = check calendarClient->/users/me/calendarList.post(calendarListEntry);
     test:assertEquals(calendarUpdate.summary, summary);
     string updateId = check verifyAndReturnId(calendarUpdate.id);
-    CalendarListEntry updatedEntry = check calendarClientForMockServer->/users/me/calendarList/[updateId].put(calendarListEntry);
+    CalendarListEntry updatedEntry = check calendarClient->/users/me/calendarList/[updateId].put(calendarListEntry);
     test:assertEquals(updatedEntry.id, calendarUpdate.id);
-    check calendarClientForMockServer->/users/me/calendarList/[updateId].delete();
+    check calendarClient->/users/me/calendarList/[updateId].delete();
 }
 
-@test:Config {
-    groups: ["mock", "live"]
-}
+@test:Config {}
 function testCalendarListGet() returns error? {
     
-    CalendarList calendarList = check calendarClientForMockServer->/users/me/calendarList.get();
+    CalendarList calendarList = check calendarClient->/users/me/calendarList.get();
     test:assertNotEquals(calendarList, ());
     CalendarListEntry[]? calendarListEntries = calendarList.items;
     test:assertTrue(calendarListEntries is () || calendarListEntries.length() > 0);
 }
 
-@test:Config {
-    groups: ["mock", "live"]
-}
+@test:Config {}
 function testColorsGet() returns error? {
     
-    Colors colors = check calendarClientForMockServer->/colors.get();
+    Colors colors = check calendarClient->/colors.get();
     test:assertNotEquals(colors.calendar, ());
     test:assertNotEquals(colors.event, ());
     test:assertEquals(colors.kind, "calendar#colors");
 }
 
-@test:Config {
-    groups: ["mock", "live"]
-}
+@test:Config {}
 function testFreeBusy() returns error? {
     
     FreeBusyRequest freeBusyRequest = {
@@ -1028,49 +820,23 @@ function testFreeBusy() returns error? {
             }
         ]
     };
-    FreeBusyResponse freeBusyResponse = check calendarClientForMockServer->/freeBusy.post(freeBusyRequest);
+    FreeBusyResponse freeBusyResponse = check calendarClient->/freeBusy.post(freeBusyRequest);
     test:assertNotEquals(freeBusyResponse.kind, ());
     test:assertNotEquals(freeBusyResponse.calendars, ());
 }
 
-@test:Config {
-    groups: ["mock"]
-}
-function testCreateCalendarEventQuickAdd() returns error? {
-    string id = "default-calendar-id";
-    string eventText = "Event created using quickAdd";
-    Event createdEvent = check calendarClientForMockServer->/calendars/[id]/events/quickAdd.post(eventText);
-    test:assertEquals(createdEvent.summary, eventText);
-}
-
-@test:Config {
-    groups: ["live"]
-}
+@test:Config {}
 function testCalendarEventQuickAdd() returns error? {
     string summary = "Test Calendar";
     Calendar cal = {
         summary: summary
     };
-    Calendar createdCal = check calendarClientForMockServer->/calendars.post(cal);
+    Calendar createdCal = check calendarClient->/calendars.post(cal);
     string eventText = "Event created using quickAdd";
     string id = check verifyAndReturnId(createdCal.id);
-    Event createdEvent = check calendarClientForMockServer->/calendars/[id]/events/quickAdd.post(eventText);
+    Event createdEvent = check calendarClient->/calendars/[id]/events/quickAdd.post(eventText);
     test:assertEquals(createdEvent.summary, eventText);
     string eventId = check verifyAndReturnId(createdEvent.id);
-    check calendarClientForMockServer->/calendars/[id]/events/[eventId].delete();
-    check calendarClientForMockServer->/calendars/[id].delete();
-}
-
-@test:Config {
-    groups: ["mock"]
-}
-function testPatchCalendarListEntry() returns error? {
-    string id = "default-calendar-id";
-    CalendarListEntry calendarListEntry = {
-        id: id
-    };
-    string updateId = "default-calendar-id2";
-    calendarListEntry.id = updateId;
-    CalendarListEntry updatedEntry = check calendarClientForMockServer->/users/me/calendarList/[id].patch(calendarListEntry);
-    test:assertEquals(updatedEntry.id, updateId);
+    check calendarClient->/calendars/[id]/events/[eventId].delete();
+    check calendarClient->/calendars/[id].delete();
 }

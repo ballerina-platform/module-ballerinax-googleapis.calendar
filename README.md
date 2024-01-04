@@ -191,43 +191,31 @@ Execute the commands below to build from the source.
    ./gradlew clean test
    ```
 
-3. To run a group of tests
-
-   ```bash
-   ./gradlew clean test -Pgroups=<test_group_names>
-   ```
-
-   Tip: The following groups of test cases are available.
-   Groups | Environment
-   ---| ---
-   mock | Mock server
-   calendar | Calendar API
-
-4. To build the without the tests:
+3. To build the without the tests:
 
    ```bash
    ./gradlew clean build -x test
    ```
 
-5. To debug package with a remote debugger:
+4. To debug package with a remote debugger:
 
    ```bash
    ./gradlew clean build -Pdebug=<port>
    ```
 
-6. To debug with Ballerina language:
+5. To debug with Ballerina language:
 
    ```bash
    ./gradlew clean build -PbalJavaDebug=<port>
    ```
 
-7. Publish the generated artifacts to the local Ballerina central repository:
+6. Publish the generated artifacts to the local Ballerina central repository:
 
    ```bash
    ./gradlew clean build -PpublishToLocalCentral=true
    ```
 
-8. Publish the generated artifacts to the Ballerina central repository:
+7. Publish the generated artifacts to the Ballerina central repository:
 
    ```bash
    ./gradlew clean build -PpublishToCentral=true
