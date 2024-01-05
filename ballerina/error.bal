@@ -14,5 +14,5 @@
 // specific language governing permissions and limitations
 // under the License.
 
-# Represents any error related to the wssec module.
+# Represents any error related to the `gcalendar` module.
 public type Error distinct error;
