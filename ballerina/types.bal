@@ -96,7 +96,7 @@ public type FreeBusyResponse record {
 };
 
 # Extended properties of the event.
-public type Event_extendedProperties record {
+public type EventExtendedProperties record {
     # Properties that are private to the copy of the event that appears on this calendar.
     record {|string...;|} 'private?;
     # Properties that are shared between copies of the event on other attendees' calendars.
@@ -176,11 +176,11 @@ public type EntryPoint record {
 # Conveys information about the working location of a user during an event.
 public type EventWorkingLocationProperties record {
     # If present, specifies that the user is working from a custom location.
-    EventWorkingLocationProperties_customLocation customLocation?;
+    EventWorkingLocationPropertiesCustomLocation customLocation?;
     # If present, specifies that the user is working at home.
     anydata homeOffice?;
     # If present, specifies that the user is working from an office.
-    EventWorkingLocationProperties_officeLocation officeLocation?;
+    EventWorkingLocationPropertiesOfficeLocation officeLocation?;
     # Type of the working location. Possible values are:  
     # - "homeOffice" - The user is working at home. 
     # - "officeLocation" - The user is working from an office. 
@@ -190,7 +190,7 @@ public type EventWorkingLocationProperties record {
 };
 
 # The organizer of the event. If the organizer is also an attendee, this is indicated with a separate entry in attendees with the organizer field set to True. To change the organizer, use the move operation. Read-only, except when importing an event.
-public type Event_organizer record {
+public type EventOrganizer record {
     # The organizer's name, if available.
     string displayName?;
     # The organizer's email address, if available. It must be a valid email address as per RFC5322.
@@ -240,7 +240,7 @@ public type CalendarListEntry record {
     # Geographic location of the calendar as free-form text. Optional. Read-only.
     string location?;
     # The notifications that the authenticated user is receiving for this calendar.
-    CalendarListEntry_notificationSettings notificationSettings?;
+    CalendarListEntryNotificationSettings notificationSettings?;
     # Whether the calendar is the primary calendar of the authenticated user. Read-only. Optional. The default is False.
     boolean primary?;
     # Whether the calendar content shows up in the calendar UI. Optional. The default is False.
@@ -372,7 +372,7 @@ public type EventReminder record {
 };
 
 # If present, specifies that the user is working from a custom location.
-public type EventWorkingLocationProperties_customLocation record {
+public type EventWorkingLocationPropertiesCustomLocation record {
     # An optional extra label for additional information.
     string label?;
 };
@@ -447,7 +447,7 @@ public type Setting record {
 };
 
 # The extent to which calendar access is granted by this ACL rule.
-public type AclRule_scope record {
+public type AclRuleScope record {
     # The type of the scope. Possible values are:  
     # - "default" - The public scope. This is the default value. 
     # - "user" - Limits the scope to a single user. 
@@ -579,7 +579,7 @@ public type EventAttachment record {
 };
 
 # The notifications that the authenticated user is receiving for this calendar.
-public type CalendarListEntry_notificationSettings record {
+public type CalendarListEntryNotificationSettings record {
     # The list of notifications set for this calendar.
     CalendarNotification[] notifications?;
 };
@@ -597,7 +597,7 @@ public type Colors record {
 };
 
 # Information about the event's reminders for the authenticated user.
-public type Event_reminders record {
+public type EventReminders record {
     # If the event doesn't use the default reminders, this lists the reminders specific to the event, or, if not set, indicates that no reminders are set for this event. The maximum number of override reminders is 5.
     EventReminder[] overrides?;
     # Whether the default reminders of the calendar apply to the event.
@@ -605,7 +605,7 @@ public type Event_reminders record {
 };
 
 # Source from which the event was created. For example, a web page, an email message or any document identifiable by an URL with HTTP or HTTPS scheme. Can only be seen or modified by the creator of the event.
-public type Event_source record {
+public type EventSource record {
     # Title of the source; for example a title of a web page or an email subject.
     string title?;
     # URL of the source pointing to a resource. The URL scheme must be HTTP or HTTPS.
@@ -637,7 +637,7 @@ public type Event record {
     # Creation time of the event (as a RFC3339 timestamp). Read-only.
     string created?;
     # The creator of the event. Read-only.
-    Event_creator creator?;
+    EventCreator creator?;
     # Description of the event. Can contain HTML. Optional.
     string description?;
     # Defines the end time of the event
@@ -653,7 +653,7 @@ public type Event record {
     # - "workingLocation" - A working location event.  Currently, only "default " and "workingLocation" events can be created using the API. Extended support for other event types will be made available in later releases.
     string eventType?;
     # Extended properties of the event.
-    Event_extendedProperties extendedProperties?;
+    EventExtendedProperties extendedProperties?;
     # Whether attendees other than the organizer can invite others to the event. Optional. The default is True.
     boolean guestsCanInviteOthers?;
     # Whether attendees other than the organizer can modify the event. Optional. The default is False.
@@ -681,7 +681,7 @@ public type Event record {
     # Whether this is a locked event copy where no changes can be made to the main event fields "summary", "description", "location", "start", "end" or "recurrence". The default is False. Read-Only.
     boolean locked?;
     # The organizer of the event. If the organizer is also an attendee, this is indicated with a separate entry in attendees with the organizer field set to True. To change the organizer, use the move operation. Read-only, except when importing an event.
-    Event_organizer organizer?;
+    EventOrganizer organizer?;
     # Indicates the date and time of the original occurrence of the event
     EventDateTime originalStartTime?;
     # If set to True, Event propagation is disabled. Note that it is not the same thing as Private event properties. Optional. Immutable. The default is False.
@@ -691,11 +691,11 @@ public type Event record {
     # For an instance of a recurring event, this is the id of the recurring event to which this instance belongs. Immutable.
     string recurringEventId?;
     # Information about the event's reminders for the authenticated user.
-    Event_reminders reminders?;
+    EventReminders reminders?;
     # Sequence number as per iCalendar.
     int:Signed32 sequence?;
     # Source from which the event was created. For example, a web page, an email message or any document identifiable by an URL with HTTP or HTTPS scheme. Can only be seen or modified by the creator of the event.
-    Event_source 'source?;
+    EventSource 'source?;
     # Defines the start date and time of the event
     EventDateTime 'start?;
     # Status of the event. Optional. Possible values are:  
@@ -753,11 +753,11 @@ public type AclRule record {
     # - "owner" - Provides ownership of the calendar. This role has all of the permissions of the writer role with the additional ability to see and manipulate ACLs.
     string role?;
     # The extent to which calendar access is granted by this ACL rule.
-    AclRule_scope scope?;
+    AclRuleScope scope?;
 };
 
 # The creator of the event. Read-only.
-public type Event_creator record {
+public type EventCreator record {
     # The creator's name, if available.
     string displayName?;
     # The creator's email address, if available.
@@ -769,7 +769,7 @@ public type Event_creator record {
 };
 
 # If present, specifies that the user is working from an office.
-public type EventWorkingLocationProperties_officeLocation record {
+public type EventWorkingLocationPropertiesOfficeLocation record {
     # An optional building identifier. This should reference a building ID in the organization's Resources database.
     string buildingId?;
     # An optional desk identifier.
