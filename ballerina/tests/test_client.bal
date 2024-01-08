@@ -501,8 +501,8 @@ function testPostCalendarAcl() returns error? {
     string id = check verifyAndReturnId(createdCal.id);
     AclRule res = check calendarClient->/calendars/[id]/acl.post(check acl.cloneWithType(AclRule));
     test:assertEquals(res.role, check acl.role);
-    AclRule_scope? scope = res.scope;
-    if scope is AclRule_scope {
+    AclRuleScope? scope = res.scope;
+    if scope is AclRuleScope {
         test:assertEquals(scope.value, check acl.scope.value);
         check calendarClient->/calendars/[id].delete();
     }
