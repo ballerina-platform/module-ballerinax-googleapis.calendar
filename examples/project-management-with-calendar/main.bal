@@ -24,7 +24,7 @@ configurable string refreshToken = os:getEnv("REFRESH_TOKEN");
 configurable string refreshUrl = os:getEnv("REFRESH_URL");
 
 public function main() returns error? {
-    gcalendar:Client calendarClient = check new ({
+    gcalendar:Client calendar = check new ({
         auth: {
             clientId,
             clientSecret,
@@ -33,11 +33,11 @@ public function main() returns error? {
         }
     });
 
-    gcalendar:Calendar projectCalendar = check calendarClient->/calendars.post({
+    gcalendar:Calendar projectCalendar = check calendar->/calendars.post({
         summary: "Software Project - Alex"
     });
 
-    gcalendar:Event codingSession = check calendarClient->/calendars/[<string>projectCalendar.id]/events.post({
+    gcalendar:Event codingSession = check calendar->/calendars/[<string>projectCalendar.id]/events.post({
         'start: {
             dateTime: "2023-10-20T10:00:00+00:00",
             timeZone: "UTC"
@@ -49,7 +49,7 @@ public function main() returns error? {
         summary: "Code Review"
     });
 
-    gcalendar:Event|error designReview = calendarClient->/calendars/[<string>projectCalendar.id]/events.post({
+    gcalendar:Event|error designReview = calendar->/calendars/[<string>projectCalendar.id]/events.post({
         'start: {
             dateTime: "2023-10-25T14:00:00+00:00",
             timeZone: "UTC"
@@ -65,7 +65,7 @@ public function main() returns error? {
         log:printError(designReview.message());
     }
 
-    gcalendar:Event|error updatedCodingSession = calendarClient->/calendars/[<string>projectCalendar.id]/events/[<string>codingSession.id].put({
+    gcalendar:Event|error updatedCodingSession = calendar->/calendars/[<string>projectCalendar.id]/events/[<string>codingSession.id].put({
         'start: {
             dateTime: "2023-10-20T10:00:00+00:00",
             timeZone: "UTC"
@@ -89,7 +89,7 @@ public function main() returns error? {
         log:printError(updatedCodingSession.message());
     }
 
-    gcalendar:Event|error milestoneEvent = calendarClient->/calendars/[<string>projectCalendar.id]/events.post({
+    gcalendar:Event|error milestoneEvent = calendar->/calendars/[<string>projectCalendar.id]/events.post({
         'start: {
             dateTime: "2023-11-15T09:00:00+00:00",
             timeZone: "UTC"
@@ -117,7 +117,7 @@ public function main() returns error? {
     if milestoneEvent is error {
         log:printError(milestoneEvent.message());
     }
-    gcalendar:Events|error projectEvents = calendarClient->/calendars/[<string>projectCalendar.id]/events.get();
+    gcalendar:Events|error projectEvents = calendar->/calendars/[<string>projectCalendar.id]/events.get();
 
     if projectEvents is error {
         log:printError(projectEvents.message());

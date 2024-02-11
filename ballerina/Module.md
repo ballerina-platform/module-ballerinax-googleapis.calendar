@@ -90,7 +90,7 @@ configurable string clientSecret = ?;
 configurable string refreshToken = ?;
 configurable string refreshUrl = ?;
 
-gcalendar:Client calendarClient = check new ({
+gcalendar:Client calendar = check new ({
    auth: {
       clientId,
       clientSecret,
@@ -106,16 +106,16 @@ You can now utilize the operations available within the connector.
 
 ```ballerina
 public function main() returns error? {
-    gcalendar:Client calendarClient = ...//
+    gcalendar:Client calendar = ...//
 
     // create a calendar
-    gcalendar:Calendar calendar = check calendarClient->/calendars.post({
+    gcalendar:Calendar calendar = check calendar->/calendars.post({
         summary: "Work Schedule"
     });
 
     // quick add new event
     string eventTitle = "Sample Event";
-    gcalendar:Event event = check calendarClient->/calendars/[calendarId]/events/quickAdd.post(eventTitle);
+    gcalendar:Event event = check calendar->/calendars/[calendarId]/events/quickAdd.post(eventTitle);
 }
 ```
 
