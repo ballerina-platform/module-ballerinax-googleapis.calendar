@@ -85,7 +85,7 @@ In order to use the Google Calendar connector, you need to first create the Cale
 
 ## Quickstart
 
-This sample demonstrates a scenario of creating a secondary calendar and adding a new event to it using the Ballerina Google Calendar connector.
+To use the Google Calendar connector in your Ballerina project, modify the `.bal` file as follows:
 
 ### Step 1: Import the package
 
