@@ -11,7 +11,7 @@
 [Google Calendar](https://developers.google.com/calendar) is a time-management and scheduling calendar service developed by Google. It lets users to organize their schedule and share events with others.This connector provides the capability to programmatically manage events and calendars.
 For more information about configuration and operations, go to the module.
 
-- [googleapis.gcalendar](calendar/Module.md) - Perform Google Calendar related operations programmatically
+- [googleapis.gcalendar](ballerina/Module.md) - Perform Google Calendar related operations programmatically
 
 ## Overview
 
