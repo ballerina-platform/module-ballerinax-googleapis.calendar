@@ -1,4 +1,4 @@
-# Work Schedule Management with Google Calendar API
+# Work schedule management with Google calendar API
 
 Sarah relies on the Google Calendar API to efficiently manage her work schedule. Her application interacts with the API for various tasks related to scheduling and organizing work-related events and meetings.
 

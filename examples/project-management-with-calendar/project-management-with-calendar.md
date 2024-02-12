@@ -1,4 +1,4 @@
-# Personal Project Management with Google Calendar API
+# Project management with Google calendar API
 
 Let's explore how Alex, a software developer, leverages the Google Calendar API in Ballerina for managing his personal project schedule and collaborating with team members.
 
