@@ -18,7 +18,7 @@ In order to use the Google Calendar connector, you need to first create the Cale
 
     ![GCP Console](https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-googleapis.calendar/main/ballerina/resources/gcp-console-project-view.png)
 
-### Step 2: Enable calendar API
+### Step 2: Enable Calendar API
 
 1. Navigate to the **Library** and enable the Calendar API.
 
