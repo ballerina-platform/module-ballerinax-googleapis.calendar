@@ -4,7 +4,7 @@ Sarah relies on the Google Calendar API to efficiently manage her work schedule.
 
 ## Step 1: Import connector
 
-Import the `ballerinax/googleapis.gcalendar` package.
+Import the `ballerinax/googleapis.gcalendar` module.
 
 ```ballerina
 import ballerinax/googleapis.gcalendar;

@@ -4,7 +4,7 @@ Let's explore how Alex, a software developer, leverages the Google Calendar API 
 
 ## Step 1: Import Google Calendar Connector
 
-Alex begins by importing the `ballerinax/googleapis.gcalendar` package.
+Alex begins by importing the `ballerinax/googleapis.gcalendar` module into his Ballerina project.
 
 ```ballerina
 import ballerinax/googleapis.gcalendar;

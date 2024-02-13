@@ -72,9 +72,9 @@ In order to use the Google Calendar connector, you need to first create the Cale
 
 To use the Google Calendar connector in your Ballerina project, modify the `.bal` file as follows:
 
-### Step 1: Import the package
+### Step 1: Import the module
 
-Import the `ballerinax/googleapis.gcalendar` package into your Ballerina project.
+Import the `ballerinax/googleapis.gcalendar` module.
 
 ```ballerina
 import ballerinax/googleapis.gcalendar;
