@@ -8,7 +8,7 @@ The Ballerina Google Calendar module supports [Google Calendar API V3](https://d
 
 To utilize the Calendar connector, you must have access to the Calendar REST API through a [Google Cloud Platform (GCP)](https://console.cloud.google.com/) account and a project under it. If you do not have a GCP account, you can sign up for one [here](https://cloud.google.com/).
 
-### Step 1: Create a Google Cloud platform project
+### Step 1: Create a Google Cloud Platform project
 
 In order to use the Google Calendar connector, you need to first create the Calendar credentials for the connector to interact with Calendar.
 
@@ -117,6 +117,12 @@ public function main() returns error? {
     string eventTitle = "Sample Event";
     gcalendar:Event event = check calendar->/calendars/[calendarId]/events/quickAdd.post(eventTitle);
 }
+```
+
+Use the following command to compile and run the Ballerina program.
+
+```ballerina
+bal run
 ```
 
 ## Examples

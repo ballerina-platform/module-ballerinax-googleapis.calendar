@@ -1,4 +1,12 @@
-# Introduction
+# Sanitations for OpenAPI specification
+
+_Owners_: @Nuvindu \
+_Reviewers_: @shafreenAnfar @ThisaruGuruge \
+_Created_: 2024/02/14 \
+_Updated_: 2024/02/14 \
+_Edition_: Swan Lake
+
+## Introduction
 
 The Ballerina Google Calendar connector facilitates integration with the [Google Calendar API V3](https://developers.google.com/calendar/api) through the generation of client code using the [OpenAPI specification](https://github.com/Nuvindu/module-ballerinax-googleapis.calendar/blob/main/docs/spec/openapi.yaml). To enhance usability, the following modifications have been applied to the original specification.
 
