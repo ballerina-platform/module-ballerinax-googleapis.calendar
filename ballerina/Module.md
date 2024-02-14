@@ -12,7 +12,7 @@ To utilize the Calendar connector, you must have access to the Calendar REST API
 
 In order to use the Google Calendar connector, you need to first create the Calendar credentials for the connector to interact with Calendar.
 
-1. Open the [Google Cloud Platform Console](https://console.cloud.google.com/).
+1. Open the [Google Cloud Platform console](https://console.cloud.google.com/).
 
 2. Click on the project drop-down menu and either select an existing project or create a new one for which you want to add an API key.
 
