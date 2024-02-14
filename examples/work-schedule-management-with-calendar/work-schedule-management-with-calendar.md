@@ -2,7 +2,7 @@
 
 Sarah relies on the Google Calendar API to efficiently manage her work schedule. Her application interacts with the API for various tasks related to scheduling and organizing work-related events and meetings.
 
-## Step 1: Import connector
+## Step 1: Import Google Calendar module
 
 Import the `ballerinax/googleapis.gcalendar` module.
 
@@ -29,7 +29,7 @@ gcalendar:Client calendar = check new(config);
 
 Now, the `gcalendar:Client` instance can be used for the following steps.
 
-### Creating a Work Calendar
+### Creating a work calendar
 
 To keep her work events organized, Sarah's application creates a dedicated calendar. It sets the calendar's title, ensuring clarity for work-related events.
 
@@ -39,7 +39,7 @@ gcalendar:Calendar calendarResult = check calendar->createCalendar({
 });
 ```
 
-### Scheduling Work Events
+### Scheduling work events
 
 Sarah's application empowers her to schedule work-related events, meetings, and deadlines using the Google Calendar API. It specifies the event's title, date, time, and time zone, ensuring all details are accurately captured.
 
@@ -57,7 +57,7 @@ gcalendar:Event event = check calendar->createEvent(<string>calendarResult.id, {
 });
 ```
 
-### Managing Invitations and Notifications
+### Managing invitations and notifications
 
 When Sarah schedules meetings, her application uses the Google Calendar API to invite attendees by email. It sends out invitations and notifications, ensuring that all participants receive the necessary information.
 
@@ -85,11 +85,11 @@ gcalendar:Event updatedEvent = check calendar->updateEvent(<string>calendarResul
 });
 ```
 
-### Setting Recurrence and Reminders
+### Setting recurrence and reminders
 
 Sarah's application allows her to schedule weekly team meetings as recurring events. It also sets reminders to ensure that all team members receive timely notifications before each meeting.
 
-### Updating and Deleting Events
+### Updating and deleting events
 
 In case there are changes to a meeting schedule or cancellations, Sarah's application leverages the API to update or delete events in her calendar. Attendees are automatically notified of any changes, ensuring everyone stays informed.
 
@@ -119,7 +119,7 @@ gcalendar:Event|error reminderEvent = calendar->updateEvent(<string>calendarResu
 });
 ```
 
-### Sharing with Team
+### Sharing with team
 
 To ensure efficient collaboration, Sarah shares her work calendar with her project team members. She assigns appropriate permissions, such as read-only or edit access, to make sure the team is aware of her schedule and can coordinate their activities.
 
@@ -133,7 +133,7 @@ gcalendar:AclRule acl = check calendar->createAclRule(<string>calendarResult.id,
 });
 ```
 
-### Access Control
+### Access control
 
 If necessary, Sarah can fine-tune access to her calendar using the API. For instance, she might restrict access to specific events or grant different permissions to different users.
 
