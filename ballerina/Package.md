@@ -121,7 +121,7 @@ public function main() returns error? {
 
 Use the following command to compile and run the Ballerina program.
 
-```ballerina
+```bash
 bal run
 ```
 
