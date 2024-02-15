@@ -1,6 +1,6 @@
 # Sanitations for OpenAPI specification
 
-_Owners_: @Nuvindu \
+_Authors_: @Nuvindu \
 _Reviewers_: @shafreenAnfar @ThisaruGuruge \
 _Created_: 2024/02/14 \
 _Updated_: 2024/02/14 \
