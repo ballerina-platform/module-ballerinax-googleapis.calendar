@@ -133,6 +133,8 @@ public function main() returns error? {
 }
 ```
 
+### Step 4: Run the Ballerina application
+
 Use the following command to compile and run the Ballerina program.
 
 ```ballerina

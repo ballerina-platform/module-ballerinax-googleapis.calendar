@@ -1,6 +1,6 @@
 # Work schedule management with Google Calendar API
 
-Sarah relies on the Google Calendar API to efficiently manage her work schedule. Her application interacts with the API for various tasks related to scheduling and organizing work-related events and meetings.
+This example demonstrates the use of the Google Calendar API in Ballerina to efficiently manage work schedules, interacting with various tasks related to scheduling and organizing work-related events and meetings.
 
 ## Step 1: Import Google Calendar module
 
@@ -12,7 +12,7 @@ import ballerinax/googleapis.gcalendar;
 
 ## Step 2: Create a new connector instance
 
-Create a `gcalendar:ConnectionConfig` with the OAuth2.0 tokens obtained and initialize the connector with it.
+Create a `gcalendar:ConnectionConfig` with the obtained OAuth 2.0 tokens, and initialize the connector with it.
 
 ```ballerina
 gcalendar:ConnectionConfig config = {
@@ -31,7 +31,7 @@ Now, the `gcalendar:Client` instance can be used for the following steps.
 
 ### Creating a work calendar
 
-To keep her work events organized, Sarah's application creates a dedicated calendar. It sets the calendar's title, ensuring clarity for work-related events.
+Create a dedicated calendar to organize work events.
 
 ```ballerina
 gcalendar:Calendar calendarResult = check calendar->createCalendar({
@@ -41,7 +41,7 @@ gcalendar:Calendar calendarResult = check calendar->createCalendar({
 
 ### Scheduling work events
 
-Sarah's application empowers her to schedule work-related events, meetings, and deadlines using the Google Calendar API. It specifies the event's title, date, time, and time zone, ensuring all details are accurately captured.
+Schedule work-related events, meetings, and deadlines by specifying the event's title, date, time, and time zone, as well as any other relevant details.
 
 ```ballerina
 gcalendar:Event event = check calendar->createEvent(<string>calendarResult.id, {
@@ -59,7 +59,7 @@ gcalendar:Event event = check calendar->createEvent(<string>calendarResult.id, {
 
 ### Managing invitations and notifications
 
-When Sarah schedules meetings, her application uses the Google Calendar API to invite attendees by email. It sends out invitations and notifications, ensuring that all participants receive the necessary information.
+Invite attendees by email, sending out invitations and notifications to ensure that all participants receive the necessary information.
 
 ```ballerina
 gcalendar:Event updatedEvent = check calendar->updateEvent(<string>calendarResult.id, <string>event.id, {
@@ -87,11 +87,11 @@ gcalendar:Event updatedEvent = check calendar->updateEvent(<string>calendarResul
 
 ### Setting recurrence and reminders
 
-Sarah's application allows her to schedule weekly team meetings as recurring events. It also sets reminders to ensure that all team members receive timely notifications before each meeting.
+Schdule weekly team meetings as recurring events, setting reminders to ensure all team members receive timely notifications before each meeting.
 
 ### Updating and deleting events
 
-In case there are changes to a meeting schedule or cancellations, Sarah's application leverages the API to update or delete events in her calendar. Attendees are automatically notified of any changes, ensuring everyone stays informed.
+Modify or delete events in the calendar in case of changes to a meeting schedule or cancellations. Attendees are automatically notified of any modifications, ensuring everyone stays informed.
 
 ```ballerina
 gcalendar:Event|error reminderEvent = calendar->updateEvent(<string>calendarResult.id, <string>updatedEvent.id, {
@@ -121,7 +121,7 @@ gcalendar:Event|error reminderEvent = calendar->updateEvent(<string>calendarResu
 
 ### Sharing with team
 
-To ensure efficient collaboration, Sarah shares her work calendar with her project team members. She assigns appropriate permissions, such as read-only or edit access, to make sure the team is aware of her schedule and can coordinate their activities.
+The work calendar can be shared among project team members to facilitate efficient collaboration. Permissions, such as read-only or edit access, can be assigned to ensure the team is aware of the work schedule and can coordinate their activities.
 
 ```ballerina
 gcalendar:AclRule acl = check calendar->createAclRule(<string>calendarResult.id, {
@@ -135,7 +135,7 @@ gcalendar:AclRule acl = check calendar->createAclRule(<string>calendarResult.id,
 
 ### Access control
 
-If necessary, Sarah can fine-tune access to her calendar using the API. For instance, she might restrict access to specific events or grant different permissions to different users.
+Limit access to specific events or assign different permissions to various users.
 
 ```ballerina
 gcalendar:AclRule|error response = calendar->updateAclRule(<string>calendarResult.id, <string>acl.id, {
