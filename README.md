@@ -2,7 +2,6 @@
 
 [![Build](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/actions/workflows/ci.yml/badge.svg)](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/actions/workflows/ci.yml)
 [![Trivy](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/actions/workflows/trivy-scan.yml/badge.svg)](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/actions/workflows/trivy-scan.yml)
-[![codecov](https://codecov.io/gh/ballerina-platform/module-ballerinax-googleapis.calendar/branch/main/graph/badge.svg)](https://codecov.io/gh/ballerina-platform/module-ballerinax-googleapis.calendar)
 [![GraalVM Check](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/actions/workflows/build-with-bal-test-graalvm.yml/badge.svg)](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/actions/workflows/build-with-bal-test-graalvm.yml)
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/ballerina-platform/module-ballerinax-googleapis.calendar.svg)](https://github.com/ballerina-platform/module-ballerinax-googleapis.calendar/commits/main)
 [![GitHub Issues](https://img.shields.io/github/issues/ballerina-platform/ballerina-library/module/googleapis.calendar.svg?label=Open%20Issues)](https://github.com/ballerina-platform/ballerina-library/labels/module%2Fgoogleapis.calendar)
@@ -19,15 +18,15 @@ The Google Calendar Connector provides the capability to manage events and calen
 
 This module supports [Google Calendar API V3](https://developers.google.com/calendar/api).
 
-## Setup Guide
+## Setup guide
 
 To utilize the Calendar connector, you must have access to the Calendar REST API through a [Google Cloud Platform (GCP)](https://console.cloud.google.com/) account and a project under it. If you do not have a GCP account, you can sign up for one [here](https://cloud.google.com/).
 
-### Step 1: Create a Google Cloud platform project
+### Step 1: Create a Google Cloud Platform project
 
 In order to use the Google Calendar connector, you need to first create the Calendar credentials for the connector to interact with Calendar.
 
-1. Open the [Google Cloud Platform Console](https://console.cloud.google.com/).
+1. Open the [Google Cloud Platform console](https://console.cloud.google.com/).
 
 2. Click on the project drop-down menu and either select an existing project or create a new one for which you want to add an API key.
 
@@ -132,6 +131,14 @@ public function main() returns error? {
    string eventTitle = "Sample Event";
    gcalendar:Event event = check calendar->/calendars/[calendarId]/events/quickAdd.post(eventTitle);
 }
+```
+
+### Step 4: Run the Ballerina application
+
+Use the following command to compile and run the Ballerina program.
+
+```bash
+bal run
 ```
 
 ## Examples

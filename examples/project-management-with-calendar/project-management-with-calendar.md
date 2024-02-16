@@ -1,18 +1,18 @@
 # Project management with Google Calendar API
 
-Let's explore how Alex, a software developer, leverages the Google Calendar API in Ballerina for managing his personal project schedule and collaborating with team members.
+This example demonstrates the use of the Google Calendar API in Ballerina for managing a personal project schedule and collaborating with team members.
 
-## Step 1: Import Google Calendar Connector
+## Step 1: Import Google Calendar module
 
-Alex begins by importing the `ballerinax/googleapis.gcalendar` module into his Ballerina project.
+Import the `ballerinax/googleapis.gcalendar` module.
 
 ```ballerina
 import ballerinax/googleapis.gcalendar;
 ```
 
-## Step 2: Create a Connector Instance
+## Step 2: Create a connector instance
 
-Next, Alex creates a `gcalendar:ConnectionConfig` with his OAuth2.0 tokens and initializes the connector.
+Next, create a `gcalendar:ConnectionConfig` with OAuth2.0 tokens and initialize the connector.
 
 ```ballerina
 gcalendar:ConnectionConfig config = {
@@ -27,9 +27,11 @@ gcalendar:ConnectionConfig config = {
 gcalendar:Client calendar = check new(config);
 ```
 
-## Step 3: Create a Project Calendar
+Now, the `gcalendar:Client` instance can be used for the following steps.
 
-To keep his project events organized, Alex's application creates a dedicated calendar with a descriptive title.
+## Step 3: Create a project calendar
+
+To keep project events organized, create a dedicated calendar with a descriptive title.
 
 ```ballerina
 gcalendar:Calendar projectCalendar = check calendar->createCalendar({
@@ -37,9 +39,9 @@ gcalendar:Calendar projectCalendar = check calendar->createCalendar({
 });
 ```
 
-## Step 4: Schedule Project Tasks
+## Step 4: Schedule project tasks
 
-Alex schedules various project-related tasks using the Google Calendar API. This includes coding sessions, design reviews, and testing phases.
+The following steps are to schedule various project-related tasks using the Google Calendar API.
 
 ```ballerina
 gcalendar:Event codingSession = check calendar->createEvent(<string>projectCalendar.id, {
@@ -67,9 +69,9 @@ gcalendar:Event designReview = check calendar->createEvent(<string>projectCalend
 });
 ```
 
-## Step 5: Collaborate with Team
+## Step 5: Collaborate with team
 
-Alex invites team members to project events by utilizing the Google Calendar API. This ensures that everyone involved is aware of and aligned on project milestones.
+Invite team members to project events ensures that everyone involved is aware of and aligned on project milestones.
 
 ```ballerina
 gcalendar:Event updatedCodingSession = check calendar->updateEvent(<string>projectCalendar.id, <string>codingSession.id, {
@@ -93,9 +95,9 @@ gcalendar:Event updatedCodingSession = check calendar->updateEvent(<string>proje
 });
 ```
 
-## Step 6: Set Project Milestone Reminders
+## Step 6: Set project milestone reminders
 
-To stay on top of project deadlines, Alex sets reminders for important milestones using the Google Calendar API.
+Set reminders for important milestones.
 
 ```ballerina
 gcalendar:Event milestoneEvent = check calendar->createEvent(<string>projectCalendar.id, {
@@ -124,9 +126,9 @@ gcalendar:Event milestoneEvent = check calendar->createEvent(<string>projectCale
 });
 ```
 
-## Step 7: Monitor Project Progress
+## Step 7: Monitor project progress
 
-Alex regularly retrieves and analyzes project events using the Google Calendar API to monitor progress and make data-driven decisions.
+Retrieve and analyze project events to monitor progress and make data-driven decisions.
 
 ```ballerina
 gcalendar:Events projectEvents = check calendar->getEvents(<string>projectCalendar.id, {
