@@ -34,7 +34,7 @@ Now, the `gcalendar:Client` instance can be used for the following steps.
 Create a dedicated calendar to organize work events.
 
 ```ballerina
-gcalendar:Calendar calendarResult = check calendar->createCalendar({
+gcalendar:Calendar calendarResult = check calendar->/calendars.post({
     summary: "Work Schedule"
 });
 ```
@@ -44,7 +44,7 @@ gcalendar:Calendar calendarResult = check calendar->createCalendar({
 Schedule work-related events, meetings, and deadlines by specifying the event's title, date, time, and time zone, as well as any other relevant details.
 
 ```ballerina
-gcalendar:Event event = check calendar->createEvent(<string>calendarResult.id, {
+gcalendar:Event event = check calendar->/calendars/[calendarId]/events.post({
     'start: {
         dateTime: "2023-10-19T09:00:00+05:30",
         timeZone: "Asia/Colombo"
@@ -62,7 +62,7 @@ gcalendar:Event event = check calendar->createEvent(<string>calendarResult.id, {
 Invite attendees by email, sending out invitations and notifications to ensure that all participants receive the necessary information.
 
 ```ballerina
-gcalendar:Event updatedEvent = check calendar->updateEvent(<string>calendarResult.id, <string>event.id, {
+gcalendar:Event updatedEvent = check calendar->/calendars/[calendarId]/events/[eventId].put({
     'start: {
         dateTime: "2023-10-19T09:00:00+05:30",
         timeZone: "Asia/Colombo"
@@ -75,11 +75,11 @@ gcalendar:Event updatedEvent = check calendar->updateEvent(<string>calendarResul
     location: "Conference Room",
     description: "Weekly team meeting to discuss project status.",
     attendees: [
-        { 
-            "email": "team-member1@gmail.com" 
+        {
+            "email": "team-member1@gmail.com"
         },
-        { 
-            "email": "team-member2@gmail.com" 
+        {
+            "email": "team-member2@gmail.com"
         }
     ]
 });
@@ -89,30 +89,26 @@ gcalendar:Event updatedEvent = check calendar->updateEvent(<string>calendarResul
 
 Schdule weekly team meetings as recurring events, setting reminders to ensure all team members receive timely notifications before each meeting.
 
-### Updating and deleting events
-
-Modify or delete events in the calendar in case of changes to a meeting schedule or cancellations. Attendees are automatically notified of any modifications, ensuring everyone stays informed.
-
 ```ballerina
-gcalendar:Event|error reminderEvent = calendar->updateEvent(<string>calendarResult.id, <string>updatedEvent.id, {
+gcalendar:Event|error reminderEvent = calendar->/calendars/[calendarId]/events/[updatedEventId].put({
     'start: {
-        dateTime: "2023-10-19T09:00:00+05:30",
+        dateTime: "2023-10-19T03:00:00+05:30",
         timeZone: "Asia/Colombo"
     },
     end: {
-        dateTime: "2023-10-19T09:30:00+05:30",
+        dateTime: "2023-10-19T03:30:00+05:30",
         timeZone: "Asia/Colombo"
     },
     reminders: {
         useDefault: false,
         overrides: [
-            { 
-                method: "popup", 
-                minutes: 15 
+            {
+                method: "popup",
+                minutes: 15
             },
-            { 
-                method: "email", 
-                minutes: 30 
+            {
+                method: "email",
+                minutes: 30
             }
         ]
     }
@@ -124,10 +120,10 @@ gcalendar:Event|error reminderEvent = calendar->updateEvent(<string>calendarResu
 The work calendar can be shared among project team members to facilitate efficient collaboration. Permissions, such as read-only or edit access, can be assigned to ensure the team is aware of the work schedule and can coordinate their activities.
 
 ```ballerina
-gcalendar:AclRule acl = check calendar->createAclRule(<string>calendarResult.id, {
+gcalendar:AclRule acl = check calendar->/calendars/[calendarId]/acl.post({
     scope: {
         'type: "user",
-        value: "team-member@gmail.com"
+        value: "team_member@gmail.com"
     },
     role: "reader"
 });
@@ -138,10 +134,10 @@ gcalendar:AclRule acl = check calendar->createAclRule(<string>calendarResult.id,
 Limit access to specific events or assign different permissions to various users.
 
 ```ballerina
-gcalendar:AclRule|error response = calendar->updateAclRule(<string>calendarResult.id, <string>acl.id, {
+gcalendar:AclRule|error response = calendar->/calendars/[calendarId]/acl/[aclId].put({
     scope: {
         'type: "user",
-        value: "colleague@gmail.com"
+        value: "team_member@gmail.com"
     },
     role: "writer"
 });
