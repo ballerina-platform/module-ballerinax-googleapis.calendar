@@ -158,7 +158,7 @@ The **Issues** and **Projects** tabs are disabled for this repository as this is
 
 This repository only contains the source code for the package.
 
-## Building from the Source
+## Building from the source
 
 ### Prerequisites
 
