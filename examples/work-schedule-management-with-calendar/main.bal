@@ -37,9 +37,10 @@ public function main() returns error? {
     gcalendar:Calendar calendarResult = check calendar->/calendars.post({
         summary: "Work Schedule"
     });
+    string calendarId = <string>calendarResult.id;
 
     // create new event
-    gcalendar:Event event = check calendar->/calendars/[<string>calendarResult.id]/events.post({
+    gcalendar:Event event = check calendar->/calendars/[calendarId]/events.post({
         'start: {
             dateTime: "2023-10-19T09:00:00+05:30",
             timeZone: "Asia/Colombo"
@@ -50,9 +51,10 @@ public function main() returns error? {
         },
         summary: "Project Kickoff Meeting"
     });
+    string eventId = <string>event.id;
 
     // update event to invite attendees by email
-    gcalendar:Event updatedEvent = check calendar->/calendars/[<string>calendarResult.id]/events/[<string>event.id].put({
+    gcalendar:Event updatedEvent = check calendar->/calendars/[calendarId]/events/[eventId].put({
         'start: {
             dateTime: "2023-10-19T09:00:00+05:30",
             timeZone: "Asia/Colombo"
@@ -73,9 +75,10 @@ public function main() returns error? {
             }
         ]
     });
+    string updatedEventId = <string>updatedEvent.id;
 
     // update event to add reminders to send timely notifications to attendees before the meeting
-    gcalendar:Event|error reminderEvent = calendar->/calendars/[<string>calendarResult.id]/events/[<string>updatedEvent.id].put({
+    gcalendar:Event|gcalendar:Error reminderEvent = calendar->/calendars/[calendarId]/events/[updatedEventId].put({
         'start: {
             dateTime: "2023-10-19T03:00:00+05:30",
             timeZone: "Asia/Colombo"
@@ -93,28 +96,29 @@ public function main() returns error? {
         }
     });
 
-    if reminderEvent is error {
+    if reminderEvent is gcalendar:Error {
         log:printError(reminderEvent.message());
     }
 
     // create access control rule and assign it to a team member
-    gcalendar:AclRule acl = check calendar->/calendars/[<string>calendarResult.id]/acl.post({
+    gcalendar:AclRule acl = check calendar->/calendars/[calendarId]/acl.post({
         scope: {
             'type: "user",
             value: "team_member@gmail.com"
         },
         role: "reader"
     });
+    string aclId = <string>acl.id;
 
     // change access control rule
-    gcalendar:AclRule|error response = calendar->/calendars/[<string>calendarResult.id]/acl/[<string>acl.id].put({
+    gcalendar:AclRule|gcalendar:Error response = calendar->/calendars/[calendarId]/acl/[aclId].put({
         scope: {
             'type: "user",
             value: "team_member@gmail.com"
         },
         role: "writer"
     });
-    if response is error {
+    if response is gcalendar:Error {
         log:printError(response.message());
     }
 }

@@ -54,7 +54,7 @@ In order to use the Google Calendar connector, you need to first create the Cale
 
 ### Step 5: Get the access and refresh tokens
 
-**Note**: It is recommended to use the OAuth 2.0 playground to obtain the tokens.
+**Note**: It is recommended to use the [OAuth 2.0 playground](https://developers.google.com/oauthplayground) to obtain the tokens.
 
 1. Configure the OAuth playground with the OAuth client ID and client secret.
 
