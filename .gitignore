@@ -1,13 +1,13 @@
 # Compiled class file
 *.class
 *.balx
+
 # Log file
 *.log
 
 #Config file
 Config.toml
-# Modules
-/modules/googleapis.gcalendar
+**/Config.toml
 
 # BlueJ files
 *.ctxt
@@ -26,12 +26,14 @@ Config.toml
 *.zip
 *.tar.gz
 *.rar
+*.deb
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
 # Ignore everything in this directory
 target
+.idea
 .classpath
 .settings
 .project
@@ -54,6 +56,13 @@ target/
 
 # Ignore Gradle build output directory
 build
+generated
 
 # Ignore Docker env file
 docker.env
+
+# Ignore environment files
+*.env
+
+# Ignore all Dependencies.toml files in the examples directory
+examples/**/Dependencies.toml
