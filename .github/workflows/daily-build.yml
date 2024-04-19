@@ -12,3 +12,5 @@ jobs:
     secrets: inherit
     with:
       repo-name: module-ballerinax-googleapis.calendar
+      additional-build-flags: "-x :googleapis.gcalendar-examples:build"
+      additional-test-flags: "-x :googleapis.gcalendar-examples:build"
