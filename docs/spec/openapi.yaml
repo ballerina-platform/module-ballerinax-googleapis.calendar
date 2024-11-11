@@ -60,7 +60,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Calendar"
-          description: A `gcalendar:Calendar` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:Calendar` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -81,7 +81,7 @@ paths:
             type: string
       responses:
         "200":
-          description: If successful `()`, otherwise a `gcalendar:Error`
+          description: If successful `()`, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -105,7 +105,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Calendar"
-          description: A `gcalendar:Calendar` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:Calendar` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -146,7 +146,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Calendar"
-          description: A `gcalendar:Calendar` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:Calendar` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -176,7 +176,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Calendar"
-          description: A `gcalendar:Calendar` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:Calendar` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -226,7 +226,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Acl"
-          description: A `gcalendar:Acl` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:Acl` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -268,7 +268,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AclRule"
-          description: A `gcalendar:AclRule` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:AclRule` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -295,7 +295,7 @@ paths:
             type: string
       responses:
         "200":
-          description: If successful `()`, otherwise a `gcalendar:Error`
+          description: If successful `()`, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -325,7 +325,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AclRule"
-          description: A `gcalendar:AclRule` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:AclRule` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -377,7 +377,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AclRule"
-          description: A `gcalendar:AclRule` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:AclRule` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -418,7 +418,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AclRule"
-          description: A `gcalendar:AclRule` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:AclRule` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -446,7 +446,7 @@ paths:
             type: string
       responses:
         "200":
-          description: If successful `()`, otherwise a `gcalendar:Error`
+          description: If successful `()`, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -596,7 +596,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Events"
-          description: A `gcalendar:Events` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:Events` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -672,7 +672,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Event"
-          description: A `gcalendar:Event` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:Event` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -726,7 +726,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Event"
-          description: A `gcalendar:Event` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:Event` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -777,7 +777,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Event"
-          description: A `gcalendar:Event` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:Event` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -817,7 +817,7 @@ paths:
             type: string
       responses:
         "200":
-          description: if successful `()`, otherwise a `gcalendar:Error`
+          description: if successful `()`, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -862,7 +862,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Event"
-          description: A `gcalendar:Event` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:Event` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -944,7 +944,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Event"
-          description: A `gcalendar:Event` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:Event` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -1011,7 +1011,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Event"
-          description: A `gcalendar:Event` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:Event` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -1088,7 +1088,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Events"
-          description: A `gcalendar:Events` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:Events` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -1162,7 +1162,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Event"
-          description: A `gcalendar:Event` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:Event` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -1184,7 +1184,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Colors"
-          description: A `gcalendar:Colors` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:Colors` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -1228,7 +1228,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/FreeBusyResponse"
-          description: A `gcalendar:FreeBusyResponse` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:FreeBusyResponse` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -1292,7 +1292,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CalendarList"
-          description: A `gcalendar:CalendarList` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:CalendarList` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -1333,7 +1333,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CalendarListEntry"
-          description: A `gcalendar:CalendarListEntry` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:CalendarListEntry` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -1354,7 +1354,7 @@ paths:
             type: string
       responses:
         "200":
-          description: If successful `()`, otherwise a `gcalendar:Error`
+          description: If successful `()`, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -1378,7 +1378,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CalendarListEntry"
-          description: A `gcalendar:CalendarListEntry` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:CalendarListEntry` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -1425,7 +1425,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CalendarListEntry"
-          description: A `gcalendar:CalendarListEntry` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:CalendarListEntry` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -1460,7 +1460,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CalendarListEntry"
-          description: A `gcalendar:CalendarListEntry` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:CalendarListEntry` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
