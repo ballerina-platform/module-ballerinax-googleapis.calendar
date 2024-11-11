@@ -79,6 +79,7 @@ public type CalendarCalendarsClearQueries record {
 public type ConferenceSolution record {
     # The user-visible icon for this solution.
     string iconUri?;
+    # The key which can uniquely identify the conference solution for this event.
     ConferenceSolutionKey 'key?;
     # The user-visible name of this solution. Not localized.
     string name?;
@@ -225,10 +226,52 @@ public type Event_organizer record {
     boolean self = false;
 };
 
-# Identifies the target calendar or group for which free/busy information is requested.
-public type FreeBusyRequestItem record {
-    # The identifier of a calendar or a group.
-    string id?;
+# Represents the Queries record for the operation: delete.calendar
+public type DeleteCalendarQueries record {
+    # An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
+    string quotaUser?;
+    # Returns response with indentations and line breaks.
+    boolean prettyPrint?;
+    # OAuth 2.0 token for the current user.
+    string oauth_token?;
+    # Data format for the response.
+    "json" alt?;
+    # Selector specifying which fields to include in a partial response.
+    string fields?;
+    # API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    string 'key?;
+};
+
+# Represents the Queries record for the operation: calendar.calendars.update
+public type CalendarCalendarsUpdateQueries record {
+    # An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
+    string quotaUser?;
+    # Returns response with indentations and line breaks.
+    boolean prettyPrint?;
+    # OAuth 2.0 token for the current user.
+    string oauth_token?;
+    # Data format for the response.
+    "json" alt?;
+    # Selector specifying which fields to include in a partial response.
+    string fields?;
+    # API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    string 'key?;
+};
+
+# Represents the Queries record for the operation: create.calendar
+public type CreateCalendarQueries record {
+    # An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
+    string quotaUser?;
+    # Returns response with indentations and line breaks.
+    boolean prettyPrint?;
+    # OAuth 2.0 token for the current user.
+    string oauth_token?;
+    # Data format for the response.
+    "json" alt?;
+    # Selector specifying which fields to include in a partial response.
+    string fields?;
+    # API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
+    string 'key?;
 };
 
 # Represents the Queries record for the operation: calendar.events.quickAdd
@@ -462,7 +505,9 @@ public type ConferenceData record {
     # - hangoutsMeet: ID is the 10-letter meeting code, for example aaa-bbbb-ccc.
     # - addOn: ID is defined by the third-party provider.  Optional.
     string conferenceId?;
+    # Information about the conference solution, including its name and user-visible icon. Optional.
     ConferenceSolution conferenceSolution?;
+    # Specifies a request to create a conference. Optional.
     CreateConferenceRequest createRequest?;
     # Information about individual conference entry points, such as URLs or phone numbers.
     # All of them must belong to the same conference.
@@ -470,6 +515,7 @@ public type ConferenceData record {
     EntryPoint[] entryPoints?;
     # Additional notes (such as instructions from the domain administrator, legal notices) to display to the user. Can contain HTML. The maximum length is 2048 characters. Optional.
     string notes?;
+    # Includes parameters related to the conference
     ConferenceParameters parameters?;
     # The signature of the conference data.
     # Generated on server side.
@@ -514,10 +560,12 @@ public type CalendarAclDeleteQueries record {
 
 # Represents the request to create a conference within a calendar event.
 public type CreateConferenceRequest record {
+    # Specifies the key identifying the conference solution for this request.
     ConferenceSolutionKey conferenceSolutionKey?;
     # The client-generated unique ID for this request.
     # Clients should regenerate this ID for every new request. If an ID provided is the same as for the previous request, the request is ignored.
     string requestId?;
+    # Represents the current status of the conference create request
     ConferenceRequestStatus status?;
 };
 
@@ -734,9 +782,11 @@ public type CalendarCalendarlistGetQueries record {
 
 # Conveys information about the working location of a user during an event.
 public type EventWorkingLocationProperties record {
+    # If present, specifies that the user is working from a custom location.
     EventWorkingLocationProperties_customLocation customLocation?;
     # If present, specifies that the user is working at home.
     anydata homeOffice?;
+    # If present, specifies that the user is working from an office.
     EventWorkingLocationProperties_officeLocation officeLocation?;
     # Type of the working location. Possible values are:  
     # - "homeOffice" - The user is working at home. 
@@ -824,6 +874,7 @@ public type CalendarListEntry record {
     string backgroundColor?;
     # The color of the calendar. This is an ID referring to an entry in the calendar section of the colors definition (see the colors endpoint). This property is superseded by the backgroundColor and foregroundColor properties and can be ignored when using these properties. Optional.
     string colorId?;
+    # Properties related to conferences associated with the calendar
     ConferenceProperties conferenceProperties?;
     # The default reminders that the authenticated user has for this calendar.
     EventReminder[] defaultReminders?;
@@ -843,6 +894,7 @@ public type CalendarListEntry record {
     string kind = "calendar#calendarListEntry";
     # Geographic location of the calendar as free-form text. Optional. Read-only.
     string location?;
+    # The notifications that the authenticated user is receiving for this calendar.
     CalendarListEntry_notificationSettings notificationSettings?;
     # Whether the calendar is the primary calendar of the authenticated user. Read-only. Optional. The default is False.
     boolean primary = false;
@@ -1232,6 +1284,7 @@ public type ConferenceSolutionKey record {
 
 # This type is used for adding parameters that control the behavior of a conference.
 public type ConferenceParametersAddOnParameters record {
+    # Additional parameters controlling the behavior of the conference add-on.
     record {|string...;|} parameters?;
 };
 
@@ -1267,6 +1320,7 @@ public type Event record {
     ConferenceData conferenceData?;
     # Creation time of the event (as a RFC3339 timestamp). Read-only.
     string created?;
+    # The creator of the event. Read-only.
     Event_creator creator?;
     # Description of the event. Can contain HTML. Optional.
     string description?;
@@ -1281,6 +1335,7 @@ public type Event record {
     # - "focusTime" - A focus-time event. 
     # - "workingLocation" - A working location event.  Currently, only "default " and "workingLocation" events can be created using the API. Extended support for other event types will be made available in later releases.
     string eventType = "default";
+    # Extended properties of the event.
     Event_extendedProperties extendedProperties?;
     # Whether attendees other than the organizer can invite others to the event. Optional. The default is True.
     boolean guestsCanInviteOthers = true;
@@ -1308,7 +1363,9 @@ public type Event record {
     string location?;
     # Whether this is a locked event copy where no changes can be made to the main event fields "summary", "description", "location", "start", "end" or "recurrence". The default is False. Read-Only.
     boolean locked = false;
+    # The organizer of the event. If the organizer is also an attendee, this is indicated with a separate entry in attendees with the organizer field set to True. To change the organizer, use the move operation. Read-only, except when importing an event.
     Event_organizer organizer?;
+    # Indicates the date and time of the original occurrence of the event
     EventDateTime originalStartTime?;
     # If set to True, Event propagation is disabled. Note that it is not the same thing as Private event properties. Optional. Immutable. The default is False.
     boolean privateCopy = false;
@@ -1316,10 +1373,13 @@ public type Event record {
     string[] recurrence?;
     # For an instance of a recurring event, this is the id of the recurring event to which this instance belongs. Immutable.
     string recurringEventId?;
+    # Information about the event's reminders for the authenticated user.
     Event_reminders reminders?;
     # Sequence number as per iCalendar.
     int:Signed32 sequence?;
+    # Source from which the event was created. For example, a web page, an email message or any document identifiable by an URL with HTTP or HTTPS scheme. Can only be seen or modified by the creator of the event.
     Event_source 'source?;
+    # Defines the start date and time of the event
     EventDateTime 'start?;
     # Status of the event. Optional. Possible values are:  
     # - "confirmed" - The event is confirmed. This is the default status. 
@@ -1346,6 +1406,7 @@ public type Event record {
     # - "private" - The event is private and only event attendees may view event details. 
     # - "confidential" - The event is private. This value is provided for compatibility reasons.
     string visibility = "default";
+    # Working location event data.
     EventWorkingLocationProperties workingLocationProperties?;
 };
 
@@ -1364,6 +1425,7 @@ public type AclRule record {
     # - "writer" - Provides read and write access to the calendar. Private events will appear to users with writer access, and event details will be visible. 
     # - "owner" - Provides ownership of the calendar. This role has all of the permissions of the writer role with the additional ability to see and manipulate ACLs.
     string role?;
+    # The extent to which calendar access is granted by this ACL rule.
     AclRule_scope scope?;
 };
 
