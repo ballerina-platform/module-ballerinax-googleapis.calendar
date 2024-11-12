@@ -2,4 +2,4 @@
 org = "ballerina"
 name = "work_schedule"
 version = "0.1.0"
-distribution = "2201.8.4"
+distribution = "2201.10.0"

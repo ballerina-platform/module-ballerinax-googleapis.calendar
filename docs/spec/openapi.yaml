@@ -60,7 +60,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Calendar"
-          description: A `gcalendar:Calendar` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:Calendar` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -81,7 +81,7 @@ paths:
             type: string
       responses:
         "200":
-          description: If successful `()`, otherwise a `gcalendar:Error`
+          description: If successful `()`, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -105,7 +105,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Calendar"
-          description: A `gcalendar:Calendar` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:Calendar` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -146,7 +146,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Calendar"
-          description: A `gcalendar:Calendar` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:Calendar` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -176,7 +176,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Calendar"
-          description: A `gcalendar:Calendar` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:Calendar` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -226,7 +226,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Acl"
-          description: A `gcalendar:Acl` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:Acl` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -268,7 +268,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AclRule"
-          description: A `gcalendar:AclRule` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:AclRule` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -295,7 +295,7 @@ paths:
             type: string
       responses:
         "200":
-          description: If successful `()`, otherwise a `gcalendar:Error`
+          description: If successful `()`, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -325,7 +325,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AclRule"
-          description: A `gcalendar:AclRule` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:AclRule` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -377,7 +377,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AclRule"
-          description: A `gcalendar:AclRule` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:AclRule` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -418,7 +418,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AclRule"
-          description: A `gcalendar:AclRule` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:AclRule` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -446,7 +446,7 @@ paths:
             type: string
       responses:
         "200":
-          description: If successful `()`, otherwise a `gcalendar:Error`
+          description: If successful `()`, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -596,7 +596,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Events"
-          description: A `gcalendar:Events` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:Events` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -672,7 +672,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Event"
-          description: A `gcalendar:Event` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:Event` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -726,7 +726,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Event"
-          description: A `gcalendar:Event` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:Event` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -777,7 +777,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Event"
-          description: A `gcalendar:Event` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:Event` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -817,7 +817,7 @@ paths:
             type: string
       responses:
         "200":
-          description: if successful `()`, otherwise a `gcalendar:Error`
+          description: if successful `()`, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -862,7 +862,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Event"
-          description: A `gcalendar:Event` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:Event` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -944,7 +944,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Event"
-          description: A `gcalendar:Event` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:Event` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -1011,7 +1011,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Event"
-          description: A `gcalendar:Event` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:Event` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -1088,7 +1088,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Events"
-          description: A `gcalendar:Events` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:Events` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -1162,7 +1162,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Event"
-          description: A `gcalendar:Event` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:Event` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -1184,7 +1184,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Colors"
-          description: A `gcalendar:Colors` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:Colors` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -1228,7 +1228,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/FreeBusyResponse"
-          description: A `gcalendar:FreeBusyResponse` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:FreeBusyResponse` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -1292,7 +1292,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CalendarList"
-          description: A `gcalendar:CalendarList` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:CalendarList` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -1333,7 +1333,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CalendarListEntry"
-          description: A `gcalendar:CalendarListEntry` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:CalendarListEntry` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -1354,7 +1354,7 @@ paths:
             type: string
       responses:
         "200":
-          description: If successful `()`, otherwise a `gcalendar:Error`
+          description: If successful `()`, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -1378,7 +1378,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CalendarListEntry"
-          description: A `gcalendar:CalendarListEntry` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:CalendarListEntry` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -1425,7 +1425,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CalendarListEntry"
-          description: A `gcalendar:CalendarListEntry` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:CalendarListEntry` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -1460,7 +1460,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CalendarListEntry"
-          description: A `gcalendar:CalendarListEntry` if successful, otherwise a `gcalendar:Error`
+          description: A `gcalendar:CalendarListEntry` if successful, otherwise an error
       security:
         - Oauth2:
             - https://www.googleapis.com/auth/calendar
@@ -1529,6 +1529,7 @@ components:
         nextSyncToken:
           description: Token used at a later point in time to retrieve only the entries that have changed since this result was returned. Omitted if further results are available, in which case nextPageToken is provided.
           type: string
+      description: Manages access control and permissions for calendars and events.
       type: object
     AclRule:
       properties:
@@ -1566,6 +1567,7 @@ components:
               description: The email address of a user or group, or the name of a domain, depending on the scope type. Omitted for type "default".
               type: string
           type: object
+      description: Defines access control rules for a calendar
       type: object
     Calendar:
       properties:
@@ -1594,6 +1596,7 @@ components:
         timeZone:
           description: The time zone of the calendar. (Formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich".) Optional.
           type: string
+      description: Defines and manages individual calendars.
       type: object
     CalendarList:
       properties:
@@ -1615,6 +1618,7 @@ components:
         nextSyncToken:
           description: Token used at a later point in time to retrieve only the entries that have changed since this result was returned. Omitted if further results are available, in which case nextPageToken is provided.
           type: string
+      description: Represents list of calendars associated with the user's account.
       type: object
     CalendarListEntry:
       properties:
@@ -1693,6 +1697,7 @@ components:
         timeZone:
           description: The time zone of the calendar. Optional. Read-only.
           type: string
+      description: Represent calendar properties which allow users to manage and interact with their calendars effectively.
       type: object
     CalendarNotification:
       properties:
@@ -1712,6 +1717,7 @@ components:
             - "agenda" - An agenda with the events of the day (sent out in the morning).  
             Required when adding a notification.
           type: string
+      description: Manages notification preferences of the calendars.
       type: object
     ColorDefinition:
       properties:
@@ -1721,10 +1727,11 @@ components:
         foreground:
           description: The foreground color that can be used to write on top of a background with 'background' color.
           type: string
+      description: Defines and manages color combinations associated with calendar events
       type: object
     Colors:
       properties:
-        gcalendar:
+        calendar:
           additionalProperties:
             $ref: "#/components/schemas/ColorDefinition"
             description: A calendar color definition.
@@ -1744,6 +1751,7 @@ components:
           description: Last modification time of the color palette (as a RFC3339 timestamp). Read-only.
           format: date-time
           type: string
+      description: Represents a global palette of calendar and event colors used in Google Calendar.
       type: object
     ConferenceData:
       properties:
@@ -1789,12 +1797,14 @@ components:
             Unset for a conference with a failed create request.
             Optional for a conference with a pending create request.
           type: string
+      description: Represents information about conferences associated with calendar events.
       type: object
     ConferenceParameters:
       properties:
         addOnParameters:
           $ref: "#/components/schemas/ConferenceParametersAddOnParameters"
           description: Additional add-on specific data.
+      description: Represents parameters related to conference settings for events.
       type: object
     ConferenceParametersAddOnParameters:
       properties:
@@ -1802,6 +1812,7 @@ components:
           additionalProperties:
             type: string
           type: object
+      description: This type is used for adding parameters that control the behavior of a conference.
       type: object
     ConferenceProperties:
       properties:
@@ -1815,6 +1826,7 @@ components:
           items:
             type: string
           type: array
+      description: Specify the types of conference solutions supported for a calendar.
       type: object
     ConferenceRequestStatus:
       properties:
@@ -1826,6 +1838,7 @@ components:
             - "success": the conference create request succeeded, the entry points are populated.
             - "failure": the conference create request failed, there are no entry points.
           type: string
+      description: Provides information about the current status of a conference create request.
       type: object
     ConferenceSolution:
       properties:
@@ -1838,6 +1851,7 @@ components:
         name:
           description: The user-visible name of this solution. Not localized.
           type: string
+      description: Represents conference solutions that users can utilize when scheduling or participating in events and meetings
       type: object
     ConferenceSolutionKey:
       properties:
@@ -1851,6 +1865,7 @@ components:
             - "hangoutsMeet" for Google Meet (http://meet.google.com)
             - "addOn" for 3P conference providers
           type: string
+      description: Represents the key information for a conference solution.
       type: object
     CreateConferenceRequest:
       properties:
@@ -1865,6 +1880,7 @@ components:
         status:
           $ref: "#/components/schemas/ConferenceRequestStatus"
           description: The status of the conference create request.
+      description: Represents the request to create a conference within a calendar event.
       type: object
     EntryPoint:
       properties:
@@ -1935,6 +1951,7 @@ components:
             - for sip, sip: schema is required, e.g., sip:12345678@myprovider.com.
             - for more, http: or https: schema is required.
           type: string
+      description: Represents information for different methods of joining a conference or event.
       type: object
     Error:
       properties:
@@ -1949,6 +1966,7 @@ components:
             - "notFound" - The requested resource was not found. 
             - "internalError" - The API service has encountered an internal error.  Additional error types may be added in the future, so clients should gracefully handle additional error statuses not included in this list.
           type: string
+      description: Represents detailed information about errors encountered in operations.
       type: object
     Event:
       properties:
@@ -2181,6 +2199,7 @@ components:
         workingLocationProperties:
           $ref: "#/components/schemas/EventWorkingLocationProperties"
           description: Working location event data.
+      description: Represents an event in Google Calendar
       type: object
     EventAttachment:
       properties:
@@ -2204,6 +2223,7 @@ components:
         title:
           description: Attachment title.
           type: string
+      description: Contains information about an attachment associated with an event.
       type: object
     EventAttendee:
       properties:
@@ -2249,6 +2269,7 @@ components:
           default: false
           description: Whether this entry represents the calendar on which this copy of the event appears. Read-only. The default is False.
           type: boolean
+      description: Manages and describes attendees and their responses to calendar events.
       type: object
     EventDateTime:
       properties:
@@ -2263,6 +2284,7 @@ components:
         timeZone:
           description: The time zone in which the time is specified. (Formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich".) For recurring events this field is required and specifies the time zone in which the recurrence is expanded. For single events this field is optional and indicates a custom time zone for the event start/end.
           type: string
+      description: Defines the date, time, and time zone information for events.
       type: object
     EventReminder:
       properties:
@@ -2279,6 +2301,7 @@ components:
             Required when adding a reminder.
           format: int32
           type: integer
+      description: Allows users to define how and when to be reminded of upcoming events.
       type: object
     EventWorkingLocationProperties:
       properties:
@@ -2318,6 +2341,7 @@ components:
             - "customLocation" - The user is working from a custom location.  Any details are specified in a sub-field of the specified name, but this field may be missing if empty. Any other fields are ignored.
             Required when adding working location properties.
           type: string
+      description: Conveys information about the working location of a user during an event.
       type: object
     Events:
       properties:
@@ -2366,6 +2390,7 @@ components:
           description: Last modification time of the calendar (as a RFC3339 timestamp). Read-only.
           format: date-time
           type: string
+      description: Reprsents event properties which allow users to access and manage calendar event.
       type: object
     FreeBusyCalendar:
       properties:
@@ -2379,6 +2404,7 @@ components:
           items:
             $ref: "#/components/schemas/Error"
           type: array
+      description: Response data with free/busy information.
       type: object
     FreeBusyGroup:
       properties:
@@ -2392,6 +2418,7 @@ components:
           items:
             $ref: "#/components/schemas/Error"
           type: array
+      description: Provides information about free/busy schedules for a group of calendars.
       type: object
     FreeBusyRequest:
       properties:
@@ -2420,12 +2447,14 @@ components:
           default: UTC
           description: Time zone used in the response. Optional. The default is UTC.
           type: string
+      description: Contains parameters for a request to retrieve free/busy information for a set of calendars and groups.
       type: object
     FreeBusyRequestItem:
       properties:
         id:
           description: The identifier of a calendar or a group.
           type: string
+      description: Identifies the target calendar or group for which free/busy information is requested.
       type: object
     FreeBusyResponse:
       properties:
@@ -2464,6 +2493,7 @@ components:
           description: The (inclusive) start of the time period.
           format: date-time
           type: string
+      description: Defines and represents time intervals or periods.
       type: object
   securitySchemes:
     Oauth2:
@@ -2472,7 +2502,7 @@ components:
         implicit:
           authorizationUrl: https://accounts.google.com/o/oauth2/auth
           scopes:
-            https://www.googleapis.com/auth/gcalendar: See, edit, share, and permanently delete all the calendars you can access using Google Calendar
+            https://www.googleapis.com/auth/calendar: See, edit, share, and permanently delete all the calendars you can access using Google Calendar
             https://www.googleapis.com/auth/calendar.events: View and edit events on all your calendars
             https://www.googleapis.com/auth/calendar.events.readonly: View events on all your calendars
             https://www.googleapis.com/auth/calendar.readonly: See and download any calendar you can access using your Google Calendar
@@ -2483,7 +2513,7 @@ components:
         authorizationCode:
           authorizationUrl: https://accounts.google.com/o/oauth2/auth
           scopes:
-            https://www.googleapis.com/auth/gcalendar: See, edit, share, and permanently delete all the calendars you can access using Google Calendar
+            https://www.googleapis.com/auth/calendar: See, edit, share, and permanently delete all the calendars you can access using Google Calendar
             https://www.googleapis.com/auth/calendar.events: View and edit events on all your calendars
             https://www.googleapis.com/auth/calendar.events.readonly: View events on all your calendars
             https://www.googleapis.com/auth/calendar.readonly: See and download any calendar you can access using your Google Calendar

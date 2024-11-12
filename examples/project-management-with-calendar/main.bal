@@ -51,7 +51,7 @@ public function main() returns error? {
     });
     string codingSessionId = <string>codingSession.id;
 
-    gcalendar:Event|gcalendar:Error designReview = calendar->/calendars/[calendarId]/events.post({
+    gcalendar:Event|error designReview = calendar->/calendars/[calendarId]/events.post({
         'start: {
             dateTime: "2023-10-25T14:00:00+00:00",
             timeZone: "UTC"
@@ -63,11 +63,11 @@ public function main() returns error? {
         summary: "Design Review"
     });
 
-    if designReview is gcalendar:Error {
+    if designReview is error {
         log:printError(designReview.message());
     }
 
-    gcalendar:Event|gcalendar:Error updatedCodingSession = calendar->/calendars/[calendarId]/events/[codingSessionId].put({
+    gcalendar:Event|error updatedCodingSession = calendar->/calendars/[calendarId]/events/[codingSessionId].put({
         'start: {
             dateTime: "2023-10-20T10:00:00+00:00",
             timeZone: "UTC"
@@ -87,11 +87,11 @@ public function main() returns error? {
         ]
     });
 
-    if updatedCodingSession is gcalendar:Error {
+    if updatedCodingSession is error {
         log:printError(updatedCodingSession.message());
     }
 
-    gcalendar:Event|gcalendar:Error milestoneEvent = calendar->/calendars/[calendarId]/events.post({
+    gcalendar:Event|error milestoneEvent = calendar->/calendars/[calendarId]/events.post({
         'start: {
             dateTime: "2023-11-15T09:00:00+00:00",
             timeZone: "UTC"
@@ -116,12 +116,12 @@ public function main() returns error? {
         }
     });
 
-    if milestoneEvent is gcalendar:Error {
+    if milestoneEvent is error {
         log:printError(milestoneEvent.message());
     }
 
-    gcalendar:Events|gcalendar:Error projectEvents = calendar->/calendars/[calendarId]/events.get();
-    if projectEvents is gcalendar:Error {
+    gcalendar:Events|error projectEvents = calendar->/calendars/[calendarId]/events.get();
+    if projectEvents is error {
         log:printError(projectEvents.message());
     }
 }
