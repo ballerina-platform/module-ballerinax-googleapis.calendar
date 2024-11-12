@@ -25,8 +25,9 @@ public isolated client class Client {
     # + config - The configurations to be used when initializing the `connector` 
     # + serviceUrl - URL of the target service 
     # + return - An error if connector initialization failed 
-    public isolated function init(oas:ConnectionConfig config, string serviceUrl = "https://www.googleapis.com/calendar/v3") returns error? {
-        oas:Client genClient = check new oas:Client(config, serviceUrl);
+    public isolated function init(ConnectionConfig config, string serviceUrl = "https://www.googleapis.com/calendar/v3") returns error? {
+        oas:ConnectionConfig connectionConfig = check config.ensureType();
+        oas:Client genClient = check new oas:Client(connectionConfig, serviceUrl);
         self.genClient = genClient;
         return;
     }
