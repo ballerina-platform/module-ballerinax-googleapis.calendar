@@ -5,7 +5,7 @@
 
 [ballerina]
 dependencies-toml-version = "2"
-distribution-version = "2201.8.4"
+distribution-version = "2201.10.0"
 
 [[package]]
 org = "ballerina"
@@ -244,7 +244,7 @@ dependencies = [
 [[package]]
 org = "ballerina"
 name = "observe"
-version = "1.2.3"
+version = "1.3.0"
 dependencies = [
 	{org = "ballerina", name = "jballerina.java"}
 ]
@@ -277,6 +277,7 @@ version = "0.0.0"
 scope = "testOnly"
 dependencies = [
 	{org = "ballerina", name = "jballerina.java"},
+	{org = "ballerina", name = "lang.array"},
 	{org = "ballerina", name = "lang.error"}
 ]
 modules = [
@@ -329,6 +330,7 @@ dependencies = [
 ]
 modules = [
 	{org = "ballerinax", packageName = "googleapis.gcalendar", moduleName = "googleapis.gcalendar"},
-	{org = "ballerinax", packageName = "googleapis.gcalendar", moduleName = "googleapis.gcalendar.mock"}
+	{org = "ballerinax", packageName = "googleapis.gcalendar", moduleName = "googleapis.gcalendar.mock"},
+	{org = "ballerinax", packageName = "googleapis.gcalendar", moduleName = "googleapis.gcalendar.oas"}
 ]
 
