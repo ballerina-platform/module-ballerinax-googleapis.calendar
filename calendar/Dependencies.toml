@@ -41,7 +41,7 @@ dependencies = [
 [[package]]
 org = "ballerina"
 name = "crypto"
-version = "2.3.0"
+version = "2.3.2"
 dependencies = [
 	{org = "ballerina", name = "jballerina.java"},
 	{org = "ballerina", name = "time"}
@@ -63,7 +63,7 @@ dependencies = [
 [[package]]
 org = "ballerina"
 name = "http"
-version = "2.6.1"
+version = "2.6.2"
 dependencies = [
 	{org = "ballerina", name = "auth"},
 	{org = "ballerina", name = "cache"},
@@ -94,10 +94,13 @@ modules = [
 [[package]]
 org = "ballerina"
 name = "io"
-version = "1.4.0"
+version = "1.4.1"
 dependencies = [
 	{org = "ballerina", name = "jballerina.java"},
 	{org = "ballerina", name = "lang.value"}
+]
+modules = [
+	{org = "ballerina", packageName = "io", moduleName = "io"}
 ]
 
 [[package]]
@@ -139,6 +142,9 @@ version = "0.0.0"
 dependencies = [
 	{org = "ballerina", name = "jballerina.java"},
 	{org = "ballerina", name = "lang.__internal"}
+]
+modules = [
+	{org = "ballerina", packageName = "lang.array", moduleName = "lang.array"}
 ]
 
 [[package]]
@@ -248,9 +254,6 @@ dependencies = [
 	{org = "ballerina", name = "io"},
 	{org = "ballerina", name = "jballerina.java"}
 ]
-modules = [
-	{org = "ballerina", packageName = "os", moduleName = "os"}
-]
 
 [[package]]
 org = "ballerina"
@@ -285,18 +288,15 @@ modules = [
 [[package]]
 org = "ballerina"
 name = "time"
-version = "2.2.4"
+version = "2.2.5"
 dependencies = [
 	{org = "ballerina", name = "jballerina.java"}
-]
-modules = [
-	{org = "ballerina", packageName = "time", moduleName = "time"}
 ]
 
 [[package]]
 org = "ballerina"
 name = "url"
-version = "2.2.3"
+version = "2.2.4"
 dependencies = [
 	{org = "ballerina", name = "jballerina.java"}
 ]
@@ -319,14 +319,14 @@ modules = [
 [[package]]
 org = "ballerinax"
 name = "googleapis.calendar"
-version = "3.2.0"
+version = "3.2.1"
 dependencies = [
 	{org = "ballerina", name = "http"},
+	{org = "ballerina", name = "io"},
 	{org = "ballerina", name = "jwt"},
+	{org = "ballerina", name = "lang.array"},
 	{org = "ballerina", name = "log"},
-	{org = "ballerina", name = "os"},
 	{org = "ballerina", name = "test"},
-	{org = "ballerina", name = "time"},
 	{org = "ballerina", name = "url"},
 	{org = "ballerinax", name = "client.config"}
 ]

@@ -269,19 +269,66 @@ public type Shared record {|
     string...;
 |};
 
-# Defines conference-related information.
-#
-# + entryPoints - Information about individual conference entry points
-# + conferenceSolution - The conference solution
-# + conferenceId - The ID of the conference
-# + signature - The signature of the conference data
-# + notes - Additional notes to display to the user
+# Represents information about conferences associated with calendar events.
 public type ConferenceData record {
-    EntryPoint[] entryPoints?;
-    ConferenceSolution conferenceSolution?;
+    # The ID of the conference.
+    # Can be used by developers to keep track of conferences, should not be displayed to users.
+    # The ID value is formed differently for each conference solution type:  
+    # - eventHangout: ID is not set. (This conference type is deprecated.)
+    # - eventNamedHangout: ID is the name of the Hangout. (This conference type is deprecated.)
+    # - hangoutsMeet: ID is the 10-letter meeting code, for example aaa-bbbb-ccc.
+    # - addOn: ID is defined by the third-party provider.  Optional.
     string conferenceId?;
-    string signature;
+    # Information about the conference solution, including its name and user-visible icon. Optional.
+    ConferenceSolution conferenceSolution?;
+    # Specifies a request to create a conference. Optional.
+    CreateConferenceRequest createRequest?;
+    # Information about individual conference entry points, such as URLs or phone numbers.
+    # All of them must belong to the same conference.
+    # Either conferenceSolution and at least one entryPoint, or createRequest is required.
+    EntryPoint[] entryPoints?;
+    # Additional notes (such as instructions from the domain administrator, legal notices) to display to the user. Can contain HTML. The maximum length is 2048 characters. Optional.
     string notes?;
+    # Includes parameters related to the conference
+    ConferenceParameters parameters?;
+    # The signature of the conference data.
+    # Generated on server side.
+    # Unset for a conference with a failed create request.
+    # Optional for a conference with a pending create request.
+    string signature?;
+};
+
+# Represents parameters related to conference settings for events.
+public type ConferenceParameters record {
+    # Specify additional parameters for third-party conferencing solutions
+    ConferenceParametersAddOnParameters addOnParameters?;
+};
+
+# This type is used for adding parameters that control the behavior of a conference.
+public type ConferenceParametersAddOnParameters record {
+    # Additional parameters controlling the behavior of the conference add-on.
+    record {|string...;|} parameters?;
+};
+
+# Represents the request to create a conference within a calendar event.
+public type CreateConferenceRequest record {
+    # Specifies the key identifying the conference solution for this request.
+    ConferenceSolutionKey conferenceSolutionKey?;
+    # The client-generated unique ID for this request.
+    # Clients should regenerate this ID for every new request. If an ID provided is the same as for the previous request, the request is ignored.
+    string requestId?;
+    # Represents the current status of the conference create request
+    ConferenceRequestStatus status?;
+};
+
+# Provides information about the current status of a conference create request.
+public type ConferenceRequestStatus record {
+    # The current status of the conference create request. Read-only.
+    # The possible values are:  
+    # - "pending": the conference create request is still being processed.
+    # - "success": the conference create request succeeded, the entry points are populated.
+    # - "failure": the conference create request failed, there are no entry points.
+    string statusCode?;
 };
 
 # Defines conference-related information.
