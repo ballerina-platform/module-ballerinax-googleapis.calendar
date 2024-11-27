@@ -226,52 +226,10 @@ public type Event_organizer record {
     boolean self = false;
 };
 
-# Represents the Queries record for the operation: delete.calendar
-public type DeleteCalendarQueries record {
-    # An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
-    string quotaUser?;
-    # Returns response with indentations and line breaks.
-    boolean prettyPrint?;
-    # OAuth 2.0 token for the current user.
-    string oauth_token?;
-    # Data format for the response.
-    "json" alt?;
-    # Selector specifying which fields to include in a partial response.
-    string fields?;
-    # API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
-    string 'key?;
-};
-
-# Represents the Queries record for the operation: calendar.calendars.update
-public type CalendarCalendarsUpdateQueries record {
-    # An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
-    string quotaUser?;
-    # Returns response with indentations and line breaks.
-    boolean prettyPrint?;
-    # OAuth 2.0 token for the current user.
-    string oauth_token?;
-    # Data format for the response.
-    "json" alt?;
-    # Selector specifying which fields to include in a partial response.
-    string fields?;
-    # API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
-    string 'key?;
-};
-
-# Represents the Queries record for the operation: create.calendar
-public type CreateCalendarQueries record {
-    # An opaque string that represents a user for quota purposes. Must not exceed 40 characters.
-    string quotaUser?;
-    # Returns response with indentations and line breaks.
-    boolean prettyPrint?;
-    # OAuth 2.0 token for the current user.
-    string oauth_token?;
-    # Data format for the response.
-    "json" alt?;
-    # Selector specifying which fields to include in a partial response.
-    string fields?;
-    # API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.
-    string 'key?;
+# Identifies the target calendar or group for which free/busy information is requested.
+public type FreeBusyRequestItem record {
+    # The identifier of a calendar or a group.
+    string id?;
 };
 
 # Represents the Queries record for the operation: calendar.events.quickAdd
@@ -1103,6 +1061,7 @@ public type EventAttendee record {
 
 # Defines and manages individual calendars.
 public type Calendar record {
+    # Represents properties related to conferencing options for the calendar
     ConferenceProperties conferenceProperties?;
     # Description of the calendar. Optional.
     string description?;
@@ -1300,6 +1259,7 @@ public type ClientHttp1Settings record {|
 
 # Represents parameters related to conference settings for events.
 public type ConferenceParameters record {
+    # Specify additional parameters for third-party conferencing solutions
     ConferenceParametersAddOnParameters addOnParameters?;
 };
 
@@ -1317,6 +1277,7 @@ public type Event record {
     boolean attendeesOmitted = false;
     # The color of the event. This is an ID referring to an entry in the event section of the colors definition (see the  colors endpoint). Optional.
     string colorId?;
+    # Provides information about virtual conferences associated with the event
     ConferenceData conferenceData?;
     # Creation time of the event (as a RFC3339 timestamp). Read-only.
     string created?;
@@ -1324,6 +1285,7 @@ public type Event record {
     Event_creator creator?;
     # Description of the event. Can contain HTML. Optional.
     string description?;
+    # Defines the end time of the event
     EventDateTime end?;
     # Whether the end time is actually unspecified. An end time is still provided for compatibility reasons, even if this attribute is set to True. The default is False.
     boolean endTimeUnspecified = false;
