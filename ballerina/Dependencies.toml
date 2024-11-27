@@ -318,7 +318,7 @@ modules = [
 [[package]]
 org = "ballerinax"
 name = "googleapis.gcalendar"
-version = "4.0.2"
+version = "5.0.0"
 dependencies = [
 	{org = "ballerina", name = "constraint"},
 	{org = "ballerina", name = "http"},
