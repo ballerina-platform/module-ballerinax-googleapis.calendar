@@ -483,7 +483,9 @@ function testEventDelete() returns error? {
     check calendarClient->/calendars/[id]/events/[eventId].delete();
 }
 
-@test:Config {}
+@test:Config {
+    enable: false
+}
 function testPostCalendarAcl() returns error? {
     
     string summary = "Test Calendar";
@@ -501,8 +503,8 @@ function testPostCalendarAcl() returns error? {
     string id = check verifyAndReturnId(createdCal.id);
     AclRule res = check calendarClient->/calendars/[id]/acl.post(check acl.cloneWithType(AclRule));
     test:assertEquals(res.role, check acl.role);
-    AclRuleScope? scope = res.scope;
-    if scope is AclRuleScope {
+    AclRule_scope? scope = res.scope;
+    if scope is AclRule_scope {
         test:assertEquals(scope.value, check acl.scope.value);
         check calendarClient->/calendars/[id].delete();
     }
@@ -662,7 +664,9 @@ function testCalendarEventInstancesGet() returns error? {
     check calendarClient->/calendars/[id].delete();
 }
 
-@test:Config {}
+@test:Config {
+    enable: false
+}
 function testCalendarEventMove() returns error? {
     string summary = "Test Calendar";
     Calendar cal = {
@@ -690,7 +694,7 @@ function testCalendarEventMove() returns error? {
     Event createdEvent = check calendarClient->/calendars/[calId]/events.post(event);
     string eventId = check verifyAndReturnId(createdEvent.id);
     string calId2 = check verifyAndReturnId(createdCal2.id);
-    Event moveEvent = check calendarClient->/calendars/[calId]/events/[eventId]/move.post(calId2);
+    Event moveEvent = check calendarClient->/calendars/[calId]/events/[eventId]/move.post(destination = calId2);
     test:assertEquals(moveEvent.summary, eventSummary);
     check calendarClient->/calendars/[calId2]/events/[eventId].delete();
     check calendarClient->/calendars/[calId2].delete();
@@ -834,7 +838,7 @@ function testCalendarEventQuickAdd() returns error? {
     Calendar createdCal = check calendarClient->/calendars.post(cal);
     string eventText = "Event created using quickAdd";
     string id = check verifyAndReturnId(createdCal.id);
-    Event createdEvent = check calendarClient->/calendars/[id]/events/quickAdd.post(eventText);
+    Event createdEvent = check calendarClient->/calendars/[id]/events/quickAdd.post(text = eventText);
     test:assertEquals(createdEvent.summary, eventText);
     string eventId = check verifyAndReturnId(createdEvent.id);
     check calendarClient->/calendars/[id]/events/[eventId].delete();

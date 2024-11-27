@@ -78,7 +78,7 @@ public function main() returns error? {
     string updatedEventId = <string>updatedEvent.id;
 
     // update event to add reminders to send timely notifications to attendees before the meeting
-    gcalendar:Event|gcalendar:Error reminderEvent = calendar->/calendars/[calendarId]/events/[updatedEventId].put({
+    gcalendar:Event|error reminderEvent = calendar->/calendars/[calendarId]/events/[updatedEventId].put({
         'start: {
             dateTime: "2023-10-19T03:00:00+05:30",
             timeZone: "Asia/Colombo"
@@ -96,7 +96,7 @@ public function main() returns error? {
         }
     });
 
-    if reminderEvent is gcalendar:Error {
+    if reminderEvent is error {
         log:printError(reminderEvent.message());
     }
 
@@ -111,14 +111,14 @@ public function main() returns error? {
     string aclId = <string>acl.id;
 
     // change access control rule
-    gcalendar:AclRule|gcalendar:Error response = calendar->/calendars/[calendarId]/acl/[aclId].put({
+    gcalendar:AclRule|error response = calendar->/calendars/[calendarId]/acl/[aclId].put({
         scope: {
             'type: "user",
             value: "team_member@gmail.com"
         },
         role: "writer"
     });
-    if response is gcalendar:Error {
+    if response is error {
         log:printError(response.message());
     }
 }
