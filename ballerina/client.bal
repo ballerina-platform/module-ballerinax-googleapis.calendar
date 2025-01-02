@@ -16,9 +16,13 @@
 
 import googleapis.gcalendar.oas;
 
+import ballerina/http;
+import ballerina/jwt;
+
 # Manipulates events and other calendar data.
 public isolated client class Client {
     final oas:Client genClient;
+    final ClientOAuth2ExtensionGrantHandler clientHandler;
 
     # Gets invoked to initialize the `connector`.
     #
@@ -27,6 +31,7 @@ public isolated client class Client {
     # + return - An error if connector initialization failed 
     public isolated function init(ConnectionConfig config, string serviceUrl = "https://www.googleapis.com/calendar/v3") returns error? {
         oas:ConnectionConfig connectionConfig = check config.ensureType();
+        self.clientHandler = config.auth is http:JwtIssuerConfig ? check new (<jwt:IssuerConfig>config.auth) : check new ();
         oas:Client genClient = check new oas:Client(connectionConfig, serviceUrl);
         self.genClient = genClient;
         return;
@@ -38,7 +43,10 @@ public isolated client class Client {
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - If successful `()`, otherwise an error
-    resource isolated function delete calendars/[string calendarId](map<string|string[]> headers = {}, *DeleteCalendarQueries queries) returns error? {
+    resource isolated function delete calendars/[string calendarId](map<string|string[]> headers = {}, string? userAccount = (), *DeleteCalendarQueries queries) returns error? {
+        if self.clientHandler.isServiceAccount() {
+            check self.clientHandler.getSecurityHeaders(userAccount, headers);
+        }
         return self.genClient->/calendars/[calendarId].delete(headers, queries);
     }
 
@@ -49,7 +57,10 @@ public isolated client class Client {
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - If successful `()`, otherwise an error
-    resource isolated function delete calendars/[string calendarId]/acl/[string ruleId](map<string|string[]> headers = {}, *CalendarAclDeleteQueries queries) returns error? {
+    resource isolated function delete calendars/[string calendarId]/acl/[string ruleId](map<string|string[]> headers = {}, string? userAccount = (), *CalendarAclDeleteQueries queries) returns error? {
+        if self.clientHandler.isServiceAccount() {
+            check self.clientHandler.getSecurityHeaders(userAccount, headers);
+        }
         return self.genClient->/calendars/[calendarId]/acl/[ruleId].delete(headers, queries);
     }
 
@@ -60,8 +71,11 @@ public isolated client class Client {
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - if successful `()`, otherwise an error
-    resource isolated function delete calendars/[string calendarId]/events/[string eventId](map<string|string[]> headers = {}, *CalendarEventsDeleteQueries queries) returns error? {
-        return self.genClient->/calendars/[calendarId]/events/[eventId].delete();
+    resource isolated function delete calendars/[string calendarId]/events/[string eventId](map<string|string[]> headers = {}, string? userAccount = (), *CalendarEventsDeleteQueries queries) returns error? {
+        if self.clientHandler.isServiceAccount() {
+            check self.clientHandler.getSecurityHeaders(userAccount, headers);
+        }
+        return self.genClient->/calendars/[calendarId]/events/[eventId].delete(headers, queries);
     }
 
     # Removes a calendar from the user's calendar list.
@@ -70,8 +84,11 @@ public isolated client class Client {
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - If successful `()`, otherwise an error
-    resource isolated function delete users/me/calendarList/[string calendarId](map<string|string[]> headers = {}, *CalendarCalendarlistDeleteQueries queries) returns error? {
-        return self.genClient->/users/me/calendarList/[calendarId].delete();
+    resource isolated function delete users/me/calendarList/[string calendarId](map<string|string[]> headers = {}, string? userAccount = (), *CalendarCalendarlistDeleteQueries queries) returns error? {
+        if self.clientHandler.isServiceAccount() {
+            check self.clientHandler.getSecurityHeaders(userAccount, headers);
+        }
+        return self.genClient->/users/me/calendarList/[calendarId].delete(headers, queries);
     }
 
     # Returns metadata for a calendar.
@@ -80,7 +97,10 @@ public isolated client class Client {
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - A `gcalendar:Calendar` if successful, otherwise an error
-    resource isolated function get calendars/[string calendarId](map<string|string[]> headers = {}, *oas:CalendarCalendarsGetQueries queries) returns Calendar|error {
+    resource isolated function get calendars/[string calendarId](map<string|string[]> headers = {}, string? userAccount = (), *oas:CalendarCalendarsGetQueries queries) returns Calendar|error {
+        if self.clientHandler.isServiceAccount() {
+            check self.clientHandler.getSecurityHeaders(userAccount, headers);
+        }
         return self.genClient->/calendars/[calendarId].get(headers, queries);
     }
 
@@ -90,7 +110,10 @@ public isolated client class Client {
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - A `gcalendar:Acl` if successful, otherwise an error
-    resource isolated function get calendars/[string calendarId]/acl(map<string|string[]> headers = {}, *CalendarAclListQueries queries) returns Acl|error {
+    resource isolated function get calendars/[string calendarId]/acl(map<string|string[]> headers = {}, string? userAccount = (), *CalendarAclListQueries queries) returns Acl|error {
+        if self.clientHandler.isServiceAccount() {
+            check self.clientHandler.getSecurityHeaders(userAccount, headers);
+        }
         return self.genClient->/calendars/[calendarId]/acl(headers, queries);
     }
 
@@ -101,7 +124,10 @@ public isolated client class Client {
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - A `gcalendar:AclRule` if successful, otherwise an error
-    resource isolated function get calendars/[string calendarId]/acl/[string ruleId](map<string|string[]> headers = {}, *CalendarAclGetQueries queries) returns AclRule|error {
+    resource isolated function get calendars/[string calendarId]/acl/[string ruleId](map<string|string[]> headers = {}, string? userAccount = (), *CalendarAclGetQueries queries) returns AclRule|error {
+        if self.clientHandler.isServiceAccount() {
+            check self.clientHandler.getSecurityHeaders(userAccount, headers);
+        }
         return self.genClient->/calendars/[calendarId]/acl/[ruleId].get(headers, queries);
     }
 
@@ -111,7 +137,10 @@ public isolated client class Client {
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - A `gcalendar:Events` if successful, otherwise an error
-    resource isolated function get calendars/[string calendarId]/events(map<string|string[]> headers = {}, *CalendarEventsListQueries queries) returns Events|error {
+    resource isolated function get calendars/[string calendarId]/events(map<string|string[]> headers = {}, string? userAccount = (), *CalendarEventsListQueries queries) returns Events|error {
+        if self.clientHandler.isServiceAccount() {
+            check self.clientHandler.getSecurityHeaders(userAccount, headers);
+        }
         return self.genClient->/calendars/[calendarId]/events(headers, queries);
     }
 
@@ -122,7 +151,10 @@ public isolated client class Client {
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - A `gcalendar:Event` if successful, otherwise an error
-    resource isolated function get calendars/[string calendarId]/events/[string eventId](map<string|string[]> headers = {}, *CalendarEventsGetQueries queries) returns Event|error {
+    resource isolated function get calendars/[string calendarId]/events/[string eventId](map<string|string[]> headers = {}, string? userAccount = (), *CalendarEventsGetQueries queries) returns Event|error {
+        if self.clientHandler.isServiceAccount() {
+            check self.clientHandler.getSecurityHeaders(userAccount, headers);
+        }
         return self.genClient->/calendars/[calendarId]/events/[eventId].get(headers, queries);
     }
 
@@ -133,7 +165,10 @@ public isolated client class Client {
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - A `gcalendar:Events` if successful, otherwise an error
-    resource isolated function get calendars/[string calendarId]/events/[string eventId]/instances(map<string|string[]> headers = {}, *CalendarEventsInstancesQueries queries) returns Events|error {
+    resource isolated function get calendars/[string calendarId]/events/[string eventId]/instances(map<string|string[]> headers = {}, string? userAccount = (), *CalendarEventsInstancesQueries queries) returns Events|error {
+        if self.clientHandler.isServiceAccount() {
+            check self.clientHandler.getSecurityHeaders(userAccount, headers);
+        }
         return self.genClient->/calendars/[calendarId]/events/[eventId]/instances(headers, queries);
     }
 
@@ -142,7 +177,10 @@ public isolated client class Client {
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - A `gcalendar:Colors` if successful, otherwise an error
-    resource isolated function get colors(map<string|string[]> headers = {}, *CalendarColorsGetQueries queries) returns Colors|error {
+    resource isolated function get colors(map<string|string[]> headers = {}, string? userAccount = (), *CalendarColorsGetQueries queries) returns Colors|error {
+        if self.clientHandler.isServiceAccount() {
+            check self.clientHandler.getSecurityHeaders(userAccount, headers);
+        }
         return self.genClient->/colors(headers, queries);
     }
 
@@ -151,7 +189,10 @@ public isolated client class Client {
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - A `gcalendar:CalendarList` if successful, otherwise an error
-    resource isolated function get users/me/calendarList(map<string|string[]> headers = {}, *CalendarCalendarlistListQueries queries) returns CalendarList|error {
+    resource isolated function get users/me/calendarList(map<string|string[]> headers = {}, string? userAccount = (), *CalendarCalendarlistListQueries queries) returns CalendarList|error {
+        if self.clientHandler.isServiceAccount() {
+            check self.clientHandler.getSecurityHeaders(userAccount, headers);
+        }
         return self.genClient->/users/me/calendarList.get(headers, queries);
     }
 
@@ -161,7 +202,10 @@ public isolated client class Client {
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - A `gcalendar:CalendarListEntry` if successful, otherwise an error
-    resource isolated function get users/me/calendarList/[string calendarId](map<string|string[]> headers = {}, *CalendarCalendarlistGetQueries queries) returns CalendarListEntry|error {
+    resource isolated function get users/me/calendarList/[string calendarId](map<string|string[]> headers = {}, string? userAccount = (), *CalendarCalendarlistGetQueries queries) returns CalendarListEntry|error {
+        if self.clientHandler.isServiceAccount() {
+            check self.clientHandler.getSecurityHeaders(userAccount, headers);
+        }
         return self.genClient->/users/me/calendarList/[calendarId].get(headers, queries);
     }
 
@@ -172,7 +216,10 @@ public isolated client class Client {
     # + queries - Queries to be sent with the request 
     # + payload - Data required to update the calendar. 
     # + return - A `gcalendar:Calendar` if successful, otherwise an error
-    resource isolated function patch calendars/[string calendarId](Calendar payload, map<string|string[]> headers = {}, *CalendarCalendarsPatchQueries queries) returns Calendar|error {
+    resource isolated function patch calendars/[string calendarId](Calendar payload, map<string|string[]> headers = {}, string? userAccount = (), *CalendarCalendarsPatchQueries queries) returns Calendar|error {
+        if self.clientHandler.isServiceAccount() {
+            check self.clientHandler.getSecurityHeaders(userAccount, headers);
+        }
         return self.genClient->/calendars/[calendarId].patch(payload, headers, queries);
     }
 
@@ -184,7 +231,10 @@ public isolated client class Client {
     # + queries - Queries to be sent with the request 
     # + payload - Data required to update access permissions for the calendar 
     # + return - A `gcalendar:AclRule` if successful, otherwise an error
-    resource isolated function patch calendars/[string calendarId]/acl/[string ruleId](AclRule payload, map<string|string[]> headers = {}, *CalendarAclPatchQueries queries) returns AclRule|error {
+    resource isolated function patch calendars/[string calendarId]/acl/[string ruleId](AclRule payload, map<string|string[]> headers = {}, string? userAccount = (), *CalendarAclPatchQueries queries) returns AclRule|error {
+        if self.clientHandler.isServiceAccount() {
+            check self.clientHandler.getSecurityHeaders(userAccount, headers);
+        }
         return self.genClient->/calendars/[calendarId]/acl/[ruleId].patch(payload, headers, queries);
     }
 
@@ -196,7 +246,10 @@ public isolated client class Client {
     # + queries - Queries to be sent with the request 
     # + payload - Data required to update the event. 
     # + return - A `gcalendar:Event` if successful, otherwise an error
-    resource isolated function patch calendars/[string calendarId]/events/[string eventId](Event payload, map<string|string[]> headers = {}, *CalendarEventsPatchQueries queries) returns Event|error {
+    resource isolated function patch calendars/[string calendarId]/events/[string eventId](Event payload, map<string|string[]> headers = {}, string? userAccount = (), *CalendarEventsPatchQueries queries) returns Event|error {
+        if self.clientHandler.isServiceAccount() {
+            check self.clientHandler.getSecurityHeaders(userAccount, headers);
+        }
         return self.genClient->/calendars/[calendarId]/events/[eventId].patch(payload, headers, queries);
     }
 
@@ -207,7 +260,10 @@ public isolated client class Client {
     # + queries - Queries to be sent with the request 
     # + payload - Data required to update an existing calendar entry on the user's calendar list 
     # + return - A `gcalendar:CalendarListEntry` if successful, otherwise an error
-    resource isolated function patch users/me/calendarList/[string calendarId](CalendarListEntry payload, map<string|string[]> headers = {}, *CalendarCalendarlistPatchQueries queries) returns CalendarListEntry|error {
+    resource isolated function patch users/me/calendarList/[string calendarId](CalendarListEntry payload, map<string|string[]> headers = {}, string? userAccount = (), *CalendarCalendarlistPatchQueries queries) returns CalendarListEntry|error {
+        if self.clientHandler.isServiceAccount() {
+            check self.clientHandler.getSecurityHeaders(userAccount, headers);
+        }
         return self.genClient->/users/me/calendarList/[calendarId].patch(payload, headers, queries);
     }
 
@@ -217,7 +273,10 @@ public isolated client class Client {
     # + queries - Queries to be sent with the request 
     # + payload - Data required to create the calendar. 
     # + return - A `gcalendar:Calendar` if successful, otherwise an error
-    resource isolated function post calendars(Calendar payload, map<string|string[]> headers = {}, *CreateCalendarQueries queries) returns Calendar|error {
+    resource isolated function post calendars(Calendar payload, map<string|string[]> headers = {}, string? userAccount = (), *CreateCalendarQueries queries) returns Calendar|error {
+        if self.clientHandler.isServiceAccount() {
+            check self.clientHandler.getSecurityHeaders(userAccount, headers);
+        }
         return self.genClient->/calendars.post(payload, headers, queries);
     }
 
@@ -228,7 +287,10 @@ public isolated client class Client {
     # + queries - Queries to be sent with the request 
     # + payload - Data required to create access permissions for the calendar. 
     # + return - A `gcalendar:AclRule` if successful, otherwise an error
-    resource isolated function post calendars/[string calendarId]/acl(AclRule payload, map<string|string[]> headers = {}, *CalendarAclInsertQueries queries) returns AclRule|error {
+    resource isolated function post calendars/[string calendarId]/acl(AclRule payload, map<string|string[]> headers = {}, string? userAccount = (), *CalendarAclInsertQueries queries) returns AclRule|error {
+        if self.clientHandler.isServiceAccount() {
+            check self.clientHandler.getSecurityHeaders(userAccount, headers);
+        }
         return self.genClient->/calendars/[calendarId]/acl.post(payload, headers, queries);
     }
 
@@ -238,7 +300,10 @@ public isolated client class Client {
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - If successful `()`, otherwise an error
-    resource isolated function post calendars/[string calendarId]/clear(map<string|string[]> headers = {}, *CalendarCalendarsClearQueries queries) returns error? {
+    resource isolated function post calendars/[string calendarId]/clear(map<string|string[]> headers = {}, string? userAccount = (), *CalendarCalendarsClearQueries queries) returns error? {
+        if self.clientHandler.isServiceAccount() {
+            check self.clientHandler.getSecurityHeaders(userAccount, headers);
+        }
         return self.genClient->/calendars/[calendarId]/clear.post(headers, queries);
     }
 
@@ -249,7 +314,10 @@ public isolated client class Client {
     # + queries - Queries to be sent with the request 
     # + payload - Data required to create an event. 
     # + return - A `gcalendar:Event` if successful, otherwise an error
-    resource isolated function post calendars/[string calendarId]/events(Event payload, map<string|string[]> headers = {}, *CalendarEventsInsertQueries queries) returns Event|error {
+    resource isolated function post calendars/[string calendarId]/events(Event payload, map<string|string[]> headers = {}, string? userAccount = (), *CalendarEventsInsertQueries queries) returns Event|error {
+        if self.clientHandler.isServiceAccount() {
+            check self.clientHandler.getSecurityHeaders(userAccount, headers);
+        }
         return self.genClient->/calendars/[calendarId]/events.post(payload, headers, queries);
     }
 
@@ -259,7 +327,10 @@ public isolated client class Client {
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - A `gcalendar:Event` if successful, otherwise an error
-    resource isolated function post calendars/[string calendarId]/events/'import(Event payload, map<string|string[]> headers = {}, *CalendarEventsImportQueries queries) returns Event|error {
+    resource isolated function post calendars/[string calendarId]/events/'import(Event payload, map<string|string[]> headers = {}, string? userAccount = (), *CalendarEventsImportQueries queries) returns Event|error {
+        if self.clientHandler.isServiceAccount() {
+            check self.clientHandler.getSecurityHeaders(userAccount, headers);
+        }
         return self.genClient->/calendars/[calendarId]/events/'import.post(payload, headers, queries);
     }
 
@@ -270,7 +341,10 @@ public isolated client class Client {
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - A `gcalendar:Event` if successful, otherwise an error
-    resource isolated function post calendars/[string calendarId]/events/[string eventId]/move(map<string|string[]> headers = {}, *CalendarEventsMoveQueries queries) returns Event|error {
+    resource isolated function post calendars/[string calendarId]/events/[string eventId]/move(map<string|string[]> headers = {}, string? userAccount = (), *CalendarEventsMoveQueries queries) returns Event|error {
+        if self.clientHandler.isServiceAccount() {
+            check self.clientHandler.getSecurityHeaders(userAccount, headers);
+        }
         return self.genClient->/calendars/[calendarId]/events/[eventId]/move.post(headers, queries);
     }
 
@@ -280,7 +354,10 @@ public isolated client class Client {
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - A `gcalendar:Event` if successful, otherwise an error
-    resource isolated function post calendars/[string calendarId]/events/quickAdd(map<string|string[]> headers = {}, *CalendarEventsQuickaddQueries queries) returns Event|error {
+    resource isolated function post calendars/[string calendarId]/events/quickAdd(map<string|string[]> headers = {}, string? userAccount = (), *CalendarEventsQuickaddQueries queries) returns Event|error {
+        if self.clientHandler.isServiceAccount() {
+            check self.clientHandler.getSecurityHeaders(userAccount, headers);
+        }
         return self.genClient->/calendars/[calendarId]/events/quickAdd.post(headers, queries);
     }
 
@@ -290,7 +367,10 @@ public isolated client class Client {
     # + queries - Queries to be sent with the request 
     # + payload - Data required to return free/busy information 
     # + return - A `gcalendar:FreeBusyResponse` if successful, otherwise an error
-    resource isolated function post freeBusy(FreeBusyRequest payload, map<string|string[]> headers = {}, *CalendarFreebusyQueryQueries queries) returns FreeBusyResponse|error {
+    resource isolated function post freeBusy(FreeBusyRequest payload, map<string|string[]> headers = {}, string? userAccount = (), *CalendarFreebusyQueryQueries queries) returns FreeBusyResponse|error {
+        if self.clientHandler.isServiceAccount() {
+            check self.clientHandler.getSecurityHeaders(userAccount, headers);
+        }
         return self.genClient->/freeBusy.post(payload, headers, queries);
     }
 
@@ -300,7 +380,10 @@ public isolated client class Client {
     # + queries - Queries to be sent with the request 
     # + payload - Data required to identify the calendar 
     # + return - A `gcalendar:CalendarListEntry` if successful, otherwise an error
-    resource isolated function post users/me/calendarList(CalendarListEntry payload, map<string|string[]> headers = {}, *CalendarCalendarlistInsertQueries queries) returns CalendarListEntry|error {
+    resource isolated function post users/me/calendarList(CalendarListEntry payload, map<string|string[]> headers = {}, string? userAccount = (), *CalendarCalendarlistInsertQueries queries) returns CalendarListEntry|error {
+        if self.clientHandler.isServiceAccount() {
+            check self.clientHandler.getSecurityHeaders(userAccount, headers);
+        }
         return self.genClient->/users/me/calendarList.post(payload, headers, queries);
     }
 
@@ -311,7 +394,10 @@ public isolated client class Client {
     # + queries - Queries to be sent with the request 
     # + payload - Data required to update the calendar. 
     # + return - A `gcalendar:Calendar` if successful, otherwise an error
-    resource isolated function put calendars/[string calendarId](Calendar payload, map<string|string[]> headers = {}, *CalendarCalendarsUpdateQueries queries) returns Calendar|error {
+    resource isolated function put calendars/[string calendarId](Calendar payload, map<string|string[]> headers = {}, string? userAccount = (), *CalendarCalendarsUpdateQueries queries) returns Calendar|error {
+        if self.clientHandler.isServiceAccount() {
+            check self.clientHandler.getSecurityHeaders(userAccount, headers);
+        }
         return self.genClient->/calendars/[calendarId].put(payload, headers, queries);
     }
 
@@ -323,7 +409,10 @@ public isolated client class Client {
     # + queries - Queries to be sent with the request 
     # + payload - Data required to update access permissions for the calendar 
     # + return - A `gcalendar:AclRule` if successful, otherwise an error
-    resource isolated function put calendars/[string calendarId]/acl/[string ruleId](AclRule payload, map<string|string[]> headers = {}, *CalendarAclUpdateQueries queries) returns AclRule|error {
+    resource isolated function put calendars/[string calendarId]/acl/[string ruleId](AclRule payload, map<string|string[]> headers = {}, string? userAccount = (), *CalendarAclUpdateQueries queries) returns AclRule|error {
+        if self.clientHandler.isServiceAccount() {
+            check self.clientHandler.getSecurityHeaders(userAccount, headers);
+        }
         return self.genClient->/calendars/[calendarId]/acl/[ruleId].put(payload, headers, queries);
     }
 
@@ -335,7 +424,10 @@ public isolated client class Client {
     # + queries - Queries to be sent with the request 
     # + payload - Data required to update the event. 
     # + return - A `gcalendar:Event` if successful, otherwise an error
-    resource isolated function put calendars/[string calendarId]/events/[string eventId](Event payload, map<string|string[]> headers = {}, *CalendarEventsUpdateQueries queries) returns Event|error {
+    resource isolated function put calendars/[string calendarId]/events/[string eventId](Event payload, map<string|string[]> headers = {}, string? userAccount = (), *CalendarEventsUpdateQueries queries) returns Event|error {
+        if self.clientHandler.isServiceAccount() {
+            check self.clientHandler.getSecurityHeaders(userAccount, headers);
+        }
         return self.genClient->/calendars/[calendarId]/events/[eventId].put(payload, headers, queries);
     }
 
@@ -346,7 +438,10 @@ public isolated client class Client {
     # + queries - Queries to be sent with the request 
     # + payload - Data required to update an existing calendar entry on the user's calendar list 
     # + return - A `gcalendar:CalendarListEntry` if successful, otherwise an error
-    resource isolated function put users/me/calendarList/[string calendarId](CalendarListEntry payload, map<string|string[]> headers = {}, *CalendarCalendarlistUpdateQueries queries) returns CalendarListEntry|error {
+    resource isolated function put users/me/calendarList/[string calendarId](CalendarListEntry payload, map<string|string[]> headers = {}, string? userAccount = (), *CalendarCalendarlistUpdateQueries queries) returns CalendarListEntry|error {
+        if self.clientHandler.isServiceAccount() {
+            check self.clientHandler.getSecurityHeaders(userAccount, headers);
+        }
         return self.genClient->/users/me/calendarList/[calendarId].put(payload, headers, queries);
     }
 }
