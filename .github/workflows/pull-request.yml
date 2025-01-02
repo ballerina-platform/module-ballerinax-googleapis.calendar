@@ -13,4 +13,5 @@ jobs:
     uses: ballerina-platform/ballerina-library/.github/workflows/pr-build-connector-template.yml@main
     secrets: inherit
     with:
+      additional-build-flags: "-x :googleapis.gcalendar-examples:build"
       additional-test-flags: ${{ github.event.pull_request.head.repo.full_name != github.repository && '-x test' || ''}}

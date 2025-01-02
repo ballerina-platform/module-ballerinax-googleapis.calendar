@@ -57,7 +57,7 @@ gcalendar:Event codingSession = check calendar->/calendars/[calendarId]/events.p
 });
 
 
-gcalendar:Event|gcalendar:Error designReview = calendar->/calendars/[calendarId]/events.post({
+gcalendar:Event|error designReview = calendar->/calendars/[calendarId]/events.post({
     'start: {
         dateTime: "2023-10-25T14:00:00+00:00",
         timeZone: "UTC"
@@ -75,7 +75,7 @@ gcalendar:Event|gcalendar:Error designReview = calendar->/calendars/[calendarId]
 Invite team members to project events ensures that everyone involved is aware of and aligned on project milestones.
 
 ```ballerina
-gcalendar:Event|gcalendar:Error updatedCodingSession = calendar->/calendars/[calendarId]/events/[codingSessionId].put({
+gcalendar:Event|error updatedCodingSession = calendar->/calendars/[calendarId]/events/[codingSessionId].put({
     'start: {
         dateTime: "2023-10-20T10:00:00+00:00",
         timeZone: "UTC"
@@ -101,7 +101,7 @@ gcalendar:Event|gcalendar:Error updatedCodingSession = calendar->/calendars/[cal
 Set reminders for important milestones.
 
 ```ballerina
-gcalendar:Event|gcalendar:Error milestoneEvent = calendar->/calendars/[calendarId]/events.post({
+gcalendar:Event|error milestoneEvent = calendar->/calendars/[calendarId]/events.post({
     'start: {
         dateTime: "2023-11-15T09:00:00+00:00",
         timeZone: "UTC"
@@ -132,5 +132,5 @@ gcalendar:Event|gcalendar:Error milestoneEvent = calendar->/calendars/[calendarI
 Retrieve and analyze project events to monitor progress and make data-driven decisions.
 
 ```ballerina
-gcalendar:Events|gcalendar:Error projectEvents = calendar->/calendars/[calendarId]/events.get();
+gcalendar:Events|error projectEvents = calendar->/calendars/[calendarId]/events.get();
 ```

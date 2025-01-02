@@ -14,7 +14,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerinax/googleapis.gcalendar.mock as _;
+import googleapis.gcalendar.mock as _;
+
 import ballerina/os;
 import ballerina/test;
 
@@ -28,9 +29,9 @@ configurable string mockRefreshToken = ?;
 configurable string mockRefreshUrl = ?;
 
 @test:BeforeSuite
-function initializeClientsForCalendarServer () returns error? {
+function initializeClientsForCalendarServer() returns error? {
     if isTestOnLiveServer {
-        calendarClient = check new({
+        calendarClient = check new ({
             auth: {
                 clientId: os:getEnv("CLIENT_ID"),
                 clientSecret: os:getEnv("CLIENT_SECRET"),
@@ -222,7 +223,6 @@ function testCalendarEventCreate() returns error? {
 
 @test:Config {}
 function testCalendarEventUpdate() returns error? {
-    
     string summary = "Test Calendar";
     Calendar cal = {
         summary: summary
@@ -253,7 +253,6 @@ function testCalendarEventUpdate() returns error? {
 
 @test:Config {}
 function testCalendarEventPatch() returns error? {
-    
     string summary = "Test Calendar";
     Calendar cal = {
         summary: summary
@@ -284,7 +283,6 @@ function testCalendarEventPatch() returns error? {
 
 @test:Config {}
 function testCalendarEventDelete() returns error? {
-    
     string summary = "Test Calendar";
     Calendar cal = {
         summary: summary
@@ -311,7 +309,6 @@ function testCalendarEventDelete() returns error? {
 
 @test:Config {}
 function testEventCreate() returns error? {
-    
     string summary = "Test Meeting 110";
     Calendar cal = {
         summary: summary
@@ -336,7 +333,6 @@ function testEventCreate() returns error? {
 
 @test:Config {}
 function testEventImport() returns error? {
-    
     string summary = "Test Meeting 110";
     Calendar cal = {
         summary: summary
@@ -375,7 +371,6 @@ function testEventImport() returns error? {
 
 @test:Config {}
 function testEventUpdate() returns error? {
-    
     string summary = "Test Meeting 110";
     Calendar cal = {
         summary: summary
@@ -405,7 +400,6 @@ function testEventUpdate() returns error? {
 
 @test:Config {}
 function testEventPatch() returns error? {
-    
     string summary = "Test Meeting 110";
     Calendar cal = {
         summary: summary
@@ -460,7 +454,6 @@ function testEventGet() returns error? {
 
 @test:Config {}
 function testEventDelete() returns error? {
-    
     string summary = "Test Meeting 110";
     Calendar cal = {
         summary: summary
@@ -487,7 +480,6 @@ function testEventDelete() returns error? {
     enable: false
 }
 function testPostCalendarAcl() returns error? {
-    
     string summary = "Test Calendar";
     Calendar cal = {
         summary: summary
@@ -571,7 +563,6 @@ function testAclRuleGet() returns error? {
 
 @test:Config {}
 function testAclRuleUpdate() returns error? {
-    
     string summary = "Test Calendar";
     Calendar cal = {
         summary: summary
@@ -604,7 +595,6 @@ function testAclRuleUpdate() returns error? {
 
 @test:Config {}
 function testAclRulePatch() returns error? {
-    
     string summary = "Test Calendar";
     Calendar cal = {
         summary: summary
@@ -637,7 +627,6 @@ function testAclRulePatch() returns error? {
 
 @test:Config {}
 function testCalendarEventInstancesGet() returns error? {
-    
     string summary = "Test Calendar";
     Calendar cal = {
         summary: summary
@@ -703,7 +692,6 @@ function testCalendarEventMove() returns error? {
 
 @test:Config {}
 function testCalendarFromListDelete() returns error? {
-    
     string summary = "Test Calendar";
     Calendar cal = {
         summary: summary
@@ -718,7 +706,6 @@ function testCalendarFromListDelete() returns error? {
 
 @test:Config {}
 function testCalendarListEntryPatch() returns error? {
-    
     string summary = "Test Calendar List Entry";
     Calendar cal = {
         summary: summary
@@ -795,7 +782,6 @@ function testCalendarListEntryUpdate() returns error? {
 
 @test:Config {}
 function testCalendarListGet() returns error? {
-    
     CalendarList calendarList = check calendarClient->/users/me/calendarList.get();
     test:assertNotEquals(calendarList, ());
     CalendarListEntry[]? calendarListEntries = calendarList.items;
@@ -804,7 +790,6 @@ function testCalendarListGet() returns error? {
 
 @test:Config {}
 function testColorsGet() returns error? {
-    
     Colors colors = check calendarClient->/colors.get();
     test:assertNotEquals(colors.calendar, ());
     test:assertNotEquals(colors.event, ());
@@ -813,7 +798,6 @@ function testColorsGet() returns error? {
 
 @test:Config {}
 function testFreeBusy() returns error? {
-    
     FreeBusyRequest freeBusyRequest = {
         timeMin: "2022-01-01T00:00:00Z",
         timeMax: "2022-01-02T00:00:00Z",
