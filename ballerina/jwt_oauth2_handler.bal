@@ -21,7 +21,6 @@ const string OAUTH_URL = "https://oauth2.googleapis.com";
 
 # Defines the OAuth2 handler for client authentication.
 isolated class ClientOAuth2ExtensionGrantHandler {
-
     private final OAuth2ExtensionGrantProvider provider;
 
     public isolated function init(jwt:IssuerConfig? config = ()) returns error? {
@@ -29,11 +28,6 @@ isolated class ClientOAuth2ExtensionGrantHandler {
         return;
     }
 
-    # Returns the headers map with the relevant authentication requirements.
-    #
-    # + userAccount - The email address of the user for requesting delegated access in service account
-    # + headers - The headers map to be enriched with the OAuth2 token
-    # + return - The updated headers map or else an `Error` in case of an error
     public isolated function getSecurityHeaders(string? userAccount, map<string|string[]> headers) returns error? {
         if userAccount !is string {
             return error("User account is not provided.");
@@ -52,7 +46,6 @@ isolated class ClientOAuth2ExtensionGrantHandler {
 }
 
 isolated class OAuth2ExtensionGrantProvider {
-
     private jwt:IssuerConfig jwtIssuerConfig = {};
     private boolean isServiceAccount = false;
     private final http:Client clientEndpoint;
@@ -66,10 +59,6 @@ isolated class OAuth2ExtensionGrantProvider {
         return;
     }
 
-    # Get an OAuth2 access token from authorization server for the OAuth2 authentication.
-    #
-    # + userAccount - The email address of the user for requesting delegated access in service account
-    # + return - Generated OAuth2 token or else an `Error` if an error occurred
     public isolated function generateToken(string userAccount) returns string|error {
         lock {
             self.jwtIssuerConfig.customClaims["sub"] = userAccount;
@@ -96,14 +85,12 @@ isolated class OAuth2ExtensionGrantProvider {
 
 isolated function extractAccessToken(http:Response response) returns string|error {
     json|error jsonResponse = response.getJsonPayload();
-    if jsonResponse is json {
-        json|error accessToken = jsonResponse.access_token;
-        if accessToken is json {
-            return accessToken.toJsonString();
-        } else {
-            return error("Failed to access 'access_token' property from the JSON.", accessToken);
-        }
-    } else {
+    if jsonResponse is error {
         return error("Failed to retrieve access-token since the response payload is not a JSON.", jsonResponse);
     }
+    json|error accessToken = jsonResponse.access_token;
+    if accessToken is error {
+        return error("Failed to access 'access_token' property from the JSON.", accessToken);
+    }
+    return accessToken.toJsonString();
 }
