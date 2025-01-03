@@ -72,7 +72,7 @@ isolated class OAuth2ExtensionGrantProvider {
                     return error("Failed to call the token endpoint.", response);
                 }
             }
-            return error("Failed to generate JWT.", <error>jwt);
+            return error("Failed to generate JWT.", jwt);
         }
     }
 
