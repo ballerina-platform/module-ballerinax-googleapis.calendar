@@ -64,3 +64,4 @@ jobs:
       distribution-zip: ${{ inputs.distribution-zip }}
       auto-merge: ${{ inputs.auto-merge }}
       ballerina-version: ${{ inputs.ballerina-version }}
+      generation-path: "ballerina/modules/oas"
