@@ -30,4 +30,4 @@ The Ballerina Google Calendar connector facilitates integration with the [Google
 ## OpenAPI cli command
 
 ```bash
-bal openapi -i docs/spec/openapi.yaml --mode client -o ballerina
+bal openapi -i docs/spec/openapi.yaml --mode client -o ballerina/oas
