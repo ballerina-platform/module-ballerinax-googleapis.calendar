@@ -14,6 +14,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import ballerina/data.jsondata;
 import ballerina/http;
 
 # Manipulates events and other calendar data.
@@ -39,7 +40,7 @@ public isolated client class Client {
         string resourcePath = string `/calendars`;
         resourcePath = resourcePath + check getPathForQueryParam(queries);
         http:Request request = new;
-        json jsonBody = payload.toJson();
+        json jsonBody = jsondata:toJson(payload);
         request.setPayload(jsonBody, "application/json");
         return self.clientEp->post(resourcePath, request, headers);
     }
@@ -67,7 +68,7 @@ public isolated client class Client {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}`;
         resourcePath = resourcePath + check getPathForQueryParam(queries);
         http:Request request = new;
-        json jsonBody = payload.toJson();
+        json jsonBody = jsondata:toJson(payload);
         request.setPayload(jsonBody, "application/json");
         return self.clientEp->put(resourcePath, request, headers);
     }
@@ -95,7 +96,7 @@ public isolated client class Client {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}`;
         resourcePath = resourcePath + check getPathForQueryParam(queries);
         http:Request request = new;
-        json jsonBody = payload.toJson();
+        json jsonBody = jsondata:toJson(payload);
         request.setPayload(jsonBody, "application/json");
         return self.clientEp->patch(resourcePath, request, headers);
     }
@@ -123,7 +124,7 @@ public isolated client class Client {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/acl`;
         resourcePath = resourcePath + check getPathForQueryParam(queries);
         http:Request request = new;
-        json jsonBody = payload.toJson();
+        json jsonBody = jsondata:toJson(payload);
         request.setPayload(jsonBody, "application/json");
         return self.clientEp->post(resourcePath, request, headers);
     }
@@ -153,7 +154,7 @@ public isolated client class Client {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/acl/${getEncodedUri(ruleId)}`;
         resourcePath = resourcePath + check getPathForQueryParam(queries);
         http:Request request = new;
-        json jsonBody = payload.toJson();
+        json jsonBody = jsondata:toJson(payload);
         request.setPayload(jsonBody, "application/json");
         return self.clientEp->put(resourcePath, request, headers);
     }
@@ -183,7 +184,7 @@ public isolated client class Client {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/acl/${getEncodedUri(ruleId)}`;
         resourcePath = resourcePath + check getPathForQueryParam(queries);
         http:Request request = new;
-        json jsonBody = payload.toJson();
+        json jsonBody = jsondata:toJson(payload);
         request.setPayload(jsonBody, "application/json");
         return self.clientEp->patch(resourcePath, request, headers);
     }
@@ -225,16 +226,23 @@ public isolated client class Client {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/events`;
         resourcePath = resourcePath + check getPathForQueryParam(queries);
         http:Request request = new;
-        json jsonBody = payload.toJson();
+        json jsonBody = jsondata:toJson(payload);
         request.setPayload(jsonBody, "application/json");
         return self.clientEp->post(resourcePath, request, headers);
     }
 
+    # Imports an event. This operation is used to add a private copy of an existing event to a calendar.
+    #
+    # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword
+    # + headers - Headers to be sent with the request 
+    # + queries - Queries to be sent with the request 
+    # + payload - Data required to import an event 
+    # + return - A `gcalendar:Event` if successful, otherwise an error 
     resource isolated function post calendars/[string calendarId]/events/'import(Event payload, map<string|string[]> headers = {}, *CalendarEventsImportQueries queries) returns Event|error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/events/import`;
         resourcePath = resourcePath + check getPathForQueryParam(queries);
         http:Request request = new;
-        json jsonBody = payload.toJson();
+        json jsonBody = jsondata:toJson(payload);
         request.setPayload(jsonBody, "application/json");
         return self.clientEp->post(resourcePath, request, headers);
     }
@@ -277,7 +285,7 @@ public isolated client class Client {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/events/${getEncodedUri(eventId)}`;
         resourcePath = resourcePath + check getPathForQueryParam(queries);
         http:Request request = new;
-        json jsonBody = payload.toJson();
+        json jsonBody = jsondata:toJson(payload);
         request.setPayload(jsonBody, "application/json");
         return self.clientEp->put(resourcePath, request, headers);
     }
@@ -307,7 +315,7 @@ public isolated client class Client {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/events/${getEncodedUri(eventId)}`;
         resourcePath = resourcePath + check getPathForQueryParam(queries);
         http:Request request = new;
-        json jsonBody = payload.toJson();
+        json jsonBody = jsondata:toJson(payload);
         request.setPayload(jsonBody, "application/json");
         return self.clientEp->patch(resourcePath, request, headers);
     }
@@ -360,7 +368,7 @@ public isolated client class Client {
         string resourcePath = string `/freeBusy`;
         resourcePath = resourcePath + check getPathForQueryParam(queries);
         http:Request request = new;
-        json jsonBody = payload.toJson();
+        json jsonBody = jsondata:toJson(payload);
         request.setPayload(jsonBody, "application/json");
         return self.clientEp->post(resourcePath, request, headers);
     }
@@ -386,7 +394,7 @@ public isolated client class Client {
         string resourcePath = string `/users/me/calendarList`;
         resourcePath = resourcePath + check getPathForQueryParam(queries);
         http:Request request = new;
-        json jsonBody = payload.toJson();
+        json jsonBody = jsondata:toJson(payload);
         request.setPayload(jsonBody, "application/json");
         return self.clientEp->post(resourcePath, request, headers);
     }
@@ -414,7 +422,7 @@ public isolated client class Client {
         string resourcePath = string `/users/me/calendarList/${getEncodedUri(calendarId)}`;
         resourcePath = resourcePath + check getPathForQueryParam(queries);
         http:Request request = new;
-        json jsonBody = payload.toJson();
+        json jsonBody = jsondata:toJson(payload);
         request.setPayload(jsonBody, "application/json");
         return self.clientEp->put(resourcePath, request, headers);
     }
@@ -442,7 +450,7 @@ public isolated client class Client {
         string resourcePath = string `/users/me/calendarList/${getEncodedUri(calendarId)}`;
         resourcePath = resourcePath + check getPathForQueryParam(queries);
         http:Request request = new;
-        json jsonBody = payload.toJson();
+        json jsonBody = jsondata:toJson(payload);
         request.setPayload(jsonBody, "application/json");
         return self.clientEp->patch(resourcePath, request, headers);
     }
