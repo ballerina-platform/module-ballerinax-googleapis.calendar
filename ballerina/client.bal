@@ -231,6 +231,13 @@ public isolated client class Client {
         return self.clientEp->post(resourcePath, request, headers);
     }
 
+    # Imports an event. This operation is used to add a private copy of an existing event to a calendar.
+    #
+    # + calendarId - Calendar identifier. To retrieve calendar IDs call the calendarList.list method. If you want to access the primary calendar of the currently logged in user, use the "primary" keyword
+    # + headers - Headers to be sent with the request 
+    # + queries - Queries to be sent with the request 
+    # + payload - Data required to import an event 
+    # + return - A `gcalendar:Event` if successful, otherwise an error 
     resource isolated function post calendars/[string calendarId]/events/'import(Event payload, map<string|string[]> headers = {}, *CalendarEventsImportQueries queries) returns Event|error {
         string resourcePath = string `/calendars/${getEncodedUri(calendarId)}/events/import`;
         resourcePath = resourcePath + check getPathForQueryParam(queries);
