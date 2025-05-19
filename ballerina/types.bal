@@ -72,6 +72,7 @@ public type ConferenceSolution record {
     string name?;
     # The user-visible icon for this solution
     string iconUri?;
+    # Represents the key information for a conference solution
     ConferenceSolutionKey 'key?;
 };
 
@@ -414,13 +415,16 @@ public type ConferenceData record {
     # - hangoutsMeet: ID is the 10-letter meeting code, for example aaa-bbbb-ccc.
     # - addOn: ID is defined by the third-party provider.  Optional
     string conferenceId?;
+    # Represents the request to create a conference within a calendar event
     CreateConferenceRequest createRequest?;
     # The signature of the conference data.
     # Generated on server side.
     # Unset for a conference with a failed create request.
     # Optional for a conference with a pending create request
     string signature?;
+    # Represents conference solutions that users can utilize when scheduling or participating in events and meetings
     ConferenceSolution conferenceSolution?;
+    # Represents parameters related to conference settings for events
     ConferenceParameters parameters?;
 };
 
@@ -464,7 +468,9 @@ public type CreateConferenceRequest record {
     # The client-generated unique ID for this request.
     # Clients should regenerate this ID for every new request. If an ID provided is the same as for the previous request, the request is ignored
     string requestId?;
+    # Represents the key information for a conference solution
     ConferenceSolutionKey conferenceSolutionKey?;
+    # Provides information about the current status of a conference create request
     ConferenceRequestStatus status?;
 };
 
@@ -702,9 +708,11 @@ public type CalendarCalendarListUpdateQueries record {
 
 # Conveys information about the working location of a user during an event
 public type EventWorkingLocationProperties record {
+    # If present, specifies that the user is working from an office
     EventWorkingLocationPropertiesOfficeLocation officeLocation?;
     # If present, specifies that the user is working at home
     anydata homeOffice?;
+    # If present, specifies that the user is working from a custom location
     EventWorkingLocationPropertiesCustomLocation customLocation?;
     # Type of the working location. Possible values are:  
     # - "homeOffice" - The user is working at home. 
@@ -779,6 +787,7 @@ public type CreateCalendarQueries record {
 
 # Represent calendar properties which allow users to manage and interact with their calendars effectively
 public type CalendarListEntry record {
+    # Specify the types of conference solutions supported for a calendar
     ConferenceProperties conferenceProperties?;
     # Title of the calendar. Read-only
     string summary?;
@@ -796,6 +805,7 @@ public type CalendarListEntry record {
     string timeZone?;
     # The foreground color of the calendar in the hexadecimal format "#ffffff". This property supersedes the index-based colorId property. To set or change this property, you need to specify colorRgbFormat=true in the parameters of the insert, update and patch methods. Optional
     string foregroundColor?;
+    # The notifications that the authenticated user is receiving for this calendar
     CalendarListEntryNotificationSettings notificationSettings?;
     # Whether this calendar list entry has been deleted from the calendar list. Read-only. Optional. The default is False
     boolean deleted = false;
@@ -1068,6 +1078,7 @@ public type EventAttendee record {
 
 # Defines and manages individual calendars
 public type Calendar record {
+    # Specify the types of conference solutions supported for a calendar
     ConferenceProperties conferenceProperties?;
     # Title of the calendar
     string summary?;
@@ -1238,16 +1249,19 @@ public type AclRuleScope record {
 
 # Represents parameters related to conference settings for events
 public type ConferenceParameters record {
+    # This type is used for adding parameters that control the behavior of a conference
     ConferenceParametersAddOnParameters addOnParameters?;
 };
 
 # Represents an event in Google Calendar
 public type Event record {
+    # Information about the event's reminders for the authenticated user
     EventReminders reminders?;
     # File attachments for the event.
     # In order to modify attachments the supportsAttachments request parameter should be set to true.
     # There can be at most 25 attachments per event,
     EventAttachment[] attachments?;
+    # Conveys information about the working location of a user during an event
     EventWorkingLocationProperties workingLocationProperties?;
     # The color of the event. This is an ID referring to an entry in the event section of the colors definition (see the  colors endpoint). Optional
     string colorId?;
@@ -1257,7 +1271,9 @@ public type Event record {
     boolean attendeesOmitted = false;
     # Description of the event. Can contain HTML. Optional
     string description?;
+    # Source from which the event was created. For example, a web page, an email message or any document identifiable by an URL with HTTP or HTTPS scheme. Can only be seen or modified by the creator of the event
     EventSource 'source?;
+    # Extended properties of the event
     EventExtendedProperties extendedProperties?;
     # Whether attendees other than the organizer can modify the event. Optional. The default is False
     boolean guestsCanModify = false;
@@ -1267,6 +1283,7 @@ public type Event record {
     boolean endTimeUnspecified = false;
     # Whether attendees other than the organizer can see who the event's attendees are. Optional. The default is True
     boolean guestsCanSeeOtherGuests = true;
+    # Defines the date, time, and time zone information for events
     EventDateTime end?;
     # Opaque identifier of the event. When creating new single or recurring events, you can specify their IDs. Provided IDs must follow these rules:  
     # - characters allowed in the ID are those used in base32hex encoding, i.e. lowercase letters a-v and digits 0-9, see section 3.1.2 in RFC2938 
@@ -1281,6 +1298,7 @@ public type Event record {
     boolean anyoneCanAddSelf = false;
     # Title of the event
     string summary?;
+    # The creator of the event. Read-only
     EventCreator creator?;
     # If set to True, Event propagation is disabled. Note that it is not the same thing as Private event properties. Optional. Immutable. The default is False
     boolean privateCopy = false;
@@ -1301,7 +1319,9 @@ public type Event record {
     # Event unique identifier as defined in RFC5545. It is used to uniquely identify events accross calendaring systems and must be supplied when importing events via the import method.
     # Note that the iCalUID and the id are not identical and only one of them should be supplied at event creation time. One difference in their semantics is that in recurring events, all occurrences of one event have different ids while they all share the same iCalUIDs. To retrieve an event using its iCalUID, call the events.list method using the iCalUID parameter. To retrieve an event using its id, call the events.get method
     string iCalUID?;
+    # Defines the date, time, and time zone information for events
     EventDateTime 'start?;
+    # Defines the date, time, and time zone information for events
     EventDateTime originalStartTime?;
     # Specific type of the event. This cannot be modified after the event is created. Possible values are:  
     # - "default" - A regular event or not further specified. 
@@ -1313,11 +1333,13 @@ public type Event record {
     string[] recurrence?;
     # Sequence number as per iCalendar
     int:Signed32 sequence?;
+    # The organizer of the event. If the organizer is also an attendee, this is indicated with a separate entry in attendees with the organizer field set to True. To change the organizer, use the move operation. Read-only, except when importing an event
     EventOrganizer organizer?;
     # Whether the event blocks time on the calendar. Optional. Possible values are:  
     # - "opaque" - Default value. The event does block time on the calendar. This is equivalent to setting Show me as to Busy in the Calendar UI. 
     # - "transparent" - The event does not block time on the calendar. This is equivalent to setting Show me as to Available in the Calendar UI
     string transparency = "opaque";
+    # Represents information about conferences associated with calendar events
     ConferenceData conferenceData?;
     # ETag of the resource
     string etag?;
@@ -1351,6 +1373,7 @@ public type AclRule record {
     string role?;
     # Type of the resource ("calendar#aclRule")
     string kind = "calendar#aclRule";
+    # The extent to which calendar access is granted by this ACL rule
     AclRuleScope scope?;
     # ETag of the resource
     string etag?;
