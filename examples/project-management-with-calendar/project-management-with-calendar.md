@@ -4,18 +4,18 @@ This example demonstrates the use of the Google Calendar API in Ballerina for ma
 
 ## Step 1: Import Google Calendar module
 
-Import the `ballerinax/googleapis.gcalendar` module.
+Import the `ballerinax/googleapis.calendar` module.
 
 ```ballerina
-import ballerinax/googleapis.gcalendar;
+import ballerinax/googleapis.calendar;
 ```
 
 ## Step 2: Create a connector instance
 
-Next, create a `gcalendar:ConnectionConfig` with OAuth2.0 tokens and initialize the connector.
+Next, create a `calendar:ConnectionConfig` with OAuth2.0 tokens and initialize the connector.
 
 ```ballerina
-gcalendar:ConnectionConfig config = {
+calendar:ConnectionConfig config = {
     auth: {
         clientId: <CLIENT_ID>,
         clientSecret: <CLIENT_SECRET>,
@@ -24,17 +24,17 @@ gcalendar:ConnectionConfig config = {
     }
 };
 
-gcalendar:Client calendar = check new(config);
+calendar:Client calendar = check new(config);
 ```
 
-Now, the `gcalendar:Client` instance can be used for the following steps.
+Now, the `calendar:Client` instance can be used for the following steps.
 
 ## Step 3: Create a project calendar
 
 To keep project events organized, create a dedicated calendar with a descriptive title.
 
 ```ballerina
-gcalendar:Calendar projectCalendar = check calendar->/calendars.post({
+calendar:Calendar projectCalendar = check calendar->/calendars.post({
     summary: "Software Project"
 });
 ```
@@ -44,7 +44,7 @@ gcalendar:Calendar projectCalendar = check calendar->/calendars.post({
 The following steps are to schedule various project-related tasks using the Google Calendar API.
 
 ```ballerina
-gcalendar:Event codingSession = check calendar->/calendars/[calendarId]/events.post({
+calendar:Event codingSession = check calendar->/calendars/[calendarId]/events.post({
     'start: {
         dateTime: "2023-10-20T10:00:00+00:00",
         timeZone: "UTC"
@@ -57,7 +57,7 @@ gcalendar:Event codingSession = check calendar->/calendars/[calendarId]/events.p
 });
 
 
-gcalendar:Event|error designReview = calendar->/calendars/[calendarId]/events.post({
+calendar:Event|error designReview = calendar->/calendars/[calendarId]/events.post({
     'start: {
         dateTime: "2023-10-25T14:00:00+00:00",
         timeZone: "UTC"
@@ -75,7 +75,7 @@ gcalendar:Event|error designReview = calendar->/calendars/[calendarId]/events.po
 Invite team members to project events ensures that everyone involved is aware of and aligned on project milestones.
 
 ```ballerina
-gcalendar:Event|error updatedCodingSession = calendar->/calendars/[calendarId]/events/[codingSessionId].put({
+calendar:Event|error updatedCodingSession = calendar->/calendars/[calendarId]/events/[codingSessionId].put({
     'start: {
         dateTime: "2023-10-20T10:00:00+00:00",
         timeZone: "UTC"
@@ -101,7 +101,7 @@ gcalendar:Event|error updatedCodingSession = calendar->/calendars/[calendarId]/e
 Set reminders for important milestones.
 
 ```ballerina
-gcalendar:Event|error milestoneEvent = calendar->/calendars/[calendarId]/events.post({
+calendar:Event|error milestoneEvent = calendar->/calendars/[calendarId]/events.post({
     'start: {
         dateTime: "2023-11-15T09:00:00+00:00",
         timeZone: "UTC"
@@ -132,5 +132,5 @@ gcalendar:Event|error milestoneEvent = calendar->/calendars/[calendarId]/events.
 Retrieve and analyze project events to monitor progress and make data-driven decisions.
 
 ```ballerina
-gcalendar:Events|error projectEvents = calendar->/calendars/[calendarId]/events.get();
+calendar:Events|error projectEvents = calendar->/calendars/[calendarId]/events.get();
 ```

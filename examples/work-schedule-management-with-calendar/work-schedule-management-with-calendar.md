@@ -4,18 +4,18 @@ This example demonstrates the use of the Google Calendar API in Ballerina to eff
 
 ## Step 1: Import Google Calendar module
 
-Import the `ballerinax/googleapis.gcalendar` module.
+Import the `ballerinax/googleapis.calendar` module.
 
 ```ballerina
-import ballerinax/googleapis.gcalendar;
+import ballerinax/googleapis.calendar;
 ```
 
 ## Step 2: Create a new connector instance
 
-Create a `gcalendar:ConnectionConfig` with the obtained OAuth 2.0 tokens, and initialize the connector with it.
+Create a `calendar:ConnectionConfig` with the obtained OAuth 2.0 tokens, and initialize the connector with it.
 
 ```ballerina
-gcalendar:ConnectionConfig config = {
+calendar:ConnectionConfig config = {
     auth: {
         clientId: <CLIENT_ID>,
         clientSecret: <CLIENT_SECRET>
@@ -24,17 +24,17 @@ gcalendar:ConnectionConfig config = {
     }
 };
 
-gcalendar:Client calendar = check new(config);
+calendar:Client calendar = check new(config);
 ```
 
-Now, the `gcalendar:Client` instance can be used for the following steps.
+Now, the `calendar:Client` instance can be used for the following steps.
 
 ### Creating a work calendar
 
 Create a dedicated calendar to organize work events.
 
 ```ballerina
-gcalendar:Calendar calendarResult = check calendar->/calendars.post({
+calendar:Calendar calendarResult = check calendar->/calendars.post({
     summary: "Work Schedule"
 });
 ```
@@ -44,7 +44,7 @@ gcalendar:Calendar calendarResult = check calendar->/calendars.post({
 Schedule work-related events, meetings, and deadlines by specifying the event's title, date, time, and time zone, as well as any other relevant details.
 
 ```ballerina
-gcalendar:Event event = check calendar->/calendars/[calendarId]/events.post({
+calendar:Event event = check calendar->/calendars/[calendarId]/events.post({
     'start: {
         dateTime: "2023-10-19T09:00:00+05:30",
         timeZone: "Asia/Colombo"
@@ -62,7 +62,7 @@ gcalendar:Event event = check calendar->/calendars/[calendarId]/events.post({
 Invite attendees by email, sending out invitations and notifications to ensure that all participants receive the necessary information.
 
 ```ballerina
-gcalendar:Event updatedEvent = check calendar->/calendars/[calendarId]/events/[eventId].put({
+calendar:Event updatedEvent = check calendar->/calendars/[calendarId]/events/[eventId].put({
     'start: {
         dateTime: "2023-10-19T09:00:00+05:30",
         timeZone: "Asia/Colombo"
@@ -90,7 +90,7 @@ gcalendar:Event updatedEvent = check calendar->/calendars/[calendarId]/events/[e
 Schdule weekly team meetings as recurring events, setting reminders to ensure all team members receive timely notifications before each meeting.
 
 ```ballerina
-gcalendar:Event|error reminderEvent = calendar->/calendars/[calendarId]/events/[updatedEventId].put({
+calendar:Event|error reminderEvent = calendar->/calendars/[calendarId]/events/[updatedEventId].put({
     'start: {
         dateTime: "2023-10-19T03:00:00+05:30",
         timeZone: "Asia/Colombo"
@@ -120,7 +120,7 @@ gcalendar:Event|error reminderEvent = calendar->/calendars/[calendarId]/events/[
 The work calendar can be shared among project team members to facilitate efficient collaboration. Permissions, such as read-only or edit access, can be assigned to ensure the team is aware of the work schedule and can coordinate their activities.
 
 ```ballerina
-gcalendar:AclRule acl = check calendar->/calendars/[calendarId]/acl.post({
+calendar:AclRule acl = check calendar->/calendars/[calendarId]/acl.post({
     scope: {
         'type: "user",
         value: "team_member@gmail.com"
@@ -134,7 +134,7 @@ gcalendar:AclRule acl = check calendar->/calendars/[calendarId]/acl.post({
 Limit access to specific events or assign different permissions to various users.
 
 ```ballerina
-gcalendar:AclRule|error response = calendar->/calendars/[calendarId]/acl/[aclId].put({
+calendar:AclRule|error response = calendar->/calendars/[calendarId]/acl/[aclId].put({
     scope: {
         'type: "user",
         value: "team_member@gmail.com"
